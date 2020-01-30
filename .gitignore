@@ -1,6 +1,6 @@
 ﻿ # Default ignored files
 /.idea.ReleaseNotes-WebAPI/.idea/workspace.xml
-/.idea/
+../.idea/
 /obj/
 /bin/
 *.csproj
