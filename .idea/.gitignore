@@ -2,4 +2,4 @@
 /.idea.ReleaseNotes-WebAPI/.idea/workspace.xml
 /.idea/
 /obj/
-*.csj
+*.csproj
