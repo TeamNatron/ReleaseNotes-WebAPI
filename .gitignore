@@ -3,7 +3,6 @@
 ../.idea/
 /obj/
 /bin/
-*.csproj
 *.xml
 *.iml
 *.sln
