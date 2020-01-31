@@ -18,9 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="mono_crash.mem.10334.1.blob" />
-        <None Remove="mono_crash.mem.19410.1.blob" />
-        <None Remove="mono_crash.mem.9913.1.blob" />
     </ItemGroup>
 
 
