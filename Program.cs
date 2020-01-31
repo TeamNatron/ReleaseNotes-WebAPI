@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using ReleaseNotes_WebAPI.Domain.Security;
+using ReleaseNotes_WebAPI.Persistence.Contexts;
 
 namespace ReleaseNotes_WebAPI
 {
@@ -21,10 +15,10 @@ namespace ReleaseNotes_WebAPI
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                // var context = scope.ServiceProvider.GetService<AppDbContext>();
-                // context.Database.EnsureCreated();
-                // var passwordHasher = services.GetService<IPasswordHasher<>>();
-                // DatabaseSeed.Seed(context, passwordHasher);
+                var context = scope.ServiceProvider.GetService<AppDbContext>();
+                context.Database.EnsureCreated();
+                var passwordHasher = services.GetService<IPasswordHasher>();
+                DatabaseSeed.Seed(context, passwordHasher);
             }
 
             host.Run();
