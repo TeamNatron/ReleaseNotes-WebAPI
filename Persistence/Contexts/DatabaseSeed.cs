@@ -29,49 +29,69 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new ProductVersion {Id = 102},
                     new ProductVersion {Id = 103}
                 };
-                
+
                 Console.WriteLine("Added these articles:");
                 Console.WriteLine(productVersions);
                 context.ProductVersions.AddRange(productVersions);
                 context.SaveChanges();
             }
-            
+
             // If there are no Releases
             if (!context.Releases.Any())
             {
                 Console.WriteLine("Creating new Releases");
                 var releases = new List<Release>
                 {
-                    new Release {Id = 100,ProductVersionId = 100},
-                    new Release {Id = 101,ProductVersionId = 101},
-                    new Release {Id = 102,ProductVersionId = 102},
-                    new Release {Id = 103,ProductVersionId = 103}
+                    new Release {Id = 100, ProductVersionId = 100},
+                    new Release {Id = 101, ProductVersionId = 101},
+                    new Release {Id = 102, ProductVersionId = 102},
+                    new Release {Id = 103, ProductVersionId = 103}
                 };
-                
+
                 Console.WriteLine("Added these Releases:");
                 Console.WriteLine(releases);
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
             }
-            
+
             // If there are no articles
             if (!context.Articles.Any())
             {
                 Console.WriteLine("Creating new Articles");
                 var articles = new List<Article>
                 {
-                    new Article {Id = 100, ReleaseId = 100, Uri = "article001.rtf", Title = "Release 1.2 - AR"},
-                    new Article {Id = 101, ReleaseId = 101, Uri = "article002.rtf", Title = "Release 2.2 - VR"},
-                    new Article {Id = 102, ReleaseId = 102, Uri = "article003.rtf", Title = "Release 3.2 - Parachute"},
-                    new Article {Id = 103, ReleaseId = 103, Uri = "article004.rtf", Title = "Release 4.2 - Bazooka"}
+                    new Article
+                    {
+                        Id = 100, ReleaseId = 100, Uri = "article001.rtf", Title = "Release 1.2 - AR",
+                        Description =
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
+                    },
+                    new Article
+                    {
+                        Id = 101, ReleaseId = 101, Uri = "article002.rtf", Title = "Release 2.2 - VR",
+                        Description =
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
+                    },
+                    new Article
+                    {
+                        Id = 102, ReleaseId = 102, Uri = "article003.rtf", Title = "Release 3.2 - Parachute",
+                        Description =
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
+                    },
+                    new Article
+                    {
+                        Id = 103, ReleaseId = 103, Uri = "article004.rtf", Title = "Release 4.2 - Bazooka",
+                        Description =
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
+                    }
                 };
-                
+
                 Console.WriteLine("Added these articles:");
                 Console.WriteLine(articles);
                 context.Articles.AddRange(articles);
                 context.SaveChanges();
             }
-            
+
             // If there are no roles
             if (!context.Roles.Any())
             {
