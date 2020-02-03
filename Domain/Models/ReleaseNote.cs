@@ -8,11 +8,9 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         
         public Release Release { get; set; }
         
-        [Required]
         [StringLength(512)]
         public string Comment { get; set; }
         
-        [Required]
         public bool IsPublic { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReleaseNotes_WebAPI.Domain.Models
 {
@@ -6,12 +7,12 @@ namespace ReleaseNotes_WebAPI.Domain.Models
     {
         public int Id { get; set; }
         
-        [Required]
+        public int ProductVersionId { get; set; }
+        
         public ProductVersion ProductVersion { get; set; }
         
         public Article Article { get; set; }
         
-        [Required]
         public bool IsPublic { get; set; }
     }
 }
