@@ -40,14 +40,15 @@ namespace ReleaseNotes_WebAPI
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-
             services.AddSingleton<IPasswordHasher, Security.Hashing.PasswordHasher>();
             services.AddSingleton<ITokenHandler, TokenHandler>();
 
             // BIND ALL REPOS
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IArticleRepository, ArticleRepository>();
 
             // BIND ALL SERVICES
+            services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
