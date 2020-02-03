@@ -29,6 +29,7 @@ namespace ReleaseNotes_WebAPI.Mapping
 
             CreateMap<Article, ArticleResource>();
             CreateMap<Release, ReleaseResource>();
+            CreateMap<ProductVersion, ProductVersionResource>();
         }
     }
 }
