@@ -28,6 +28,7 @@ namespace ReleaseNotes_WebAPI.Mapping
                         a => a.Expiration));
 
             CreateMap<Article, ArticleResource>();
+            CreateMap<Release, ReleaseResource>();
         }
     }
 }

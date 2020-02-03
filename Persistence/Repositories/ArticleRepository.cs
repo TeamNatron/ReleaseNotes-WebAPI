@@ -16,7 +16,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
 
         public async Task<IEnumerable<Article>> ListAsync()
         {
-            return await _context.Articles.ToListAsync();
+            return await _context.Articles.Include(a => a.Release).ToListAsync();
         }
     }
 }

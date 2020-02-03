@@ -23,7 +23,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             base.OnModelCreating(builder);
 
             builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
-
+            
             // RELEASE SETUP
             // builder.Entity<Release>().Property(r => r.Id).UseHiLo();
             // builder.Entity<Release>().Property(r => r.IsPublic).HasDefaultValue(true);
