@@ -46,13 +46,15 @@ namespace ReleaseNotes_WebAPI
             // BIND ALL REPOS
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IArticleRepository, ArticleRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             // BIND ALL SERVICES
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            services.AddScoped<IProductService, ProductService>();
+            
             // CONFIGURE AUTHENTICATION AND TOKEN OPTIONS
             services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));
             var tokenOptions = Configuration.GetSection("TokenOptions")
