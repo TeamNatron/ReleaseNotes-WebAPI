@@ -21,7 +21,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // If there are no ProductVersions
             if (!context.ProductVersions.Any())
             {
-                Console.WriteLine("Creating new ProductVersions");
                 var productVersions = new List<ProductVersion>
                 {
                     new ProductVersion {Id = 100},
@@ -29,9 +28,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new ProductVersion {Id = 102},
                     new ProductVersion {Id = 103}
                 };
-
-                Console.WriteLine("Added these articles:");
-                Console.WriteLine(productVersions);
                 context.ProductVersions.AddRange(productVersions);
                 context.SaveChanges();
             }
@@ -39,7 +35,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // If there are no Releases
             if (!context.Releases.Any())
             {
-                Console.WriteLine("Creating new Releases");
                 var releases = new List<Release>
                 {
                     new Release {Id = 100, ProductVersionId = 100},
@@ -47,9 +42,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new Release {Id = 102, ProductVersionId = 102},
                     new Release {Id = 103, ProductVersionId = 103}
                 };
-
-                Console.WriteLine("Added these Releases:");
-                Console.WriteLine(releases);
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
             }
@@ -57,7 +49,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // If there are no articles
             if (!context.Articles.Any())
             {
-                Console.WriteLine("Creating new Articles");
                 var articles = new List<Article>
                 {
                     new Article
@@ -85,9 +76,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
                     }
                 };
-
-                Console.WriteLine("Added these articles:");
-                Console.WriteLine(articles);
                 context.Articles.AddRange(articles);
                 context.SaveChanges();
             }
