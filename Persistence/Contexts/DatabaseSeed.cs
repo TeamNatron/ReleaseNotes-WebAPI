@@ -60,10 +60,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 Console.WriteLine("Creating new Articles");
                 var articles = new List<Article>
                 {
-                    new Article {Id = 100, ReleaseId = 100, Uri = "article001.rtf"},
-                    new Article {Id = 101, ReleaseId = 101, Uri = "article002.rtf"},
-                    new Article {Id = 102, ReleaseId = 102, Uri = "article003.rtf"},
-                    new Article {Id = 103, ReleaseId = 103, Uri = "article004.rtf"}
+                    new Article {Id = 100, ReleaseId = 100, Uri = "article001.rtf", Title = "Release 1.2 - AR"},
+                    new Article {Id = 101, ReleaseId = 101, Uri = "article002.rtf", Title = "Release 2.2 - VR"},
+                    new Article {Id = 102, ReleaseId = 102, Uri = "article003.rtf", Title = "Release 3.2 - Parachute"},
+                    new Article {Id = 103, ReleaseId = 103, Uri = "article004.rtf", Title = "Release 4.2 - Bazooka"}
                 };
                 
                 Console.WriteLine("Added these articles:");

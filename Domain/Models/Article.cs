@@ -5,6 +5,8 @@ namespace ReleaseNotes_WebAPI.Domain.Models
     public class Article
     {
         public int Id { get; set; }
+        
+        public string Title { get; set; }
 
         // Needed to automatically configure One-To-One relation.
         // https://www.entityframeworktutorial.net/efcore/one-to-one-conventions-entity-framework-core.aspx
