@@ -18,15 +18,30 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         {
             context.Database.EnsureCreated();
 
+            // If there are no Products
+            if (!context.Products.Any())
+            {
+                var products = new List<Product>
+                {
+                    new Product {Id = 100, Name = "Cordel Inne"},
+                    new Product {Id = 101, Name = "Cordel Ute"},
+                    new Product {Id = 102, Name = "Cordel Her"},
+                    new Product {Id = 103, Name = "Cordel Der"}
+                };
+
+                context.Products.AddRange(products);
+                context.SaveChanges();
+            }
+            
             // If there are no ProductVersions
             if (!context.ProductVersions.Any())
             {
                 var productVersions = new List<ProductVersion>
                 {
-                    new ProductVersion {Id = 100},
-                    new ProductVersion {Id = 101},
-                    new ProductVersion {Id = 102},
-                    new ProductVersion {Id = 103}
+                    new ProductVersion {Id = 100, ProductId = 100},
+                    new ProductVersion {Id = 101, ProductId = 101},
+                    new ProductVersion {Id = 102, ProductId = 102},
+                    new ProductVersion {Id = 103, ProductId = 103}
                 };
                 context.ProductVersions.AddRange(productVersions);
                 context.SaveChanges();
