@@ -33,6 +33,14 @@ services:
       POSTGRES_DB: 'releasenotedb'
     networks:
       - dockerapi-dev
+        
+  webapp:
+    image: webapp:latest
+    build:
+      context: ../ReleaseNotes-WebApp/
+      dockerfile: Dockerfile
+    ports:
+    - '3000:3000'
 
 volumes:
   db_volume:
