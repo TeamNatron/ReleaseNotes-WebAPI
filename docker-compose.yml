@@ -41,6 +41,10 @@ services:
       dockerfile: Dockerfile
     ports:
     - '3000:3000'
+    command:
+      npm start
+    volumes:
+    - ../ReleaseNotes-WebApp/:/usr/src/app
 
 volumes:
   db_volume:
