@@ -46,7 +46,7 @@ namespace ReleaseNotes_WebAPI
                 options.AddPolicy(MyAllowSpecificOrigins,
                     builder =>
                     {
-                        builder.AllowAnyOrigin().AllowAnyMethod();
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                     });
             });
 
