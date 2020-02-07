@@ -29,7 +29,7 @@ namespace ReleaseNotes_WebAPI
         }
 
         public IConfiguration Configuration { get; }
-
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -38,6 +38,16 @@ namespace ReleaseNotes_WebAPI
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            
+            // Enable CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin().AllowAnyMethod();
+                    });
             });
 
             services.AddSingleton<IPasswordHasher, Security.Hashing.PasswordHasher>();
@@ -130,7 +140,7 @@ namespace ReleaseNotes_WebAPI
             // app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(MyAllowSpecificOrigins); 
             app.UseAuthorization();
             app.UseAuthentication();
 
