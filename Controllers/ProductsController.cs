@@ -22,8 +22,8 @@ namespace ReleaseNotes_WebAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<ProductResource>> GetAllAsync()
         {
-            var articles = await _productService.ListAsync();
-            var resources = _mapper.Map<IEnumerable<ProductResource>>(articles);
+            var products = await _productService.ListAsync();
+            var resources = _mapper.Map<IEnumerable<ProductResource>>(products);
 
             return resources;
         }

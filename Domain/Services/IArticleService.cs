@@ -8,5 +8,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     public interface IArticleService
     {
         Task<IEnumerable<Article>> ListAsync();
+        Task<IEnumerable<Article>> ListByProductAsync(int pid);
     }
 }

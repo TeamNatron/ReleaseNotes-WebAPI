@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,12 +22,18 @@ namespace ReleaseNotes_WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ArticleResource>> GetAllAsync()
+        public async Task<IEnumerable<ArticleResource>> GetAllAsync([FromQuery(Name = "product")]int product)
         {
+            if (product != null && product > 0) 
+            { 
+                var articlesByProductId = await _articleService.ListByProductAsync(product);
+                return _mapper.Map<IEnumerable<ArticleResource>>(articlesByProductId);
+            }
             var articles = await _articleService.ListAsync();
-            var resources = _mapper.Map<IEnumerable<ArticleResource>>(articles);
+            var resource = _mapper.Map<IEnumerable<ArticleResource>>(articles);
 
-            return resources;
+            return resource;
         }
+        
     }
 }

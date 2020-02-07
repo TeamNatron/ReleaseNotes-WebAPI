@@ -22,5 +22,10 @@ namespace ReleaseNotes_WebAPI.Services
         {
             return await _articleRepository.ListAsync();
         }
+
+        public async Task<IEnumerable<Article>> ListByProductAsync(int pid)
+        {
+            return await _articleRepository.ListByProductAsync(pid);
+        }
     }
 }

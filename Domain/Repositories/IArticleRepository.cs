@@ -8,5 +8,6 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
     public interface IArticleRepository
     {
         Task<IEnumerable<Article>> ListAsync();
+        Task<IEnumerable<Article>> ListByProductAsync(int id);
     }
 }
