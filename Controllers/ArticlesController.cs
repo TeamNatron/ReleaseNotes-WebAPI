@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Controllers
 {
@@ -22,16 +24,10 @@ namespace ReleaseNotes_WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ArticleResource>> GetAllAsync([FromQuery(Name = "product")]int product)
+        public async Task<IEnumerable<ArticleResource>> GetAllAsync([FromQuery] ArticlesParameters queryParameters)
         {
-            if (product != null && product > 0) 
-            { 
-                var articlesByProductId = await _articleService.ListByProductAsync(product);
-                return _mapper.Map<IEnumerable<ArticleResource>>(articlesByProductId);
-            }
-            var articles = await _articleService.ListAsync();
+            var articles = await _articleService.ListAsync(queryParameters);
             var resource = _mapper.Map<IEnumerable<ArticleResource>>(articles);
-
             return resource;
         }
         

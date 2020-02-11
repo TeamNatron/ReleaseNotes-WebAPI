@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Services
 {
@@ -18,14 +19,9 @@ namespace ReleaseNotes_WebAPI.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Article>> ListAsync()
+        public async Task<IEnumerable<Article>> ListAsync(ArticlesParameters queryParameters)
         {
-            return await _articleRepository.ListAsync();
-        }
-
-        public async Task<IEnumerable<Article>> ListByProductAsync(int pid)
-        {
-            return await _articleRepository.ListByProductAsync(pid);
+            return await _articleRepository.ListAsync(queryParameters);
         }
     }
 }
