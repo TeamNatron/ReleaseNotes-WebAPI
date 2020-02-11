@@ -19,11 +19,11 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
 
         public async Task<IEnumerable<Article>> ListAsync(ArticlesParameters queryParameters)
         {
-            var articlesQuery = _context.Articles
+            IQueryable<Article> articlesQuery = _context.Articles
                 .Include(a => a.Release)
                 .ThenInclude(r => r.ProductVersion)
-                .ThenInclude(pr => pr.Product)
-                .Where(a => a.Release.ProductVersion.Product.Id == queryParameters.product);
+                .ThenInclude(pr => pr.Product);
+            
             if (queryParameters.product > 0)
             {
                 articlesQuery = articlesQuery.Where(a => a.Release.ProductVersion.Product.Id == queryParameters.product);
@@ -41,7 +41,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
                         break;
                 }
             }
-
+    
             return await articlesQuery.ToListAsync();
         }
     }
