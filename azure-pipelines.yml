@@ -18,3 +18,9 @@ steps:
         packageType: sdk
     - script: dotnet build
       displayName: 'dotnet build'
+
+    - task: PublishBuildArtifacts@1
+      displayName: "Upload Artifacts"
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'Application Server' 
