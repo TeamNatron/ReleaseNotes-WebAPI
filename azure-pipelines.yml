@@ -22,5 +22,5 @@ steps:
     - task: PublishBuildArtifacts@1
       displayName: "Upload Artifacts"
       inputs:
-        pathtoPublish: '$(System.DefaultWorkingDirectory)/bin/AppServer' 
+        pathtoPublish: '/AppServer' 
         artifactName: 'Application Server' 
