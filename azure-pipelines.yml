@@ -19,5 +19,14 @@ steps:
     - script: dotnet build
       displayName: 'dotnet build'
 
-    - publish: $(System.DefaultWorkingDirectory)/bin/WebApp
-      artifact: WebApp
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: '**\bin\$(BuildConfiguration)\**'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'AppServer'
+        publishLocation: 'Container'
