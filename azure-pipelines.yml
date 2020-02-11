@@ -19,8 +19,12 @@ steps:
     - script: dotnet build
       displayName: 'dotnet build'
 
-    - task: PublishBuildArtifacts@1
-      displayName: "Upload Artifacts"
+    - task: CopyFiles@2
       inputs:
-        pathtoPublish: '/AppServer' 
-        artifactName: 'Application Server' 
+        contents: '_buildOutput/**'
+        targetFolder: $(Build.ArtifactStagingDirectory)
+        
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: $(Build.ArtifactStagingDirectory)
+        artifactName: MyBuildOutputs
