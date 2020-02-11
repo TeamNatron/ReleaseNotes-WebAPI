@@ -16,5 +16,5 @@ steps:
       inputs:
         version: '3.1.x'
         packageType: sdk
-    - script: dotnet build --configuration
+    - script: dotnet build
       displayName: 'dotnet build'
