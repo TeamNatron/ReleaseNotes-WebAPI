@@ -11,22 +11,16 @@ pool:
 
 steps:
 
-- task: UseDotNet@2 
-  displayName: ".NET Core 3.1.x"
-  inputs:
-    version: '3.1.x'
-    packageType: sdk
-- script: dotnet build
-  displayName: 'dotnet build'
 
-- task: CopyFiles@2
+- task: DotNetCoreCLI@2
   inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**\bin\**'
-    TargetFolder: '$(build.artifactstagingdirectory)'
+    command: publish
+    publishWebProjects: True
+    arguments: ' --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
 
+# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'AppServer'
-    publishLocation: 'Container'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'AppServer'
