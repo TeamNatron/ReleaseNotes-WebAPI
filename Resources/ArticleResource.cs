@@ -1,3 +1,5 @@
+using System;
+
 namespace ReleaseNotes_WebAPI.Resources
 {
     public class ArticleResource
@@ -11,5 +13,7 @@ namespace ReleaseNotes_WebAPI.Resources
         public string Description { get; set; }
         
         public ReleaseResource Release { get; set; }
+        
+        public DateTime Date { get; set; }
     }
 }
