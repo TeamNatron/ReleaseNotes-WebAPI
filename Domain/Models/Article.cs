@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ReleaseNotes_WebAPI.Domain.Models
@@ -14,5 +15,6 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         public Release Release { get; set; }
         public string Uri { get; set; }
         public bool IsPublic { get; set; }
+        public DateTime Date { get; set; }
     }
 }
