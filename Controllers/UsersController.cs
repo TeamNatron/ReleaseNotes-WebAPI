@@ -32,7 +32,7 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var user = _mapper.Map<UserCredentialResource, User>(userCredentials);
 
-            var response = await _userService.CreateUserAsync(user, ERole.Common);
+            var response = await _userService.CreateUserAsync(user, ERole.Administrator);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
