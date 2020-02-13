@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
@@ -24,6 +25,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
 
             builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
             
+            builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
+
             // RELEASE SETUP
             // builder.Entity<Release>().Property(r => r.Id).UseHiLo();
             // builder.Entity<Release>().Property(r => r.IsPublic).HasDefaultValue(true);
