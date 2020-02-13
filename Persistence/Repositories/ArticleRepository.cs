@@ -34,10 +34,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
                 switch (queryParameters.sort)
                 {
                     case "old":
-                        //articlesQuery = articlesQuery.OrderByDescending(a => a.Date);
+                        articlesQuery = articlesQuery.OrderByDescending(a => a.Date);
                         break;
                     case "new":
-                        //articlesQuery = articlesQuery.OrderBy(a => a.Date);
+                        articlesQuery = articlesQuery.OrderBy(a => a.Date);
                         break;
                 }
             }
