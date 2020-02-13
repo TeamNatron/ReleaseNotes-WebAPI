@@ -104,7 +104,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             {
                 var roles = new List<Role>
                 {
-                    new Role {Name = ERole.Common.ToString()},
                     new Role {Name = ERole.Administrator.ToString()}
                 };
 
@@ -125,12 +124,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 {
                     RoleId = context.Roles.SingleOrDefault(
                         r => r.Name == ERole.Administrator.ToString()).Id
-                });
-
-                users[1].UserRoles.Add(new UserRole
-                {
-                    RoleId = context.Roles.SingleOrDefault(
-                        r => r.Name == ERole.Common.ToString()).Id
                 });
 
                 context.Users.AddRange(users);
