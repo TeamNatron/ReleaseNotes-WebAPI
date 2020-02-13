@@ -87,34 +87,34 @@ namespace ReleaseNotes_WebAPI
                         IssuerSigningKey = signingConfigurations.Key,
                         ClockSkew = TimeSpan.Zero
                     };
-                    // jwtBearerOptions.Events = new JwtBearerEvents()
-                    // {
-                    //     OnChallenge = context =>
-                    //     {
-                    //         Console.WriteLine("OnChallenge: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnAuthenticationFailed = context =>
-                    //     {
-                    //         Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnForbidden = context =>
-                    //     {
-                    //         Console.WriteLine("OnForbidden: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnMessageReceived = context =>
-                    //     {
-                    //         Console.WriteLine("OnMessageReceived: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnTokenValidated = context =>
-                    //     {
-                    //         Console.WriteLine("OnTokenValidated: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     }
-                    // };
+                    jwtBearerOptions.Events = new JwtBearerEvents()
+                    {
+                        OnChallenge = context =>
+                        {
+                            Console.WriteLine("OnChallenge: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+                            return Task.CompletedTask;
+                        },
+                        OnForbidden = context =>
+                        {
+                            Console.WriteLine("OnForbidden: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        },
+                        OnMessageReceived = context =>
+                        {
+                            Console.WriteLine("OnMessageReceived: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = context =>
+                        {
+                            Console.WriteLine("OnTokenValidated: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             // May be wrong to use current parameter, was added to resolve error
@@ -129,6 +129,7 @@ namespace ReleaseNotes_WebAPI
         {
             if (env.IsDevelopment())
             {
+                IdentityModelEventSource.ShowPII = true;
                 app.UseDeveloperExceptionPage();
             }
             else
