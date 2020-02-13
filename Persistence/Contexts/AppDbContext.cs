@@ -24,6 +24,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             base.OnModelCreating(builder);
 
             builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
+            
+            builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
 
             // RELEASE SETUP
             // builder.Entity<Release>().Property(r => r.Id).UseHiLo();
@@ -32,7 +34,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // ARTICLE SETUP
             // builder.Entity<Article>().Property(a => a.Id).UseIdentityAlwaysColumn();
             // builder.Entity<Article>().Property(a => a.IsPublic).HasDefaultValue(true);
-            // builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             // builder.Entity<Article>()
             //     .HasOne(a => a.Release)
             //     .WithOne(r => r.Article)
