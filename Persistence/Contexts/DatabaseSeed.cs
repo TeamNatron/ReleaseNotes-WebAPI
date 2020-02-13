@@ -32,7 +32,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 context.Products.AddRange(products);
                 context.SaveChanges();
             }
-            
+
             // If there are no ProductVersions
             if (!context.ProductVersions.Any())
             {
@@ -59,6 +59,42 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 };
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
+            }
+
+            if (context.ReleaseNotes.Any())
+            {
+                const string htmlDummy1 =
+                    "<div><div>Fixed the shangala bangala<br></div><div><img src=\"https://dev.azure.com/ReleaseNoteSystem/399f705f-cd58-45f2-becb-f890cb50f774/_apis/wit/attachments/9a3d3458-8831-4eb4-af7d-adf0269c8e32?fileName=image.png\" alt=Image></div><div><br></div><div><ol><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver MyeLars <b>Skriver</b> MyeLars <i>Skriver Mye</i><br></li></ol></div><span>&#128521;</span><span>&#128515;</span></div><blockquote style=\"margin-top:0px;margin-bottom:0px;\"><blockquote style=\"margin-top:0px;margin-bottom:0px;\"><blockquote style=\"margin-top:0px;margin-bottom:0px;\"><div>fafaas</div></blockquote></blockquote><div>Lars Skriver Mye</div></blockquote><div><br></div><div><br></div><div><h1>Lars Skriver Mye<br></h1></div><div><h2></h2></div>";
+                const string htmlDummy2 = "<div>fix house-arrest bug</div>";
+                const string htmlDummy3 = "<div>Eliminated all escapists</div>";
+                const string htmlDummy4 = "<div>Whoa whoa hey hey hey</div>";
+                var releaseNotes = new List<ReleaseNote>
+                {
+                    new ReleaseNote
+                    {
+                        WorkItemId = 20, AuthorName = "Ronnay Voudrait", AuthorEmail = "ronnay@natron.no",
+                        WorkItemDescriptionHtml = htmlDummy1, WorkItemTitle = "Test item please ignore",
+                        ClosedDate = new DateTime(2001, 7, 11, 23, 0, 59, 4)
+                    },
+                    new ReleaseNote
+                    {
+                    WorkItemId = 21, AuthorName = "Aung San Suu Kyi", AuthorEmail = "aungsansuukyi@natron.no",
+                    WorkItemDescriptionHtml = htmlDummy2, WorkItemTitle = "Receive Nobel Price",
+                    ClosedDate = new DateTime(2012, 6, 16, 16, 0, 59, 4)
+                },
+                    new ReleaseNote
+                    {
+                        WorkItemId = 22, AuthorName = "Liu chi", AuthorEmail = "luichi@natron.no",
+                        WorkItemDescriptionHtml = htmlDummy3, WorkItemTitle = "Forbid escapism",
+                        ClosedDate = new DateTime(2190, 7, 11, 23, 0, 59, 4)
+                    },
+                    new ReleaseNote
+                    {
+                        WorkItemId = 20, AuthorName = "Ronnay Voudrait", AuthorEmail = "ronnay@natron.no",
+                        WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
+                        ClosedDate = new DateTime(2005, 7, 11, 23, 0, 59, 4)
+                    }
+                };
             }
 
             // If there are no articles
