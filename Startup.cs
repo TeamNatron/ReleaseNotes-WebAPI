@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ReleaseNotes_WebAPI.API.Services;
 using ReleaseNotes_WebAPI.Domain.Models.Auth.Token;
@@ -73,9 +75,14 @@ namespace ReleaseNotes_WebAPI
             var signingConfigurations = new SigningConfigurations();
             services.AddSingleton(signingConfigurations);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(jwtBearerOptions =>
                 {
+                    jwtBearerOptions.RequireHttpsMetadata = false;
                     jwtBearerOptions.SaveToken = true;
                     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters()
                     {
@@ -141,9 +148,12 @@ namespace ReleaseNotes_WebAPI
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+            
             app.UseCors(MyAllowSpecificOrigins); 
+            
+            app.UseAuthentication();            
+            
             app.UseAuthorization();
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
