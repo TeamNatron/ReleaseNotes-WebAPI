@@ -24,9 +24,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             base.OnModelCreating(builder);
 
             builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
-            
+            builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
             builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
-
             // RELEASE SETUP
             // builder.Entity<Release>().Property(r => r.Id).UseHiLo();
             // builder.Entity<Release>().Property(r => r.IsPublic).HasDefaultValue(true);
