@@ -61,7 +61,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 context.SaveChanges();
             }
 
-            if (context.ReleaseNotes.Any())
+            if (!context.ReleaseNotes.Any())
             {
                 const string htmlDummy1 =
                     "<div><div>Fixed the shangala bangala<br></div><div><img src=\"https://dev.azure.com/ReleaseNoteSystem/399f705f-cd58-45f2-becb-f890cb50f774/_apis/wit/attachments/9a3d3458-8831-4eb4-af7d-adf0269c8e32?fileName=image.png\" alt=Image></div><div><br></div><div><ol><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver Mye</li><li>Lars Skriver MyeLars <b>Skriver</b> MyeLars <i>Skriver Mye</i><br></li></ol></div><span>&#128521;</span><span>&#128515;</span></div><blockquote style=\"margin-top:0px;margin-bottom:0px;\"><blockquote style=\"margin-top:0px;margin-bottom:0px;\"><blockquote style=\"margin-top:0px;margin-bottom:0px;\"><div>fafaas</div></blockquote></blockquote><div>Lars Skriver Mye</div></blockquote><div><br></div><div><br></div><div><h1>Lars Skriver Mye<br></h1></div><div><h2></h2></div>";
@@ -95,6 +95,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         ClosedDate = new DateTime(2005, 7, 11, 23, 0, 59, 4)
                     }
                 };
+                context.ReleaseNotes.AddRange(releaseNotes);
+                context.SaveChanges();
             }
 
             // If there are no articles

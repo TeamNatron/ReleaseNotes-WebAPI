@@ -6,7 +6,6 @@ namespace ReleaseNotes_WebAPI.Domain.Models
 {
     public class ReleaseNote
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; }
 
         public Release Release { get; set; }
