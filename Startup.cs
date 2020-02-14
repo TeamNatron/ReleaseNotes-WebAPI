@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ReleaseNotes_WebAPI.API.Services;
 using ReleaseNotes_WebAPI.Domain.Models.Auth.Token;
@@ -73,9 +75,14 @@ namespace ReleaseNotes_WebAPI
             var signingConfigurations = new SigningConfigurations();
             services.AddSingleton(signingConfigurations);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(jwtBearerOptions =>
                 {
+                    jwtBearerOptions.RequireHttpsMetadata = false;
                     jwtBearerOptions.SaveToken = true;
                     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters()
                     {
@@ -87,34 +94,34 @@ namespace ReleaseNotes_WebAPI
                         IssuerSigningKey = signingConfigurations.Key,
                         ClockSkew = TimeSpan.Zero
                     };
-                    // jwtBearerOptions.Events = new JwtBearerEvents()
-                    // {
-                    //     OnChallenge = context =>
-                    //     {
-                    //         Console.WriteLine("OnChallenge: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnAuthenticationFailed = context =>
-                    //     {
-                    //         Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnForbidden = context =>
-                    //     {
-                    //         Console.WriteLine("OnForbidden: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnMessageReceived = context =>
-                    //     {
-                    //         Console.WriteLine("OnMessageReceived: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     },
-                    //     OnTokenValidated = context =>
-                    //     {
-                    //         Console.WriteLine("OnTokenValidated: " + context.Response.StatusCode);
-                    //         return Task.CompletedTask;
-                    //     }
-                    // };
+                    jwtBearerOptions.Events = new JwtBearerEvents()
+                    {
+                        OnChallenge = context =>
+                        {
+                            Console.WriteLine("OnChallenge: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+                            return Task.CompletedTask;
+                        },
+                        OnForbidden = context =>
+                        {
+                            Console.WriteLine("OnForbidden: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        },
+                        OnMessageReceived = context =>
+                        {
+                            Console.WriteLine("OnMessageReceived: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = context =>
+                        {
+                            Console.WriteLine("OnTokenValidated: " + context.Response.StatusCode);
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             // May be wrong to use current parameter, was added to resolve error
@@ -129,6 +136,7 @@ namespace ReleaseNotes_WebAPI
         {
             if (env.IsDevelopment())
             {
+                IdentityModelEventSource.ShowPII = true;
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -140,9 +148,12 @@ namespace ReleaseNotes_WebAPI
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+            
             app.UseCors(MyAllowSpecificOrigins); 
+            
+            app.UseAuthentication();            
+            
             app.UseAuthorization();
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

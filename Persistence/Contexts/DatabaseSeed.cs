@@ -108,29 +108,25 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     {
                         Id = 100, ReleaseId = 100, Uri = "article001.rtf", Title = "Release 1.2 - AR",
                         Description =
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu.",
-                        Date = DateTime.Now
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
                     },
                     new Article
                     {
                         Id = 101, ReleaseId = 101, Uri = "article002.rtf", Title = "Release 2.2 - VR",
                         Description =
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu.",
-                        Date = DateTime.UtcNow
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
                     },
                     new Article
                     {
                         Id = 102, ReleaseId = 102, Uri = "article003.rtf", Title = "Release 3.2 - Parachute",
                         Description =
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu.",
-                        Date = DateTime.Today
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
                     },
                     new Article
                     {
                         Id = 103, ReleaseId = 103, Uri = "article004.rtf", Title = "Release 4.2 - Bazooka",
                         Description =
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu.",
-                        Date = DateTime.Today
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
                     }
                 };
                 context.Articles.AddRange(articles);
@@ -142,7 +138,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             {
                 var roles = new List<Role>
                 {
-                    new Role {Name = ERole.Common.ToString()},
                     new Role {Name = ERole.Administrator.ToString()}
                 };
 
@@ -163,12 +158,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 {
                     RoleId = context.Roles.SingleOrDefault(
                         r => r.Name == ERole.Administrator.ToString()).Id
-                });
-
-                users[1].UserRoles.Add(new UserRole
-                {
-                    RoleId = context.Roles.SingleOrDefault(
-                        r => r.Name == ERole.Common.ToString()).Id
                 });
 
                 context.Users.AddRange(users);

@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Extensions;
 using ReleaseNotes_WebAPI.Resources.Auth;
 
 namespace ReleaseNotes_WebAPI.Controllers
@@ -20,6 +22,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> CreateUserAsync([FromBody] UserCredentialResource userCredentials)
         {
             if (!ModelState.IsValid)
@@ -29,7 +32,7 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var user = _mapper.Map<UserCredentialResource, User>(userCredentials);
 
-            var response = await _userService.CreateUserAsync(user, ERole.Common);
+            var response = await _userService.CreateUserAsync(user, ERole.Administrator);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
