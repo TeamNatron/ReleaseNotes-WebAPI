@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ReleaseNotes_WebAPI.Domain.Models;
+using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Resources.Auth;
 
 namespace ReleaseNotes_WebAPI.Controllers
 {
@@ -26,6 +30,27 @@ namespace ReleaseNotes_WebAPI.Controllers
             var resources = _mapper.Map<IEnumerable<ProductResource>>(products);
 
             return resources;
+        }
+        
+        [HttpPost]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> CreateProductAsync([FromBody] SaveProductResource productResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var product = _mapper.Map<SaveProductResource, Product>(productResource);
+
+            var response = await _productService.SaveAsync(product);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+
+            var userResource = _mapper.Map<Product, ProductResource>(response.Product);
+            return Ok(userResource);
         }
     }
 }
