@@ -1,14 +1,12 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
+using ReleaseNotes_WebAPI.Resources;
 
 namespace ReleaseNotes_WebAPI.Domain.Services
 {
-    public interface IProductService
+    public interface IReleaseService
     {
-        Task<IEnumerable<Product>> ListAsync();
-
-        Task<ProductResponse> SaveAsync(Product product);
+        Task<ReleaseResponse> SaveAsync(SaveReleaseResource release);
     }
 }

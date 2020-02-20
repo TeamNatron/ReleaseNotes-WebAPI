@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,8 +15,10 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         
         public ProductVersion ProductVersion { get; set; }
         
-        public Article Article { get; set; }
+        public string Title { get; set; }
         
         public bool IsPublic { get; set; }
+        
+        public ICollection<ReleaseNote> ReleaseNotes { get; set; } = new Collection<ReleaseNote>();
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotes_WebAPI.Domain.Models;
@@ -17,6 +18,16 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
             return await _context.Products
                 .ToListAsync();
+        }
+
+        public async Task AddAsync(Product product)
+        {
+            await _context.Products.AddAsync(product);
+        }
+
+        public async Task<Product> FindByNameAsync(string productName)
+        {
+            return await _context.Products.Where(p => p.Name == productName).SingleOrDefaultAsync();
         }
     }
 }
