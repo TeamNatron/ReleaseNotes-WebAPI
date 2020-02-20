@@ -31,7 +31,7 @@ namespace ReleaseNotes_WebAPI.Services
             if (existingReleaseNote == null)
             {
                 // TODO: improve error handling
-                return existingReleaseNote();
+                return existingReleaseNote;
             }
 
             try
@@ -59,7 +59,7 @@ namespace ReleaseNotes_WebAPI.Services
             {
                 existingReleaseNote.Title = note.Title;
                 existingReleaseNote.Ingress = note.Ingress;
-                existingReleaseNote.DetialedView = note.DetailedView;
+                existingReleaseNote.DetailedView = note.DetailedView;
                 existingReleaseNote.AuthorEmail = note.AuthorEmail;
                 existingReleaseNote.AuthorName = note.AuthorName;
                 existingReleaseNote.IsPublic = note.IsPublic;

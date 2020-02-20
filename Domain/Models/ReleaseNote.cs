@@ -12,7 +12,7 @@ namespace ReleaseNotes_WebAPI.Domain.Models
 
         public string Ingress { get; set; }
 
-        public string DetialedView { get; set; }
+        public string DetailedView { get; set; }
 
         public int WorkItemId { get; set; }
 
@@ -23,9 +23,6 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         public string WorkItemDescriptionHtml { get; set; }
 
         public string WorkItemTitle { get; set; }
-
-        //[StringLength(512)]u
-        //public string Comment { get; set; }
 
         public DateTime ClosedDate { get; set; }
 
