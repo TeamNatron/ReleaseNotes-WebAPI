@@ -1,18 +1,11 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using ReleaseNotes_WebAPI.Domain.Models;
 
-namespace ReleaseNotes_WebAPI.Domain.Models
+namespace ReleaseNotes_WebAPI.Domain.Services.Communication
 {
-    public class ReleaseNote
+    public class SaveReleaseNoteResource
     {
-        public int Id { get; set; }
-
-        public string Title { get; set; }
-
-        public string Ingress { get; set; }
-
-        public string DetialedView { get; set; }
+        public Release Release { get; set; }
 
         public int WorkItemId { get; set; }
 
@@ -24,7 +17,7 @@ namespace ReleaseNotes_WebAPI.Domain.Models
 
         public string WorkItemTitle { get; set; }
 
-        //[StringLength(512)]u
+        //[StringLength(512)]
         //public string Comment { get; set; }
 
         public DateTime ClosedDate { get; set; }

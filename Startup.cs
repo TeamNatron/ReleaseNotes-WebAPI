@@ -31,7 +31,9 @@ namespace ReleaseNotes_WebAPI
         }
 
         public IConfiguration Configuration { get; }
+
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -41,15 +43,12 @@ namespace ReleaseNotes_WebAPI
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
-            
+
             // Enable CORS
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    });
+                    builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
 
             services.AddSingleton<IPasswordHasher, Security.Hashing.PasswordHasher>();
@@ -59,6 +58,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IReleaseNoteRepository, ReleaseNoteRepository>();
 
             // BIND ALL SERVICES
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -66,7 +66,8 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
-            
+            services.AddScoped<IReleaseNoteService, ReleaseNoteService>();
+
             // CONFIGURE AUTHENTICATION AND TOKEN OPTIONS
             services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));
             var tokenOptions = Configuration.GetSection("TokenOptions")
@@ -148,11 +149,11 @@ namespace ReleaseNotes_WebAPI
             // app.UseHttpsRedirection();
 
             app.UseRouting();
-            
-            app.UseCors(MyAllowSpecificOrigins); 
-            
-            app.UseAuthentication();            
-            
+
+            app.UseCors(MyAllowSpecificOrigins);
+
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
