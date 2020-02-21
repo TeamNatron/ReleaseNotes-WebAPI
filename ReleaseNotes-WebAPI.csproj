@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <Compile Remove="Domain\Services\Communication\SaveReleaseNoteResource.cs" />
+      <Compile Remove="Utilities\ReleaseNoteParameters.cs" />
     </ItemGroup>
 
 </Project>

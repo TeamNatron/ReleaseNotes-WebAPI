@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
@@ -30,7 +31,8 @@ namespace ReleaseNotes_WebAPI.Services
             var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
             if (existingReleaseNote == null)
             {
-                // TODO: improve error handling
+                
+                //return BadRequestResult;
                 return existingReleaseNote;
             }
 

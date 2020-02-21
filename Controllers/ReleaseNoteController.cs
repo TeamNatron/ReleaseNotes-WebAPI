@@ -24,6 +24,7 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         // GET: api/releasenote
         [HttpGet]
+        [Authorize(Roles="Administrator")]
         public async Task<IEnumerable<ReleaseNoteResource>> GetAllAsync()
         {
             var releaseNotes = await _releaseNoteService.ListAsync();
@@ -33,6 +34,7 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         // GET: api/releasenote/{id}
         [HttpGet("{id}")]
+        [Authorize(Roles="Administrator")]
         public async Task<ActionResult<ReleaseNoteResource>> GetSpecificReleaseNote(int id)
         {
             var releaseNote = await _releaseNoteService.GetReleaseNote(id);

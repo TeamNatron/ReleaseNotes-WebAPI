@@ -8,6 +8,8 @@
         public string DetailedView { get; set; }
         public string AuthorName { get; set; }
         public string AuthorEmail { get; set; }
+
+        public string WorkItemDescriptionHtml { get; set; }
         public string WorkItemTitle { get; set; }
         public bool IsPublic { get; set; }
     }
