@@ -12,7 +12,7 @@ namespace ReleaseNotes_WebAPI.Domain.Models
 
         public string Ingress { get; set; }
 
-        public string DetailedView { get; set; }
+        public string Description { get; set; }
 
         public int WorkItemId { get; set; }
 

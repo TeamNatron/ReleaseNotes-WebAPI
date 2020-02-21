@@ -43,9 +43,9 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        public async Task<ReleaseNoteResponse> UpdateReleaseNote(EditReleaseNoteResource note)
+        public async Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note)
         {
-            var existingReleaseNote = await _releaseNoteRepository.FindAsync(note.Id);
+            var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
             if (existingReleaseNote == null)
             {
                 return new ReleaseNoteResponse("Release noten finnes ikke!");
@@ -55,11 +55,8 @@ namespace ReleaseNotes_WebAPI.Services
             {
                 existingReleaseNote.Title = note.Title;
                 existingReleaseNote.Ingress = note.Ingress;
-                existingReleaseNote.DetailedView = note.DetailedView;
-                existingReleaseNote.AuthorEmail = note.AuthorEmail;
-                existingReleaseNote.AuthorName = note.AuthorName;
+                existingReleaseNote.Description = note.Description;
                 existingReleaseNote.IsPublic = note.IsPublic;
-                existingReleaseNote.WorkItemTitle = note.WorkItemTitle;
                 _releaseNoteRepository.UpdateReleaseNote(existingReleaseNote);
                 await _unitOfWork.CompleteAsync();
                 return new ReleaseNoteResponse(existingReleaseNote);

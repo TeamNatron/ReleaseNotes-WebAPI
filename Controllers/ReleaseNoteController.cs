@@ -48,17 +48,16 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(releaseNote);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<ActionResult<ReleaseNoteResource>> UpdateReleaseNoteAsync(
-            [FromBody] EditReleaseNoteResource resource)
+        public async Task<ActionResult<ReleaseNoteResource>> UpdateReleaseNoteAsync(int id, [FromBody] EditReleaseNoteResource resource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorMessages());
             }
 
-            var result = await _releaseNoteService.UpdateReleaseNote(resource);
+            var result = await _releaseNoteService.UpdateReleaseNote(id, resource);
 
             if (!result.Success)
             {

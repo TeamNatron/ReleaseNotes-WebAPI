@@ -12,6 +12,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 
         Task<ReleaseNoteResponse> GetReleaseNote(int id);
 
-        Task<ReleaseNoteResponse> UpdateReleaseNote(EditReleaseNoteResource note);
+        Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note);
     }
 }
