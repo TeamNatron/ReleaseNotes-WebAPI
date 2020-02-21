@@ -9,7 +9,6 @@ using ReleaseNotes_WebAPI.Resources;
 
 namespace ReleaseNotesWebAPI.Services
 {
-
     public class ReleaseService : IReleaseService
     {
         private readonly IReleaseRepository _releaseRepository;
@@ -27,15 +26,17 @@ namespace ReleaseNotesWebAPI.Services
         {
             var existingRelease = await _releaseRepository.FindByIdAsync(id);
 
-            if ( existingRelease == null)
+            if (existingRelease == null)
             {
                 return new ReleaseResponse("Release med id " + id + " ikke funnet i databasen.");
             }
 
-            existingRelease.Title = resource.Title;
-            existingRelease.IsPublic = resource.IsPublic;
-            existingRelease.ReleaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
-            existingRelease.ProductVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId);
+            if (resource.Title != null) existingRelease.Title = resource.Title;
+            if (resource.IsPublic != null) existingRelease.IsPublic = resource.IsPublic;
+            if (resource.ReleaseNotesId != null)
+                existingRelease.ReleaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
+            if (resource.ProductVersionId > 0 && resource.ProductVersionId != existingRelease.ProductVersionId)
+                existingRelease.ProductVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId);
 
             try
             {
@@ -58,7 +59,8 @@ namespace ReleaseNotesWebAPI.Services
 
                 if (existingRelease != null)
                 {
-                    return new ReleaseResponse("Release med navnet: " + resource.Title + " finnes allerede i databasen.");
+                    return new ReleaseResponse(
+                        "Release med navnet: " + resource.Title + " finnes allerede i databasen.");
                 }
 
                 Release release;
