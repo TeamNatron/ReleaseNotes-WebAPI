@@ -13,13 +13,11 @@ namespace ReleaseNotesWebAPI.Services
     {
         private readonly IReleaseRepository _releaseRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         public ReleaseService(IReleaseRepository releaseRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _releaseRepository = releaseRepository;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
         public async Task<ReleaseResponse> UpdateAsync(int id, SaveReleaseResource resource)
