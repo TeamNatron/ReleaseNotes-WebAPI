@@ -10,7 +10,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     {
         Task<IEnumerable<ReleaseNote>> ListAsync();
 
-        Task<ReleaseNote> GetReleaseNote(int id);
+        Task<ReleaseNoteResponse> GetReleaseNote(int id);
 
         Task<ReleaseNoteResponse> UpdateReleaseNote(EditReleaseNoteResource note);
     }

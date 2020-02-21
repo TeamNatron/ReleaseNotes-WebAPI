@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Extensions;
 using ReleaseNotes_WebAPI.Resources;
 
@@ -24,7 +25,7 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         // GET: api/releasenote
         [HttpGet]
-        [Authorize(Roles="Administrator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IEnumerable<ReleaseNoteResource>> GetAllAsync()
         {
             var releaseNotes = await _releaseNoteService.ListAsync();
@@ -34,22 +35,22 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         // GET: api/releasenote/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles="Administrator")]
-        public async Task<ActionResult<EditReleaseNoteResource>> GetSpecificReleaseNote(int id)
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<ReleaseNoteResource>> GetSpecificReleaseNote(int id)
         {
-            var releaseNote = await _releaseNoteService.GetReleaseNote(id);
-            if (releaseNote == null)
+            var releaseNoteResponse = await _releaseNoteService.GetReleaseNote(id);
+            if (releaseNoteResponse == null)
             {
                 return NotFound();
             }
 
-            var resources = _mapper.Map<ReleaseNote, EditReleaseNoteResource>(releaseNote);
-            return resources;
+            var releaseNote = _mapper.Map<ReleaseNote, ReleaseNoteResource>(releaseNoteResponse.ReleaseNote);
+            return Ok(releaseNote);
         }
 
         [HttpPut]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<ActionResult<EditReleaseNoteResource>> UpdateReleaseNoteAsync(
+        public async Task<ActionResult<ReleaseNoteResource>> UpdateReleaseNoteAsync(
             [FromBody] EditReleaseNoteResource resource)
         {
             if (!ModelState.IsValid)
@@ -64,7 +65,7 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return BadRequest(result.Message);
             }
 
-            var releaseNoteResource = _mapper.Map<ReleaseNote, EditReleaseNoteResource>(result.ReleaseNote);
+            var releaseNoteResource = _mapper.Map<ReleaseNote, ReleaseNoteResource>(result.ReleaseNote);
             return Ok(releaseNoteResource);
         }
     }

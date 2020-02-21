@@ -14,8 +14,6 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
 
         void UpdateReleaseNote(ReleaseNote note);
 
-        void Update(ReleaseNote releaseNote);
-
         void Remove(ReleaseNote releaseNote);
     }
 }

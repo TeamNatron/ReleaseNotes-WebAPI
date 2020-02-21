@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
@@ -26,22 +25,21 @@ namespace ReleaseNotes_WebAPI.Services
             return await _releaseNoteRepository.ListAsync();
         }
 
-        public async Task<ReleaseNote> GetReleaseNote(int id)
+        public async Task<ReleaseNoteResponse> GetReleaseNote(int id)
         {
             var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
             if (existingReleaseNote == null)
             {
-                return existingReleaseNote;
+                return new ReleaseNoteResponse("Release noten eksisterer ikke!");
             }
 
             try
             {
-                return existingReleaseNote;
+                return new ReleaseNoteResponse(existingReleaseNote);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Det oppsto en feil: {e.Message}");
-                return existingReleaseNote;
+                return new ReleaseNoteResponse($"Det oppsto en feil: {e.Message}");
             }
         }
 
@@ -62,7 +60,7 @@ namespace ReleaseNotes_WebAPI.Services
                 existingReleaseNote.AuthorName = note.AuthorName;
                 existingReleaseNote.IsPublic = note.IsPublic;
                 existingReleaseNote.WorkItemTitle = note.WorkItemTitle;
-                _releaseNoteRepository.Update(existingReleaseNote);
+                _releaseNoteRepository.UpdateReleaseNote(existingReleaseNote);
                 await _unitOfWork.CompleteAsync();
                 return new ReleaseNoteResponse(existingReleaseNote);
             }

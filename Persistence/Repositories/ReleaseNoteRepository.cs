@@ -34,11 +34,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             _context.ReleaseNotes.Update(note);
         }
 
-        public void Update(ReleaseNote releaseNote)
-        {
-            _context.ReleaseNotes.Update(releaseNote);
-        }
-
         public void Remove(ReleaseNote releaseNote)
         {
             _context.ReleaseNotes.Remove(releaseNote);
