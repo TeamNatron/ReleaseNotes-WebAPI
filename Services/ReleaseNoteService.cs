@@ -31,15 +31,11 @@ namespace ReleaseNotes_WebAPI.Services
             var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
             if (existingReleaseNote == null)
             {
-                
-                //return BadRequestResult;
                 return existingReleaseNote;
             }
 
             try
             {
-                // the note exists, return it
-
                 return existingReleaseNote;
             }
             catch (Exception e)

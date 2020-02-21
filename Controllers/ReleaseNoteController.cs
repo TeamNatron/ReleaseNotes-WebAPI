@@ -35,7 +35,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         // GET: api/releasenote/{id}
         [HttpGet("{id}")]
         [Authorize(Roles="Administrator")]
-        public async Task<ActionResult<ReleaseNoteResource>> GetSpecificReleaseNote(int id)
+        public async Task<ActionResult<EditReleaseNoteResource>> GetSpecificReleaseNote(int id)
         {
             var releaseNote = await _releaseNoteService.GetReleaseNote(id);
             if (releaseNote == null)
@@ -43,13 +43,13 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return NotFound();
             }
 
-            var resources = _mapper.Map<ReleaseNote, ReleaseNoteResource>(releaseNote);
+            var resources = _mapper.Map<ReleaseNote, EditReleaseNoteResource>(releaseNote);
             return resources;
         }
 
         [HttpPut]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<ActionResult<ReleaseNoteResource>> UpdateReleaseNoteAsync(
+        public async Task<ActionResult<EditReleaseNoteResource>> UpdateReleaseNoteAsync(
             [FromBody] EditReleaseNoteResource resource)
         {
             if (!ModelState.IsValid)
