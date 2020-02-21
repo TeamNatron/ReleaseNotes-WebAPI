@@ -38,5 +38,21 @@ namespace ReleaseNotes_WebAPI.Controllers
             var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
             return Ok(releaseResource);
         }
+        
+        [HttpPut("{id}")]
+        [Authorize(Roles="Administrator")]
+        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveReleaseResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+            var result = await _releaseService.UpdateAsync(id, resource);
+
+            if (!result.Success) return BadRequest(result.Message);
+
+            var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
+            return Ok(releaseResource);
+        }
     }
 }
