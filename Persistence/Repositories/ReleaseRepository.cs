@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Persistence.Contexts;
+using ReleaseNotes_WebAPI.Resources;
 
 namespace ReleaseNotes_WebAPI.Persistence.Repositories
 {
@@ -18,7 +19,18 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
             await _context.Releases.AddAsync(release);
         }
-        
+
+        public void Update(Release release)
+        {
+            _context.Releases.Update(release);
+        }
+
+        public async Task<Release> FindByIdAsync(int id)
+        {
+            return await _context.Releases.FindAsync(id);
+        }
+
+
         public async Task<Release> FindByNameAsync(string releaseName)
         {
             return await _context.Releases.Where(r => r.Title == releaseName).SingleOrDefaultAsync();

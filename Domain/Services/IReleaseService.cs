@@ -8,5 +8,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     public interface IReleaseService
     {
         Task<ReleaseResponse> SaveAsync(SaveReleaseResource release);
+        Task<ReleaseResponse> UpdateAsync(int id, SaveReleaseResource release);
     }
 }
