@@ -126,7 +126,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     {
                         Id = 103, ReleaseId = 103, Uri = "article004.rtf", Title = "Release 4.2 - Bazooka",
                         Description =
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu."
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nunc felis, euismod nec tristique eu, egestas ac risus. Mauris rutrum, nibh malesuada sollicitudin tincidunt, orci augue egestas magna, vitae ultricies risus sem a arcu.",
+                        Date = new DateTime(2005, 7, 11, 23, 0, 59, 4)
                     }
                 };
                 context.Articles.AddRange(articles);
