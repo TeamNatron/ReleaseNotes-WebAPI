@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
@@ -11,7 +13,9 @@ namespace ReleaseNotes_WebAPI.Mapping
         public ResourceToModelProfile()
         {
             CreateMap<UserCredentialResource, User>();
-
+            CreateMap<ReleaseNoteResource, ReleaseNote>();
+            CreateMap<EditReleaseNoteResource, ReleaseNote>();
+            CreateMap<SaveReleaseResource, Release>();
             CreateMap<SaveProductResource, Product>();
         }
     }

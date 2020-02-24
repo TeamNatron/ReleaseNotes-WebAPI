@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using ReleaseNotes_WebAPI.API.Services;
 using ReleaseNotes_WebAPI.Domain.Models.Auth.Token;
 using ReleaseNotes_WebAPI.Domain.Repositories;
@@ -19,6 +20,7 @@ using ReleaseNotes_WebAPI.Persistence.Contexts;
 using ReleaseNotes_WebAPI.Persistence.Repositories;
 using ReleaseNotes_WebAPI.Security.Tokens;
 using ReleaseNotes_WebAPI.Services;
+using ReleaseNotesWebAPI.Services;
 using TokenHandler = ReleaseNotes_WebAPI.Security.Tokens.TokenHandler;
 
 namespace ReleaseNotes_WebAPI
@@ -31,7 +33,9 @@ namespace ReleaseNotes_WebAPI
         }
 
         public IConfiguration Configuration { get; }
+
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -41,15 +45,12 @@ namespace ReleaseNotes_WebAPI
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
-            
+
             // Enable CORS
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    });
+                    builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
 
             services.AddSingleton<IPasswordHasher, Security.Hashing.PasswordHasher>();
@@ -59,6 +60,8 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IReleaseNoteRepository, ReleaseNoteRepository>();
+            services.AddScoped<IReleaseRepository, ReleaseRepository>();
 
             // BIND ALL SERVICES
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -66,7 +69,10 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
-            
+            services.AddScoped<IReleaseNoteService, ReleaseNoteService>();
+
+            services.AddScoped<IReleaseService, ReleaseService>();
+
             // CONFIGURE AUTHENTICATION AND TOKEN OPTIONS
             services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));
             var tokenOptions = Configuration.GetSection("TokenOptions")
@@ -128,7 +134,8 @@ namespace ReleaseNotes_WebAPI
             services.AddAutoMapper(typeof(Startup));
 
             // ADD ALL CONTROLLERS (ENDPOINTS)
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(
+                options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -148,11 +155,11 @@ namespace ReleaseNotes_WebAPI
             // app.UseHttpsRedirection();
 
             app.UseRouting();
-            
-            app.UseCors(MyAllowSpecificOrigins); 
-            
-            app.UseAuthentication();            
-            
+
+            app.UseCors(MyAllowSpecificOrigins);
+
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
