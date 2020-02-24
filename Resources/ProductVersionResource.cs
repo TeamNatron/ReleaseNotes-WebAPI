@@ -5,5 +5,7 @@ namespace ReleaseNotes_WebAPI.Resources
         public int Id { get; set; }
         
         public ProductResource Product { get; set; }
+        
+        public string Version { get; set; }
     }
 }
