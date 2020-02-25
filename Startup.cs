@@ -62,6 +62,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IReleaseNoteRepository, ReleaseNoteRepository>();
             services.AddScoped<IReleaseRepository, ReleaseRepository>();
+            services.AddScoped<IProductVersionRepository, ProductVersionRepository>();
 
             // BIND ALL SERVICES
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -70,8 +71,8 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IReleaseNoteService, ReleaseNoteService>();
-
             services.AddScoped<IReleaseService, ReleaseService>();
+            services.AddScoped<IProductVersionService, ProductVersionService>();
 
             // CONFIGURE AUTHENTICATION AND TOKEN OPTIONS
             services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));

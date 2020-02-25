@@ -38,10 +38,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             {
                 var productVersions = new List<ProductVersion>
                 {
-                    new ProductVersion {Id = 100, ProductId = 100},
-                    new ProductVersion {Id = 101, ProductId = 101},
-                    new ProductVersion {Id = 102, ProductId = 102},
-                    new ProductVersion {Id = 103, ProductId = 103}
+                    new ProductVersion {Id = 100, ProductId = 100, Version = "2.1"},
+                    new ProductVersion {Id = 101, ProductId = 101, Version = "5.3"},
+                    new ProductVersion {Id = 102, ProductId = 102, Version = "4.2"},
+                    new ProductVersion {Id = 103, ProductId = 103, Version = "2.4"}
                 };
                 context.ProductVersions.AddRange(productVersions);
                 context.SaveChanges();
