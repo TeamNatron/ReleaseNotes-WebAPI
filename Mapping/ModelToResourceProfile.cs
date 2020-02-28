@@ -28,7 +28,6 @@ namespace ReleaseNotes_WebAPI.Mapping
                     opt => opt.MapFrom(
                         a => a.Expiration));
 
-            CreateMap<Article, ArticleResource>();
             CreateMap<Release, ReleaseResource>();
             CreateMap<ProductVersion, ProductVersionResource>();
             CreateMap<Product, ProductResource>();

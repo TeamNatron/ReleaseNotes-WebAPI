@@ -9,7 +9,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<Article> Articles { get; set; }
         public DbSet<Release> Releases { get; set; }
         public DbSet<ReleaseNote> ReleaseNotes { get; set; }
         public DbSet<ProductVersion> ProductVersions { get; set; }
@@ -25,7 +24,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
 
             builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
             builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
-            builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             // RELEASE SETUP
             // builder.Entity<Release>().Property(r => r.Id).UseHiLo();
             // builder.Entity<Release>().Property(r => r.IsPublic).HasDefaultValue(true);

@@ -58,7 +58,6 @@ namespace ReleaseNotes_WebAPI
 
             // BIND ALL REPOS
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IReleaseNoteRepository, ReleaseNoteRepository>();
             services.AddScoped<IReleaseRepository, ReleaseRepository>();
@@ -67,7 +66,6 @@ namespace ReleaseNotes_WebAPI
             // BIND ALL SERVICES
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IReleaseNoteService, ReleaseNoteService>();
