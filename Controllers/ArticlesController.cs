@@ -24,7 +24,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ArticleResource>> GetAllAsync([FromQuery] ArticlesParameters queryParameters)
+        public async Task<IEnumerable<ArticleResource>> GetAllAsync([FromQuery] ReleasesParameters queryParameters)
         {
             var articles = await _articleService.ListAsync(queryParameters);
             var resource = _mapper.Map<IEnumerable<ArticleResource>>(articles);

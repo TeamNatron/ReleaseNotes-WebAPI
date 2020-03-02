@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Domain.Repositories
 {
     public interface IReleaseRepository
     {
+        Task<IEnumerable<Release>> ListAsync(ReleasesParameters queryParameters);
         Task AddAsync(Release release);
 
         void Update(Release release);

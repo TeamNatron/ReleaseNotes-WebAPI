@@ -8,6 +8,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 {
     public interface IArticleService
     {
-        Task<IEnumerable<Article>> ListAsync(ArticlesParameters queryParameters);
+        Task<IEnumerable<Article>> ListAsync(ReleasesParameters queryParameters);
     }
 }

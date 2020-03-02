@@ -17,7 +17,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
         }
 
-        public async Task<IEnumerable<Article>> ListAsync(ArticlesParameters queryParameters)
+        public async Task<IEnumerable<Article>> ListAsync(ReleasesParameters queryParameters)
         {
             IQueryable<Article> articlesQuery = _context.Articles
                 .Include(a => a.Release)
