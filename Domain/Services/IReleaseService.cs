@@ -9,5 +9,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     {
         Task<ReleaseResponse> SaveAsync(SaveReleaseResource release);
         Task<ReleaseResponse> UpdateAsync(int id, SaveReleaseResource release);
+        Task<ReleaseResponse> getRelease(int id);
     }
 }

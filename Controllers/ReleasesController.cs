@@ -54,5 +54,20 @@ namespace ReleaseNotes_WebAPI.Controllers
             var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
             return Ok(releaseResource);
         }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<ReleaseResource>> GetAsync(int id)
+        {
+            var releaseResponse = await _releaseService.getRelease(id);
+            if (releaseResponse == null)
+            {
+                return NotFound();
+            }
+
+            var release = _mapper.Map<Release, ReleaseResource>(releaseResponse.Release);
+            return Ok(release);
+
+        }
     }
 }
