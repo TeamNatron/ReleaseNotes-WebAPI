@@ -58,9 +58,9 @@ namespace ReleaseNotes_WebAPI.Controllers
         }
         
         [HttpGet]
-        public async Task<IEnumerable<ReleaseResource>> GetAllAsync([FromQuery] ReleasesParameters queryParameters)
+        public async Task<IEnumerable<ReleaseResource>> ListAsync([FromQuery] ReleasesParameters queryParameters)
         {
-            var result = await _releaseService.GetAllAsync(queryParameters);
+            var result = await _releaseService.ListAsync(queryParameters);
             var releasesResource = _mapper.Map<IEnumerable<ReleaseResource>>(result);
             return releasesResource;
         }

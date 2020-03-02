@@ -51,7 +51,7 @@ namespace ReleaseNotesWebAPI.Services
             }
         }
 
-        public async Task<IEnumerable<Release>> GetAllAsync(ReleasesParameters queryParameters)
+        public async Task<IEnumerable<Release>> ListAsync(ReleasesParameters queryParameters)
         {
             return await _releaseRepository.ListAsync(queryParameters);
         }

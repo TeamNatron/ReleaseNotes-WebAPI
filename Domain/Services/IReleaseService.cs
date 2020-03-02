@@ -11,6 +11,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     {
         Task<ReleaseResponse> SaveAsync(SaveReleaseResource release);
         Task<ReleaseResponse> UpdateAsync(int id, SaveReleaseResource release);
-        Task<IEnumerable<Release>> GetAllAsync(ReleasesParameters queryParameters);
+        Task<IEnumerable<Release>> ListAsync(ReleasesParameters queryParameters);
     }
 }
