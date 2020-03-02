@@ -46,3 +46,4 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 /publickey.txt
+/TestContainer/node_modules/
