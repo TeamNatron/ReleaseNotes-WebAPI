@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using ReleaseNotes_WebAPI.Domain.Models;
@@ -6,6 +7,7 @@ using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotesWebAPI.Services
 {
@@ -47,6 +49,11 @@ namespace ReleaseNotesWebAPI.Services
             {
                 return new ReleaseResponse($"En feil oppsto ved oppdatering av en release: {e.Message}");
             }
+        }
+
+        public async Task<IEnumerable<Release>> GetAllAsync(ReleasesParameters queryParameters)
+        {
+            return await _releaseRepository.ListAsync(queryParameters);
         }
 
         public async Task<ReleaseResponse> SaveAsync(SaveReleaseResource resource)
