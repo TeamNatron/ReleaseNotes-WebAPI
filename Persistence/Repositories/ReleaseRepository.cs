@@ -39,6 +39,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
                             break;
                     }
                 }
+
                 return await releasesQuery
                     .Include(r => r.ReleaseNotes)
                     .Include(r => r.ProductVersion)
@@ -63,7 +64,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
                 .Include(r => r.ReleaseNotes)
                 .SingleOrDefaultAsync(r => r.Id == id);
         }
-
 
         public async Task<Release> FindByNameAsync(string releaseName)
         {

@@ -22,6 +22,24 @@ namespace ReleaseNotesWebAPI.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<ReleaseResponse> GetRelease(int id)
+        {
+            var existingRelease = await _releaseRepository.FindByIdAsync(id);
+            if (existingRelease == null)
+            {
+                return new ReleaseResponse("Releasen eksisterer ikke!");
+            }
+
+            try
+            {
+                return new ReleaseResponse(existingRelease);
+            }
+            catch (Exception e)
+            {
+                return new ReleaseResponse($"Det oppsto en feil: {e.Message}");
+            }
+        }
+
         public async Task<ReleaseResponse> UpdateAsync(int id, SaveReleaseResource resource)
         {
             var existingRelease = await _releaseRepository.FindByIdAsync(id);
