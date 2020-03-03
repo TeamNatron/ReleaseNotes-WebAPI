@@ -74,7 +74,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new ReleaseNote
                     {
                         WorkItemId = 20, AuthorName = "Ronnay Voudrait", AuthorEmail = "ronnay@natron.no",
-                        Title = "Corona i Kina", Ingress = "Det er nå påvisst masse corona i Kina",
+                        Title = "Corona i Kina", Ingress = "Det er nå påvist masse corona i Kina",
                         Description = "Ikke bra, sier forskerer", WorkItemDescriptionHtml = htmlDummy1,
                         WorkItemTitle = "Test item please ignore",
                         ClosedDate = new DateTime(2001, 7, 11, 23, 5, 12, 23)

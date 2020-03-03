@@ -70,14 +70,13 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var release = _mapper.Map<Release, ReleaseResource>(releaseResponse.Release);
             return Ok(release);
+                [HttpGet]
 
-
-        [HttpGet]
-        public async Task<IEnumerable<ReleaseResource>> ListAsync([FromQuery] ReleasesParameters queryParameters)
-        {
-            var result = await _releaseService.ListAsync(queryParameters);
-            var releasesResource = _mapper.Map<IEnumerable<ReleaseResource>>(result);
-            return releasesResource;
+            public async Task<IEnumerable<ReleaseResource>> ListAsync([FromQuery] ReleasesParameters queryParameters)
+            {
+                var result = await _releaseService.ListAsync(queryParameters);
+                var releasesResource = _mapper.Map<IEnumerable<ReleaseResource>>(result);
+                return releasesResource;
+            }
         }
     }
-}

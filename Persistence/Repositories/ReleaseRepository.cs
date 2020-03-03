@@ -39,6 +39,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
                             break;
                     }
                 }
+
                 return await releasesQuery
                     .Include(r => r.ReleaseNotes)
                     .Include(r => r.ProductVersion)
