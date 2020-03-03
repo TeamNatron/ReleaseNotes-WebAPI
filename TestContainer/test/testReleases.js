@@ -19,7 +19,7 @@ const init = () => {
   accessToken = TokenHandler.getAccessToken();
 };
 
-describe("Releases", () => {
+describe("Releases POST", () => {
   before(() => init());
 
   it("Should return unauthorized", done => {
@@ -58,6 +58,24 @@ describe("Releases", () => {
       .send(CORRECT_INPUT_RELEASE)
       .end(err => {
         err.should.have.status(400);
+        done();
+      });
+  });
+});
+
+describe("Releases GET", () => {
+  before(() => init());
+  it("Should return all releases", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get(address)
+      .end((err, res) => {
+        console.log(["RECEIVED DATA: ", res.text]);
+        res.should.have.status(200);
+        res.body.should.be.a("array").that.is.not.empty;
+        res.body[0].productVersion.should.exist;
+        res.body[0].releaseNotes.should.exist;
+        res.body[0].title.should.exist;
         done();
       });
   });
