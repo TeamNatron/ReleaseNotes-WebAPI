@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Extensions;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Controllers
 {
@@ -68,6 +70,14 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var release = _mapper.Map<Release, ReleaseResource>(releaseResponse.Release);
             return Ok(release);
+
+
+        [HttpGet]
+        public async Task<IEnumerable<ReleaseResource>> ListAsync([FromQuery] ReleasesParameters queryParameters)
+        {
+            var result = await _releaseService.ListAsync(queryParameters);
+            var releasesResource = _mapper.Map<IEnumerable<ReleaseResource>>(result);
+            return releasesResource;
         }
     }
 }

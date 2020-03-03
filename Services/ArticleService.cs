@@ -19,7 +19,7 @@ namespace ReleaseNotes_WebAPI.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Article>> ListAsync(ArticlesParameters queryParameters)
+        public async Task<IEnumerable<Article>> ListAsync(ReleasesParameters queryParameters)
         {
             return await _articleRepository.ListAsync(queryParameters);
         }
