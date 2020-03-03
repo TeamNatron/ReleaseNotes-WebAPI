@@ -20,7 +20,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         public async Task<IEnumerable<Release>> ListAsync(ReleasesParameters queryParameters)
         {
             {
-                IQueryable<Release> releasesQuery = _context.Releases.AsQueryable();
+                IQueryable<Release> releasesQuery = _context.Releases.AsNoTracking();
 
                 if (queryParameters.product > 0)
                 {
@@ -39,7 +39,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
                             break;
                     }
                 }
-                return await releasesQuery.ToListAsync();
+                return await releasesQuery
+                    .Include(r => r.ReleaseNotes)
+                    .Include(r => r.ProductVersion)
+                    .ToListAsync();
             }
         }
 
