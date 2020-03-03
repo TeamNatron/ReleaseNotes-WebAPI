@@ -59,7 +59,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<ReleaseResource>> GetAsync(int id)
         {
-            var releaseResponse = await _releaseService.getRelease(id);
+            var releaseResponse = await _releaseService.GetRelease(id);
             if (releaseResponse == null)
             {
                 return NotFound();

@@ -20,12 +20,12 @@ namespace ReleaseNotesWebAPI.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ReleaseResponse> getRelease(int id)
+        public async Task<ReleaseResponse> GetRelease(int id)
         {
             var existingRelease = await _releaseRepository.FindByIdAsync(id);
             if (existingRelease == null)
             {
-                return new ReleaseResponse("Releasen eksistere ikke!");
+                return new ReleaseResponse("Releasen eksisterer ikke!");
             }
 
             try
