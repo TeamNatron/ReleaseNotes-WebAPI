@@ -20,9 +20,9 @@ namespace ReleaseNotes_WebAPI.Controllers
             _releaseService = releaseService;
             _mapper = mapper;
         }
-        
+
         [HttpPost]
-        [Authorize(Roles="Administrator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PostAsync([FromBody] SaveReleaseResource resource)
         {
             // Check if the user data works with this model
@@ -30,7 +30,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             {
                 return BadRequest(ModelState.GetErrorMessages());
             }
-            
+
             var result = await _releaseService.SaveAsync(resource);
 
             if (!result.Success) return BadRequest(result.Message);
@@ -38,15 +38,16 @@ namespace ReleaseNotes_WebAPI.Controllers
             var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
             return Ok(releaseResource);
         }
-        
+
         [HttpPut("{id}")]
-        [Authorize(Roles="Administrator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutAsync(int id, [FromBody] SaveReleaseResource resource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorMessages());
             }
+
             var result = await _releaseService.UpdateAsync(id, resource);
 
             if (!result.Success) return BadRequest(result.Message);
@@ -67,7 +68,6 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var release = _mapper.Map<Release, ReleaseResource>(releaseResponse.Release);
             return Ok(release);
-
         }
     }
 }

@@ -53,10 +53,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             {
                 var releases = new List<Release>
                 {
-                    new Release {Id = 100, ProductVersionId = 100},
-                    new Release {Id = 101, ProductVersionId = 101},
-                    new Release {Id = 102, ProductVersionId = 102},
-                    new Release {Id = 103, ProductVersionId = 103}
+                    new Release {Id = 100, ProductVersionId = 100, Title = "Finally Rich", IsPublic = true},
+                    new Release {Id = 101, ProductVersionId = 101, Title = "Love Sosa", IsPublic = false},
+                    new Release {Id = 102, ProductVersionId = 102, Title = "Chief Keef", IsPublic = true},
+                    new Release {Id = 103, ProductVersionId = 103, Title = "2012", IsPublic = false},
                 };
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
@@ -74,26 +74,33 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new ReleaseNote
                     {
                         WorkItemId = 20, AuthorName = "Ronnay Voudrait", AuthorEmail = "ronnay@natron.no",
-                        WorkItemDescriptionHtml = htmlDummy1, WorkItemTitle = "Test item please ignore",
-                        ClosedDate = new DateTime(2001, 7, 11, 23, 0, 59, 4)
+                        Title = "Corona i Kina", Ingress = "Det er nå påvisst masse corona i Kina",
+                        Description = "Ikke bra, sier forskerer", WorkItemDescriptionHtml = htmlDummy1,
+                        WorkItemTitle = "Test item please ignore",
+                        ClosedDate = new DateTime(2001, 7, 11, 23, 5, 12, 23)
                     },
                     new ReleaseNote
                     {
-                    WorkItemId = 21, AuthorName = "Aung San Suu Kyi", AuthorEmail = "aungsansuukyi@natron.no",
-                    WorkItemDescriptionHtml = htmlDummy2, WorkItemTitle = "Receive Nobel Price",
-                    ClosedDate = new DateTime(2012, 6, 16, 16, 0, 59, 4)
-                },
+                        WorkItemId = 21, AuthorName = "Aung San Suu Kyi", AuthorEmail = "aungsansuukyi@natron.no",
+                        Title = "Corona i Italia", Ingress = "Nå har Corona kommet til Italia",
+                        Description = "Ikke bra, sier forskere",
+                        WorkItemDescriptionHtml = htmlDummy2, WorkItemTitle = "Receive Nobel Price",
+                        ClosedDate = new DateTime(2012, 6, 16, 16, 8, 24, 44)
+                    },
                     new ReleaseNote
                     {
                         WorkItemId = 22, AuthorName = "Liu chi", AuthorEmail = "luichi@natron.no",
+                        Title = "Corona i Norge", Ingress = "Den er i Tromsø", Description = "unlucky, sier forskere",
                         WorkItemDescriptionHtml = htmlDummy3, WorkItemTitle = "Forbid escapism",
-                        ClosedDate = new DateTime(2190, 7, 11, 23, 0, 59, 4)
+                        ClosedDate = new DateTime(2190, 7, 11, 06, 21, 21, 21)
                     },
                     new ReleaseNote
                     {
                         WorkItemId = 20, AuthorName = "Ronnay Voudrait", AuthorEmail = "ronnay@natron.no",
+                        Title = "Trump bygger vegg mot Corona", Ingress = "Kina skal betale for veggen",
+                        Description = "Det hjelper fint lite, sier forskere",
                         WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
-                        ClosedDate = new DateTime(2005, 7, 11, 23, 0, 59, 4)
+                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
                     }
                 };
                 context.ReleaseNotes.AddRange(releaseNotes);
