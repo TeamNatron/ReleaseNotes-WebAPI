@@ -145,6 +145,7 @@ describe("Releases GET", () => {
         res.should.have.status(200);
         res.body.should.be.a("array").that.is.not.empty;
         res.body[0].productVersion.should.exist;
+        res.body[0].productVersion.product.should.exist;
         res.body[0].releaseNotes.should.exist;
         res.body[0].title.should.exist;
         done();
