@@ -27,6 +27,7 @@ var accessToken;
 const addressCreate = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
+const addressGet = "/api/releases/102";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
@@ -133,9 +134,9 @@ describe("Releases POST", () => {
       });
   });
 });
-
 describe("Releases GET", () => {
   before(() => init());
+
   it("Should return all releases", done => {
     chai
       .request(process.env.APP_URL)
@@ -147,6 +148,41 @@ describe("Releases GET", () => {
         res.body[0].productVersion.should.exist;
         res.body[0].releaseNotes.should.exist;
         res.body[0].title.should.exist;
+        done();
+      });
+  });
+
+  // failure case for getting a single release due to not logging in, 401 unauth
+  it("GET | Should return a 401 unauth", done => {
+    chai
+      //console
+      //.log(["DATA FROM A SINGLE RELEASE1: ", res.text])
+      .request(process.env.APP_URL)
+      .get(addressGet)
+      .end(err => {
+        err.should.have.status(401);
+        done();
+      });
+  });
+
+  // success case for getting a single release
+  it("GET | Should return a specific release", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressGet)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(200);
+        expect(res.body.id).to.equal(102);
+        expect(res.body.title).to.equal("Chief Keef");
+        expect(res.body.isPublic).to.equal(true);
+        expect(res.body.productVersion).to.be.not.empty;
+        expect(res.body.releaseNotes).to.be.a("array");
+        expect(res.body.releaseNotes).to.be.empty;
         done();
       });
   });
