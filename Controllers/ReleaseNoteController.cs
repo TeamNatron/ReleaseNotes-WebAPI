@@ -67,5 +67,27 @@ namespace ReleaseNotes_WebAPI.Controllers
             var releaseNoteResource = _mapper.Map<ReleaseNote, ReleaseNoteResource>(result.ReleaseNote);
             return Ok(releaseNoteResource);
         }
+
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<ActionResult<ReleaseNoteResource>> RemoveReleaseNote(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+            
+            //var existingReleaseNote = GetSpecificReleaseNote(id);
+            var result = await _releaseNoteService.removeReleaseNote(id);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var releaseNoteResource = _mapper.Map<ReleaseNote, ReleaseNoteResource>(result.ReleaseNote);
+            return Ok(releaseNoteResource);
+        }
     }
 }

@@ -43,6 +43,26 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
+        public async Task<ReleaseNoteResponse> removeReleaseNote(int id)
+        {
+            var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
+            if (existingReleaseNote == null)
+            {
+                return new ReleaseNoteResponse("Release noten eksisterer ikke!");
+            }
+
+            try
+            {
+                _releaseNoteRepository.Remove(existingReleaseNote);
+                await _unitOfWork.CompleteAsync();
+                return new ReleaseNoteResponse(existingReleaseNote);
+            }
+            catch (Exception e)
+            {
+                return new ReleaseNoteResponse($"Det oppsto en feil: {e.Message}");
+            }
+        }
+
         public async Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note)
         {
             var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
