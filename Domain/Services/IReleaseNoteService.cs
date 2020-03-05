@@ -12,7 +12,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 
         Task<ReleaseNoteResponse> GetReleaseNote(int id);
 
-        Task<ReleaseNoteResponse> removeReleaseNote(int id);
+        Task<ReleaseNoteResponse> RemoveReleaseNote(int id);
 
         Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note);
     }

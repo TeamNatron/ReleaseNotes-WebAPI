@@ -43,7 +43,7 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        public async Task<ReleaseNoteResponse> removeReleaseNote(int id)
+        public async Task<ReleaseNoteResponse> RemoveReleaseNote(int id)
         {
             var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
             if (existingReleaseNote == null)
