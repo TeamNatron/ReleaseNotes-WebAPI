@@ -52,10 +52,22 @@ namespace ReleaseNotesWebAPI.Services
             if (resource.Title != null) existingRelease.Title = resource.Title;
             if (resource.IsPublic != null) existingRelease.IsPublic = resource.IsPublic;
             if (resource.ReleaseNotesId != null)
-                existingRelease.ReleaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
-            if (resource.ProductVersionId > 0 && resource.ProductVersionId != existingRelease.ProductVersionId)
-                existingRelease.ProductVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId);
+            {
+                var releaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
+                if (releaseNotes != null)
+                {
+                    existingRelease.ReleaseNotes = releaseNotes;
 
+                }
+            }
+            if (resource.ProductVersionId > 0 && resource.ProductVersionId != existingRelease.ProductVersionId)
+            {
+                var productVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId);
+                if (productVersion != null)
+                {
+                    existingRelease.ProductVersion = productVersion;
+                }
+            }
             try
             {
                 _releaseRepository.Update(existingRelease);
