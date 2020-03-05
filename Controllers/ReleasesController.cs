@@ -79,5 +79,27 @@ namespace ReleaseNotes_WebAPI.Controllers
             var releasesResource = _mapper.Map<IEnumerable<ReleaseResource>>(result);
             return releasesResource;
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<ReleaseResource>> RemoveRelease(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var result = await _releaseService.RemoveRelease(id);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
+            return Ok(releaseResource);
+
+        }
+
     }
 }

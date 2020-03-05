@@ -26,7 +26,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new Product {Id = 100, Name = "Cordel Inne"},
                     new Product {Id = 101, Name = "Cordel Ute"},
                     new Product {Id = 102, Name = "Cordel Her"},
-                    new Product {Id = 103, Name = "Cordel Der"}
+                    new Product {Id = 103, Name = "Cordel Der"},
+                    new Product {Id = 104, Name = "Cordel Japan"}
                 };
 
                 context.Products.AddRange(products);
@@ -57,6 +58,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new Release {Id = 101, ProductVersionId = 101, Title = "Love Sosa", IsPublic = false},
                     new Release {Id = 102, ProductVersionId = 102, Title = "Chief Keef", IsPublic = true},
                     new Release {Id = 103, ProductVersionId = 103, Title = "2012", IsPublic = false},
+                    new Release {Id = 104, ProductVersionId = 103, Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true},
                 };
                 context.Releases.AddRange(releases);
                 context.SaveChanges();

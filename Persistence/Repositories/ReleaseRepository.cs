@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Persistence.Contexts;
-using ReleaseNotes_WebAPI.Resources;
 using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Persistence.Repositories
@@ -42,7 +41,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
 
                 return await releasesQuery
                     .Include(r => r.ReleaseNotes)
-                    .Include(r => r.ProductVersion)
+                    .Include(r => r.ProductVersion).ThenInclude(pv => pv.Product)
                     .ToListAsync();
             }
         }
@@ -50,6 +49,11 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         public async Task AddAsync(Release release)
         {
             await _context.Releases.AddAsync(release);
+        }
+
+        public void Remove(Release release)
+        {
+            _context.Releases.Remove(release);
         }
 
         public void Update(Release release)
@@ -60,7 +64,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         public async Task<Release> FindByIdAsync(int id)
         {
             return await _context.Releases
-                .Include(r => r.ProductVersion)
+                .Include(r => r.ProductVersion).ThenInclude(pv => pv.Product)
                 .Include(r => r.ReleaseNotes)
                 .SingleOrDefaultAsync(r => r.Id == id);
         }
