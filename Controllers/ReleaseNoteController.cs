@@ -50,7 +50,8 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<ActionResult<ReleaseNoteResource>> UpdateReleaseNoteAsync(int id, [FromBody] EditReleaseNoteResource resource)
+        public async Task<ActionResult<ReleaseNoteResource>> UpdateReleaseNoteAsync(int id,
+            [FromBody] EditReleaseNoteResource resource)
         {
             if (!ModelState.IsValid)
             {
@@ -58,6 +59,27 @@ namespace ReleaseNotes_WebAPI.Controllers
             }
 
             var result = await _releaseNoteService.UpdateReleaseNote(id, resource);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var releaseNoteResource = _mapper.Map<ReleaseNote, ReleaseNoteResource>(result.ReleaseNote);
+            return Ok(releaseNoteResource);
+        }
+
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<ActionResult<ReleaseNoteResource>> RemoveReleaseNote(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var result = await _releaseNoteService.RemoveReleaseNote(id);
 
             if (!result.Success)
             {
