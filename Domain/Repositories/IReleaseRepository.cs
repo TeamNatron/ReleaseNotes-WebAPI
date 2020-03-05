@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models;
-using ReleaseNotes_WebAPI.Resources;
 using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Domain.Repositories
@@ -15,6 +14,8 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
         Task<Release> FindByIdAsync(int id);
 
         Task<Release> FindByNameAsync(string release);
+
+        void Remove(Release release);
 
         Task<ProductVersion> FindProductVersion(int id);
 

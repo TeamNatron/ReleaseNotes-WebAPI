@@ -74,6 +74,26 @@ namespace ReleaseNotesWebAPI.Services
             return await _releaseRepository.ListAsync(queryParameters);
         }
 
+        public async Task<ReleaseResponse> RemoveRelease(int id)
+        {
+            var existingRelease = await _releaseRepository.FindByIdAsync(id);
+            if (existingRelease == null)
+            {
+                return new ReleaseResponse("Releasen finnes ikke!");
+            }
+
+            try
+            {
+                _releaseRepository.Remove(existingRelease);
+                await _unitOfWork.CompleteAsync();
+                return new ReleaseResponse(existingRelease);
+            }
+            catch (Exception e)
+            {
+                return new ReleaseResponse($"Det oppsto en feil: {e.Message}");
+            }
+        }
+
         public async Task<ReleaseResponse> SaveAsync(SaveReleaseResource resource)
         {
             try
