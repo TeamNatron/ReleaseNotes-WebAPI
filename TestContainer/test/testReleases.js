@@ -29,6 +29,8 @@ const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
 const addressGetFail = "/api/releases/1002";
+const addressDelete = "/api/releases/102";
+const addressDeleteFail = "api/releases/102";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
@@ -209,6 +211,82 @@ describe("Releases GET", () => {
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array");
         expect(res.body.releaseNotes).to.be.empty;
+        done();
+      });
+  });
+});
+
+describe("Releases DELETE", () => {
+  // failure case: Tries to delete without logging in
+  it("DELETE | Should return a 401 unauth", done => {
+    chai
+      .request(process.env.APP_URL)
+      .delete(addressDelete)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(401);
+        done();
+      });
+  });
+  // failure case: Tries to delete a non-existant release
+  it("DELETE | Should return a 405 Method Not Allowed", done => {
+    chai
+      .request(process.env.APP_URL)
+      .delete(addressDeleteFail)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(405);
+        done();
+      });
+  });
+  // failure case: Tries to delete a non-existant release without logging in
+  it("DELETE | Should return a 401 unath", done => {
+    chai
+      .request(process.env.APP_URL)
+      .delete(addressDeleteFail)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(401);
+        done();
+      });
+  });
+
+  // success case: deletes a release
+  it("DELETE | Should return a ok 200, and a copy of the deleted release", done => {
+    chai
+      .request(process.env.APP_URL)
+      .delete(addressDelete)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(200);
+        expect(res.body.id).to.equal(102);
+        expect(res.body.title).to.equal("Chief Keef");
+        expect(res.body.isPublic).to.equal(true);
+        expect(res.body.productVersion).to.be.not.empty;
+        expect(res.body.releaseNotes).to.be.a("array");
+        expect(res.body.releaseNotes).to.be.empty;
+        done();
+      });
+  });
+
+  // failure case: Tries to delete a already deleted release
+  it("DELETE | Should return a specific error msg", done => {
+    chai
+      .request(process.env.APP_URL)
+      .delete(addressDelete)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(400);
         done();
       });
   });
