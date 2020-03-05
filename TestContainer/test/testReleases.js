@@ -28,6 +28,7 @@ const addressCreate = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
+const addressGetFail = "/api/releases/1002";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
@@ -155,12 +156,37 @@ describe("Releases GET", () => {
   // failure case for getting a single release due to not logging in, 401 unauth
   it("GET | Should return a 401 unauth", done => {
     chai
-      //console
-      //.log(["DATA FROM A SINGLE RELEASE1: ", res.text])
       .request(process.env.APP_URL)
       .get(addressGet)
       .end(err => {
         err.should.have.status(401);
+        done();
+      });
+  });
+
+  // failure case: Logged in and attempting to get a release that does not exist
+  it("GET | Should return a 204 no content", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressGetFail)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(204);
+        done();
+      });
+  });
+
+  // failure case: not logged in and attempting to get a release that does not exist
+  it("GET | Should return a 401 unauth", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressGetFail)
+      .end(err => {
+        expect(err.should.have.status(401));
         done();
       });
   });
