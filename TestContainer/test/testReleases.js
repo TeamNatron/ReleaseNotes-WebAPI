@@ -145,7 +145,6 @@ describe("Releases GET", () => {
       .request(process.env.APP_URL)
       .get(address)
       .end((err, res) => {
-        console.log(["RECEIVED DATA: ", res.text]);
         res.should.have.status(200);
         res.body.should.be.a("array").that.is.not.empty;
         res.body[0].productVersion.should.exist;
