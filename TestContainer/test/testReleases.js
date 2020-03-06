@@ -29,8 +29,8 @@ const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
 const addressGetFail = "/api/releases/1002";
-const addressDelete = "/api/releases/102";
-const addressDeleteFail = "api/releases/102";
+const addressDelete = "/api/releases/103";
+const addressDeleteFail = "/api/releases/1003";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
@@ -168,7 +168,7 @@ describe("Releases GET", () => {
   });
 
   // failure case: Logged in and attempting to get a release that does not exist
-  it("GET | Should return a 204 no content", done => {
+  it("GET | Should return a 204 No Content", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetFail)
@@ -218,42 +218,38 @@ describe("Releases GET", () => {
 });
 
 describe("Releases DELETE", () => {
+  before(() => init());
   // failure case: Tries to delete without logging in
   it("DELETE | Should return a 401 unauth", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
-      .end((err, res) => {
-        if (err) {
-          done(err.response.text);
-        }
-        res.should.have.status(401);
+      .end(err => {
+        expect(err.should.have.status(401));
         done();
       });
   });
+
   // failure case: Tries to delete a non-existant release
-  it("DELETE | Should return a 405 Method Not Allowed", done => {
+  it("DELETE | Should return a 400 Bad Request", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
-      .end((err, res) => {
-        if (err) {
-          done(err.response.text);
-        }
-        res.should.have.status(405);
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .end(err => {
+        expect(err.should.have.status(400));
         done();
       });
   });
+
   // failure case: Tries to delete a non-existant release without logging in
   it("DELETE | Should return a 401 unath", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
-      .end((err, res) => {
-        if (err) {
-          done(err.response.text);
-        }
-        res.should.have.status(401);
+      .end(err => {
+        expect(err.should.have.status(401));
         done();
       });
   });
@@ -263,31 +259,31 @@ describe("Releases DELETE", () => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
         }
         res.should.have.status(200);
-        expect(res.body.id).to.equal(102);
-        expect(res.body.title).to.equal("Chief Keef");
-        expect(res.body.isPublic).to.equal(true);
+        expect(res.body.id).to.equal(103);
+        expect(res.body.title).to.equal("Release 2.6 - Vannkanon");
+        expect(res.body.isPublic).to.equal(false);
         expect(res.body.productVersion).to.be.not.empty;
-        expect(res.body.releaseNotes).to.be.a("array");
-        expect(res.body.releaseNotes).to.be.empty;
+        expect(res.body.releaseNotes).to.be.a("array").that.is.not.empty;
         done();
       });
   });
 
   // failure case: Tries to delete a already deleted release
-  it("DELETE | Should return a specific error msg", done => {
+  it("DELETE | Should return 400 and a error message", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
-      .end((err, res) => {
-        if (err) {
-          done(err.response.text);
-        }
-        res.should.have.status(400);
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .end(err => {
+        expect(err.should.have.status(400));
         done();
       });
   });
