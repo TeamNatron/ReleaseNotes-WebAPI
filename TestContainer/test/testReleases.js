@@ -143,8 +143,11 @@ describe("Releases GET", () => {
   it("Should return all releases", done => {
     chai
       .request(process.env.APP_URL)
-      .get(address)
+      .get(addressCreate)
       .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
         res.should.have.status(200);
         res.body.should.be.a("array").that.is.not.empty;
         res.body[0].productVersion.should.exist;
@@ -167,7 +170,7 @@ describe("Releases GET", () => {
   });
 
   // failure case: Logged in and attempting to get a release that does not exist
-  it("GET | Should return a 204 No Content", done => {
+  it("GET | Should return a 204 no content", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetFail)
@@ -266,10 +269,10 @@ describe("Releases DELETE", () => {
         }
         res.should.have.status(200);
         expect(res.body.id).to.equal(103);
-        expect(res.body.title).to.equal("Release 2.6 - Vannkanon");
+        expect(res.body.title).to.equal("2012");
         expect(res.body.isPublic).to.equal(false);
         expect(res.body.productVersion).to.be.not.empty;
-        expect(res.body.releaseNotes).to.be.a("array").that.is.not.empty;
+        expect(res.body.releaseNotes).to.be.a("array").that.is.empty;
         done();
       });
   });
