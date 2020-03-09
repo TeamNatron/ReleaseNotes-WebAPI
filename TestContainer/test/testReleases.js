@@ -23,6 +23,11 @@ const TEST_RELEASE_3 = {
   IsPublic: false
 };
 
+const TEST_RELEASE_4 = {
+  ProductVersionId: 9999999,
+  ReleaseNotesId: [1, 99999]
+};
+
 var accessToken;
 const addressCreate = "/api/releases";
 const addressPut = "/api/releases/101";
@@ -128,6 +133,30 @@ describe("Releases POST", () => {
         );
         expect(res.body.title).to.equal(TEST_RELEASE_2.Title);
         expect(res.body.isPublic).to.equal(TEST_RELEASE_3.IsPublic);
+        expect(res.body.releaseNotes[0].id).to.equal(
+          TEST_RELEASE_2.ReleaseNotesId[0]
+        );
+        done();
+      });
+  });
+
+  it("PUT | Should handle unknown values", done => {
+    chai
+      .request(process.env.APP_URL)
+      .put(addressCheckAfterCreate)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .send(TEST_RELEASE_4)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        expect(res.body.productVersion.id).to.equal(
+          TEST_RELEASE_2.ProductVersionId
+        );
+        expect(res.body.title).to.equal(TEST_RELEASE_2.Title);
+        expect(res.body.isPublic).to.equal(TEST_RELEASE_3.IsPublic);
+        expect(res.body.releaseNotes.length).to.equal(1);
         expect(res.body.releaseNotes[0].id).to.equal(
           TEST_RELEASE_2.ReleaseNotesId[0]
         );
