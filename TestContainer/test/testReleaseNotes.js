@@ -14,9 +14,8 @@ const init = () => {
 
 describe("Release notes DELETE", () => {
   before(() => init());
-
-  // failure case: Tries to delete a release note without being logged in
-  it("DELETE | Should return a 401 unauth", done => {
+  // DELETE | Should return a 401 unauth
+  it("DELETE | Deleting a release note without authorization", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -26,8 +25,8 @@ describe("Release notes DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a non-existant release note
-  it("DELETE | Should return a 400 Bad Request", done => {
+  // DELETE | Should return a 400 Bad Request
+  it("DELETE | Deleting a non-existant release note", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
@@ -39,19 +38,8 @@ describe("Release notes DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a non-existant release note without being logged in
-  it("DELETE | should return a 401 unauth", done => {
-    chai
-      .request(process.env.APP_URL)
-      .delete(addressDeleteFail)
-      .end(err => {
-        expect(err.should.have.status(401));
-        done();
-      });
-  });
-
-  // succes case: deletes a release note
-  it("DELETE | Should return a OK 200 and a copy of the deleted release note", done => {
+  // DELETE | Should return a OK 200 and a copy of the deleted release
+  it("DELETE | Deletes a note correctly", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -66,8 +54,8 @@ describe("Release notes DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a already deleted release note
-  it("DELETE | should return 400 Bad Reques", done => {
+  // DELETE | should return 400 Bad Request
+  it("DELETE | Tries to delete a already deleted release note", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)

@@ -137,6 +137,7 @@ describe("Releases POST", () => {
       });
   });
 });
+
 describe("Releases GET", () => {
   before(() => init());
 
@@ -221,8 +222,8 @@ describe("Releases GET", () => {
 
 describe("Releases DELETE", () => {
   before(() => init());
-  // failure case: Tries to delete without logging in
-  it("DELETE | Should return a 401 unauth", done => {
+  // DELETE | Should return a 401 unauth
+  it("DELETE | Tries to delete a release note without authorization", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -232,8 +233,8 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a non-existant release
-  it("DELETE | Should return a 400 Bad Request", done => {
+  // Should return a 400 Bad Request
+  it("DELETE | Tries to delete a non-existant release", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
@@ -245,8 +246,8 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a non-existant release without logging in
-  it("DELETE | Should return a 401 unath", done => {
+  // DELETE | Should return a 401 unath
+  it("DELETE | Tries to delet a non-existant release without authorization", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
@@ -256,8 +257,8 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // success case: deletes a release
-  it("DELETE | Should return a ok 200, and a copy of the deleted release", done => {
+  // DELETE | Should return a ok 200, and a copy of the deleted release
+  it("DELETE | Deletes a release correctly", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -277,8 +278,8 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a already deleted release
-  it("DELETE | Should return 400 and a error message", done => {
+  // DELETE | Should return 400
+  it("DELETE | Tries to delete a already deleted release", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
