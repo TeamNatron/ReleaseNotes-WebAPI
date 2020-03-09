@@ -24,7 +24,7 @@ const TEST_RELEASE_3 = {
 };
 
 var accessToken;
-const addressCreate = "/api/releases";
+const addressReleases = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
@@ -32,7 +32,6 @@ const addressGetFail = "/api/releases/1002";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
-  console.log(addressPut);
 };
 
 describe("Releases POST", () => {
@@ -41,7 +40,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return unauthorized", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .send(TEST_RELEASE_1)
       .end(err => {
         err.should.have.status(401);
@@ -63,7 +62,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return created", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -79,7 +78,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return release name already in use", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -141,9 +140,11 @@ describe("Releases GET", () => {
   it("Should return all releases", done => {
     chai
       .request(process.env.APP_URL)
-      .get(address)
+      .get(addressReleases)
       .end((err, res) => {
-        console.log(["RECEIVED DATA: ", res.text]);
+        if (err) {
+          done(err.response.text);
+        }
         res.should.have.status(200);
         res.body.should.be.a("array").that.is.not.empty;
         res.body[0].productVersion.should.exist;
