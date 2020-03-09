@@ -6,13 +6,15 @@ const { expect } = require("chai");
 chai.use(chaiHttp);
 
 var accessToken;
-const addressGet = "api/releasenote";
-const addressGetSingle = "api/releasenote/1";
-const addressGetSingleFail = "api/releasenote/23123";
-const addressPut = "api/releasenote/100";
+const addressGet = "/api/releasenote";
+const addressGetSingle = "/api/releasenote/5";
+const addressGetSingleFail = "/api/releasenote/23123";
+const addressPut = "/api/releasenote/100";
 const addressPutFail = "api/releasenote/123123125";
-const addressDelete = "/api/releasenote/1";
+const addressDelete = "/api/releasenote/5";
 const addressDeleteFail = "/api/releasenote/897324";
+
+var jasdhlasjd;
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
@@ -20,15 +22,14 @@ const init = () => {
 
 describe("Release notes GET", () => {
   before(() => init());
-
   // Should return a 401 unauth
-  it("GET | returns all the release note dummy data", done => {
+  // TODO: figure out why this does not connect
+  it("GET | get all without auth", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGet)
       .end(err => {
-        console.log(err);
-        //err.should.have.status(401);
+        err.should.have.status(401);
         done();
       });
   });
@@ -42,11 +43,10 @@ describe("Release notes GET", () => {
       .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
         if (err) {
-          done(err.response);
+          done(err);
         }
-        console.log(res);
+        //console.log(res.body);
         res.should.have.status(200);
-        expect(res).to.be.a("array");
         done();
       });
   });
@@ -57,14 +57,13 @@ describe("Release notes GET", () => {
       .request(process.env.APP_URL)
       .get(addressGetSingle)
       .end(err => {
-        console.log(err);
         err.should.have.status(401);
         done();
       });
   });
 
   // should return 200 OK and  a singe release note
-  it("GET | Successfully getting a single release note", done => {
+  it("GET | Successfully get a single release note", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetSingle)
@@ -75,24 +74,27 @@ describe("Release notes GET", () => {
           done(err.response);
         }
         res.should.have.status(200);
-        expect(res.body.id).to.equal(1);
+        expect(res.body.id).to.equal(5);
+        jasdhlasjd = res.body;
         done();
       });
   });
-
-  // should return 400
+  /*
+  // should return a 204 No Content
   // tries to get a single release note with a non-existant id
-  it("GET | Requesting a non-existant release note", done => {
+  it("GET | requests a non-existant release note", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetSingleFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end(err => {
-        err.should.have.status(400);
+        console.log(err);
+        err.should.have.status(204);
         done();
       });
   });
+  */
 });
 
 describe("Release note PUT", () => {
@@ -150,7 +152,7 @@ describe("Release notes DELETE", () => {
           done(err.response.text);
         }
         res.should.have.status(200);
-        expect(res.body.title).to.be.equal("Trump bygger vegg mot Corona");
+        expect(res.body).to.deep.equal(jasdhlasjd);
         done();
       });
   });

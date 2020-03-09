@@ -62,7 +62,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     {
                         Id = 104, ProductVersionId = 103,
                         Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true
-                    }
+                    },
+                    new Release {Id = 105, ProductVersionId = 102, Title = "asgsdhjkal", IsPublic = false}
                 };
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
@@ -95,18 +96,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     },
                     new ReleaseNote
                     {
-                        WorkItemId = 22, AuthorName = "Liu chi", AuthorEmail = "luichi@natron.no",
+                        WorkItemId = 22, AuthorName = "Liu chi", AuthorEmail = "luichi@natron.rno",
                         Title = "Corona i Norge", Ingress = "Den er i Tromsø", Description = "unlucky, sier forskere",
                         WorkItemDescriptionHtml = htmlDummy3, WorkItemTitle = "Forbid escapism",
                         ClosedDate = new DateTime(2190, 7, 11, 06, 21, 21, 21)
-                    },
-                    new ReleaseNote
-                    {
-                        WorkItemId = 20, AuthorName = "Ronnay Voudrait", AuthorEmail = "ronnay@natron.no",
-                        Title = "Trump bygger vegg mot Corona", Ingress = "Kina skal betale for veggen",
-                        Description = "Det hjelper fint lite, sier forskere",
-                        WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
-                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
                     },
                     new ReleaseNote
                     {
@@ -116,6 +109,14 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Description = "This LCK color caster is losing follicles by the second",
                         WorkItemDescriptionHtml = htmlDummy2, WorkItemTitle = "Cut the western bullshit",
                         ClosedDate = new DateTime(1989, 3, 16, 02, 22, 42, 1)
+                    },
+                    new ReleaseNote
+                    {
+                        WorkItemId = 20, AuthorName = "Ronnay Voudrait", AuthorEmail = "ronnay@natron.no",
+                        Title = "Trump bygger vegg mot Corona", Ingress = "Kina skal betale for veggen",
+                        Description = "Det hjelper fint lite, sier forskere",
+                        WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
+                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
                     }
                 };
                 context.ReleaseNotes.AddRange(releaseNotes);

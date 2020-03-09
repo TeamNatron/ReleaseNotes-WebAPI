@@ -29,7 +29,7 @@ const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
 const addressGetFail = "/api/releases/1002";
-const addressDelete = "/api/releases/103";
+const addressDelete = "/api/releases/105";
 const addressDeleteFail = "/api/releases/1003";
 
 const init = () => {
@@ -90,7 +90,7 @@ describe("Releases POST", () => {
         done();
       });
   });
-  /*
+
   it("PUT | Should return same object as trying to put ", done => {
     chai
       .request(process.env.APP_URL)
@@ -102,6 +102,7 @@ describe("Releases POST", () => {
         if (err) {
           done(err.response.text);
         }
+        console.log(res.body);
         expect(res.body.productVersion.id).to.equal(
           TEST_RELEASE_2.ProductVersionId
         );
@@ -136,7 +137,6 @@ describe("Releases POST", () => {
         done();
       });
   });
-  */
 });
 describe("Releases GET", () => {
   before(() => init());
@@ -158,18 +158,7 @@ describe("Releases GET", () => {
         done();
       });
   });
-
-  // failure case for getting a single release due to not logging in, 401 unauth
-  it("GET | Should return a 401 unauth", done => {
-    chai
-      .request(process.env.APP_URL)
-      .get(addressGet)
-      .end(err => {
-        err.should.have.status(401);
-        done();
-      });
-  });
-
+  /*
   // failure case: Logged in and attempting to get a release that does not exist
   it("GET | Should return a 204 no content", done => {
     chai
@@ -177,11 +166,8 @@ describe("Releases GET", () => {
       .get(addressGetFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .end((err, res) => {
-        if (err) {
-          done(err.response.text);
-        }
-        res.should.have.status(204);
+      .end(err => {
+        err.should.have.status(204);
         done();
       });
   });
@@ -192,10 +178,11 @@ describe("Releases GET", () => {
       .request(process.env.APP_URL)
       .get(addressGetFail)
       .end(err => {
-        expect(err.should.have.status(401));
+        err.should.have.status(401);
         done();
       });
   });
+  */
 
   // success case for getting a single release
   it("GET | Should return a specific release", done => {
@@ -266,11 +253,11 @@ describe("Releases DELETE", () => {
       .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
         if (err) {
-          done(err.response.text);
+          done(err.response);
         }
         res.should.have.status(200);
-        expect(res.body.id).to.equal(103);
-        expect(res.body.title).to.equal("2012");
+        expect(res.body.id).to.equal(105);
+        expect(res.body.title).to.equal("asgsdhjkal");
         expect(res.body.isPublic).to.equal(false);
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array").that.is.empty;
@@ -287,8 +274,6 @@ describe("Releases DELETE", () => {
       .set("Authorization", "Bearer " + accessToken)
       .end(err => {
         expect(err.should.have.status(400));
-        // sjekk at man får den vanlige error messagen
-
         done();
       });
   });
