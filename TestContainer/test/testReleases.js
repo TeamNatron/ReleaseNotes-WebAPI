@@ -2,6 +2,7 @@ var TokenHandler = require("../TokenHandler");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
+const correctDateFormat = require("../util/validate");
 
 chai.use(chaiHttp);
 
@@ -39,7 +40,6 @@ const addressDeleteFail = "/api/releases/1003";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
-  console.log(addressPut);
 };
 
 describe("Releases POST", () => {
@@ -188,17 +188,6 @@ describe("Releases GET", () => {
       });
   });
 
-  // failure case for getting a single release due to not logging in, 401 unauth
-  it("GET | Should return a 401 unauth", done => {
-    chai
-      .request(process.env.APP_URL)
-      .get(addressGet)
-      .end(err => {
-        err.should.have.status(401);
-        done();
-      });
-  });
-
   // failure case: Logged in and attempting to get a release that does not exist
   it("GET | Should return a 204 no content", done => {
     chai
@@ -211,17 +200,6 @@ describe("Releases GET", () => {
           done(err.response.text);
         }
         res.should.have.status(204);
-        done();
-      });
-  });
-
-  // failure case: not logged in and attempting to get a release that does not exist
-  it("GET | Should return a 401 unauth", done => {
-    chai
-      .request(process.env.APP_URL)
-      .get(addressGetFail)
-      .end(err => {
-        expect(err.should.have.status(401));
         done();
       });
   });
@@ -244,6 +222,7 @@ describe("Releases GET", () => {
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array");
         expect(res.body.releaseNotes).to.be.empty;
+        expect(correctDateFormat(res.body.date)).to.be.true;
         done();
       });
   });
