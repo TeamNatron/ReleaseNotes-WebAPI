@@ -2,7 +2,6 @@ var TokenHandler = require("../TokenHandler");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
-const correctDateFormat = require("../util/validate");
 
 chai.use(chaiHttp);
 
@@ -25,7 +24,7 @@ const TEST_RELEASE_3 = {
 };
 
 var accessToken;
-const addressReleases = "/api/releases";
+const addressCreate = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
@@ -35,6 +34,7 @@ const addressDeleteFail = "/api/releases/1003";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
+  console.log(addressPut);
 };
 
 describe("Releases POST", () => {
@@ -43,7 +43,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return unauthorized", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressReleases)
+      .post(addressCreate)
       .send(TEST_RELEASE_1)
       .end(err => {
         err.should.have.status(401);
@@ -65,7 +65,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return created", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressReleases)
+      .post(addressCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -81,7 +81,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return release name already in use", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressReleases)
+      .post(addressCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -90,7 +90,7 @@ describe("Releases POST", () => {
         done();
       });
   });
-
+  /*
   it("PUT | Should return same object as trying to put ", done => {
     chai
       .request(process.env.APP_URL)
@@ -136,6 +136,7 @@ describe("Releases POST", () => {
         done();
       });
   });
+  */
 });
 describe("Releases GET", () => {
   before(() => init());
@@ -143,7 +144,7 @@ describe("Releases GET", () => {
   it("Should return all releases", done => {
     chai
       .request(process.env.APP_URL)
-      .get(addressReleases)
+      .get(addressCreate)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
@@ -154,6 +155,17 @@ describe("Releases GET", () => {
         res.body[0].productVersion.product.should.exist;
         res.body[0].releaseNotes.should.exist;
         res.body[0].title.should.exist;
+        done();
+      });
+  });
+
+  // failure case for getting a single release due to not logging in, 401 unauth
+  it("GET | Should return a 401 unauth", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressGet)
+      .end(err => {
+        err.should.have.status(401);
         done();
       });
   });
@@ -170,6 +182,17 @@ describe("Releases GET", () => {
           done(err.response.text);
         }
         res.should.have.status(204);
+        done();
+      });
+  });
+
+  // failure case: not logged in and attempting to get a release that does not exist
+  it("GET | Should return a 401 unauth", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressGetFail)
+      .end(err => {
+        expect(err.should.have.status(401));
         done();
       });
   });
@@ -192,7 +215,6 @@ describe("Releases GET", () => {
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array");
         expect(res.body.releaseNotes).to.be.empty;
-        expect(correctDateFormat(res.body.date)).to.be.true;
         done();
       });
   });

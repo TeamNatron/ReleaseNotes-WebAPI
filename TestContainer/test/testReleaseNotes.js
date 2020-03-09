@@ -17,7 +17,7 @@ const addressDeleteFail = "/api/releasenote/897324";
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
 };
-/*
+
 describe("Release notes GET", () => {
   before(() => init());
 
@@ -99,7 +99,7 @@ describe("Release note PUT", () => {
   before(() => init());
   // TODO: create tests
 });
-*/
+
 describe("Release notes DELETE", () => {
   before(() => init());
 
