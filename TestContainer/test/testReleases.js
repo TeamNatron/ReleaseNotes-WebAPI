@@ -40,7 +40,8 @@ const init = () => {
 describe("Releases POST", () => {
   before(() => init());
 
-  it("CREATE | Should return unauthorized", done => {
+  // should return 401 unauth
+  it("CREATE | Tries to create a release without being logged in", done => {
     chai
       .request(process.env.APP_URL)
       .post(addressCreate)
@@ -51,7 +52,8 @@ describe("Releases POST", () => {
       });
   });
 
-  it("PUT | Should return unauthorized", done => {
+  // should return a 401 unauth
+  it("PUT | Tries to update a release without being logged in", done => {
     chai
       .request(process.env.APP_URL)
       .put(addressPut)
@@ -62,7 +64,8 @@ describe("Releases POST", () => {
       });
   });
 
-  it("CREATE | Should return created", done => {
+  // should return 200 OK
+  it("CREATE | Successfully creating a release", done => {
     chai
       .request(process.env.APP_URL)
       .post(addressCreate)
@@ -78,7 +81,8 @@ describe("Releases POST", () => {
       });
   });
 
-  it("CREATE | Should return release name already in use", done => {
+  // should return 400 Bad Request
+  it("CREATE | Tries to create a already created release", done => {
     chai
       .request(process.env.APP_URL)
       .post(addressCreate)
@@ -158,25 +162,12 @@ describe("Releases GET", () => {
       });
   });
 
-  // failure case: Logged in and attempting to get a release that does not exist
-  it("GET | Should return a 204 no content", done => {
+  it("GET | Attempting to get a non-existant release", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .end(err => {
-        if (err === null) {
-          done();
-        }
-      });
-  });
-
-  // failure case: not logged in and attempting to get a release that does not exist
-  it("GET | Should return a 204 unauth", done => {
-    chai
-      .request(process.env.APP_URL)
-      .get(addressGetFail)
       .end(err => {
         if (err === null) {
           done();
@@ -209,8 +200,7 @@ describe("Releases GET", () => {
 
 describe("Releases DELETE", () => {
   before(() => init());
-  // failure case: Tries to delete without logging in
-  it("DELETE | Should return a 401 unauth", done => {
+  it("DELETE | Tries to delete a release without logging in", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -220,8 +210,7 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a non-existant release
-  it("DELETE | Should return a 400 Bad Request", done => {
+  it("DELETE | Tries to delete a non-existant release", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
@@ -233,19 +222,8 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // failure case: Tries to delete a non-existant release without logging in
-  it("DELETE | Should return a 401 unath", done => {
-    chai
-      .request(process.env.APP_URL)
-      .delete(addressDeleteFail)
-      .end(err => {
-        expect(err.should.have.status(401));
-        done();
-      });
-  });
-
   // success case: deletes a release
-  it("DELETE | Should return a ok 200, and a copy of the deleted release", done => {
+  it("DELETE | Should delete a release and return a copy of the deleted release", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -257,7 +235,7 @@ describe("Releases DELETE", () => {
         }
         res.should.have.status(200);
         expect(res.body.id).to.equal(105);
-        expect(res.body.title).to.equal("asgsdhjkal");
+        expect(res.body.title).to.equal("ahhh shibal");
         expect(res.body.isPublic).to.equal(false);
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array").that.is.empty;
@@ -266,7 +244,7 @@ describe("Releases DELETE", () => {
   });
 
   // failure case: Tries to delete a already deleted release
-  it("DELETE | Should return 400 and a error message", done => {
+  it("DELETE | Tries to delete a already deleted release", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)

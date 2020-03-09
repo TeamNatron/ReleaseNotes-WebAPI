@@ -63,7 +63,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Id = 104, ProductVersionId = 103,
                         Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true
                     },
-                    new Release {Id = 105, ProductVersionId = 102, Title = "asgsdhjkal", IsPublic = false}
+                    new Release {Id = 105, ProductVersionId = 102, Title = "ahhh shibal", IsPublic = false}
                 };
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
