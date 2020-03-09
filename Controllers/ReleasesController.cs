@@ -59,7 +59,6 @@ namespace ReleaseNotes_WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<ReleaseResource>> GetAsync(int id)
         {
             var releaseResponse = await _releaseService.GetRelease(id);
