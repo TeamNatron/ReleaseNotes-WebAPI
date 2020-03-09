@@ -30,7 +30,7 @@ const TEST_RELEASE_4 = {
 };
 
 var accessToken;
-const addressCreate = "/api/releases";
+const addressReleases = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
@@ -48,7 +48,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return unauthorized", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .send(TEST_RELEASE_1)
       .end(err => {
         err.should.have.status(401);
@@ -70,7 +70,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return created", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -86,7 +86,7 @@ describe("Releases POST", () => {
   it("CREATE | Should return release name already in use", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -173,7 +173,7 @@ describe("Releases GET", () => {
   it("Should return all releases", done => {
     chai
       .request(process.env.APP_URL)
-      .get(addressCreate)
+      .get(addressReleases)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
