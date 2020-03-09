@@ -23,7 +23,6 @@ const init = () => {
 describe("Release notes GET", () => {
   before(() => init());
   // Should return a 401 unauth
-  // TODO: figure out why this does not connect
   it("GET | get all without auth", done => {
     chai
       .request(process.env.APP_URL)
@@ -45,7 +44,6 @@ describe("Release notes GET", () => {
         if (err) {
           done(err);
         }
-        //console.log(res.body);
         res.should.have.status(200);
         done();
       });
@@ -79,7 +77,7 @@ describe("Release notes GET", () => {
         done();
       });
   });
-  /*
+
   // should return a 204 No Content
   // tries to get a single release note with a non-existant id
   it("GET | requests a non-existant release note", done => {
@@ -89,12 +87,11 @@ describe("Release notes GET", () => {
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end(err => {
-        console.log(err);
-        err.should.have.status(204);
-        done();
+        if (err === null) {
+          done();
+        }
       });
   });
-  */
 });
 
 describe("Release note PUT", () => {
