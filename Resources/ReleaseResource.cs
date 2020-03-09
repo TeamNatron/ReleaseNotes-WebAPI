@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ReleaseNotes_WebAPI.Domain.Models;
@@ -15,5 +16,7 @@ namespace ReleaseNotes_WebAPI.Resources
         public bool IsPublic { get; set; }
         
         public ICollection<ReleaseNote> ReleaseNotes { get; set; } = new Collection<ReleaseNote>();
+        
+        public DateTime Date { get; set; }
     }
 }

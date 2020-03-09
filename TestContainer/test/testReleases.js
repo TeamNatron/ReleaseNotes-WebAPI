@@ -2,6 +2,7 @@ var TokenHandler = require("../TokenHandler");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
+const correctDateFormat = require("../util/validate");
 
 chai.use(chaiHttp);
 
@@ -39,7 +40,6 @@ const addressDeleteFail = "/api/releases/1003";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
-  console.log(addressPut);
 };
 
 describe("Releases POST", () => {
@@ -222,6 +222,7 @@ describe("Releases GET", () => {
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array");
         expect(res.body.releaseNotes).to.be.empty;
+        expect(correctDateFormat(res.body.date)).to.be.true;
         done();
       });
   });
