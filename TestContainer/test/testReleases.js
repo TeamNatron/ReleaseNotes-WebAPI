@@ -2,6 +2,7 @@ var TokenHandler = require("../TokenHandler");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
+const correctDateFormat = require("../util/validate");
 
 chai.use(chaiHttp);
 
@@ -212,12 +213,11 @@ describe("Releases GET", () => {
           done(err.response.text);
         }
         res.should.have.status(200);
-        expect(res.body.id).to.equal(102);
-        expect(res.body.title).to.equal("Chief Keef");
         expect(res.body.isPublic).to.equal(true);
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array");
         expect(res.body.releaseNotes).to.be.empty;
+        expect(correctDateFormat(res.body.date)).to.be.false;
         done();
       });
   });
