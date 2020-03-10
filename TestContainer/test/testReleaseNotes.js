@@ -76,7 +76,7 @@ describe("Release notes GET", () => {
         expect(res.body.id).to.be.a("number");
         expect(res.body.title).to.be.a("string").that.is.not.empty;
         expect(res.body.ingress).to.be.a("string").that.is.not.empty;
-        expect(res.body.authorName).to.be.a("strint").that.is.not.empty;
+        expect(res.body.authorName).to.be.a("string").that.is.not.empty;
         expect(res.body.authorEmail).to.be.a("string").that.is.not.empty;
         expect(res.body.isPublic).to.be.a("boolean");
         expect(res.body.workItemId).to.be.a("number");
