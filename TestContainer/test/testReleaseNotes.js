@@ -35,7 +35,18 @@ describe("Release notes GET", () => {
           done(err);
         }
         expect(res.body).to.be.a("array");
-        expect(res.body.length).to.equal(5);
+        expect(res.body[0].title).to.equal("Trump bygger vegg mot Corona");
+        expect(res.body[0].ingress).to.equal("Kina skal betale for veggen");
+        expect(res.body[0].description).to.equal(
+          "Det hjelper fint lite, sier forskere"
+        );
+        expect(res.body[0].authorName).to.equal("Ronnay Voudrait");
+        expect(res.body[0].authorEmail).to.equal("ronnay@natron.no");
+        expect(res.body[0].workItemTitle).to.equal(
+          "Fix issues with the application"
+        );
+        expect(res.body[0].isPublic).to.equal(false);
+        expect(res.body[0].workItemId).to.equal(20);
         res.should.have.status(200);
         done();
       });
@@ -47,8 +58,6 @@ describe("Release notes GET", () => {
       .request(process.env.APP_URL)
       .get(addressGetSingle)
       .end(err => {
-        // console.log(err);
-        // finnes ingen good sjekk her
         err.should.have.status(401);
         done();
       });
@@ -87,20 +96,12 @@ describe("Release notes GET", () => {
       .get(addressGetSingleFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      /*
       .end((err, res) => {
         if (err) {
-          console.log(err);
-          done(err.response);
+          done(err.response.text);
         }
-        console.log(res.body);
-        expect(res.response.status).to.equal(204);
-      });*/
-      .end(err => {
-        if (err === null) {
-          // får absolut ikke noe annet enn "null" fra 204
-          done(err);
-        }
+        res.should.have.status(204);
+        done();
       });
   });
 });
