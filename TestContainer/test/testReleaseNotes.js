@@ -35,18 +35,16 @@ describe("Release notes GET", () => {
           done(err);
         }
         expect(res.body).to.be.a("array");
-        expect(res.body[0].title).to.equal("Trump bygger vegg mot Corona");
-        expect(res.body[0].ingress).to.equal("Kina skal betale for veggen");
-        expect(res.body[0].description).to.equal(
-          "Det hjelper fint lite, sier forskere"
-        );
-        expect(res.body[0].authorName).to.equal("Ronnay Voudrait");
-        expect(res.body[0].authorEmail).to.equal("ronnay@natron.no");
-        expect(res.body[0].workItemTitle).to.equal(
-          "Fix issues with the application"
-        );
+        expect(res.body[0].title).to.be.a("string").that.is.not.empty;
+        //expect(res.body[0].title).to.equal("Trump bygger vegg mot Corona");
+        expect(res.body[0].ingress).to.be.a("string").that.is.not.empty;
+        expect(res.body[0].ingress).to.be.a("string").that.is.not.empty;
+        expect(res.body[0].description).to.be.a("string").that.is.not.empty;
+        expect(res.body[0].authorName).to.be.a("string").that.is.not.empty;
+        expect(res.body[0].authorEmail).to.be.a("string").that.is.not.empty;
+        expect(res.body[0].workItemTitle).to.be.a("string").that.is.not.empty;
         expect(res.body[0].isPublic).to.equal(false);
-        expect(res.body[0].workItemId).to.equal(20);
+        expect(res.body[0].workItemId).to.be.a("number");
         res.should.have.status(200);
         done();
       });
@@ -75,15 +73,13 @@ describe("Release notes GET", () => {
           done(err.response);
         }
         res.should.have.status(200);
-        expect(res.body.id).to.equal(5);
-        expect(res.body.title).to.equal("Corona i Kina");
-        expect(res.body.ingress).to.equal(
-          "Det er nå påvist masse corona i Kina"
-        );
-        expect(res.body.authorName).to.equal("Ronnay Voudrait");
-        expect(res.body.authorEmail).to.equal("ronnay@natron.no");
-        expect(res.body.isPublic).to.equal(false);
-        expect(res.body.workItemId).to.equal(20);
+        expect(res.body.id).to.be.a("number");
+        expect(res.body.title).to.be.a("string").that.is.not.empty;
+        expect(res.body.ingress).to.be.a("string").that.is.not.empty;
+        expect(res.body.authorName).to.be.a("strint").that.is.not.empty;
+        expect(res.body.authorEmail).to.be.a("string").that.is.not.empty;
+        expect(res.body.isPublic).to.be.a("boolean");
+        expect(res.body.workItemId).to.be.a("number");
         noteToDelete = res.body;
         done();
       });
