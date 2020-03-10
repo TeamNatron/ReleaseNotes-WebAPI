@@ -58,7 +58,12 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new Release {Id = 101, ProductVersionId = 101, Title = "Love Sosa", IsPublic = false},
                     new Release {Id = 102, ProductVersionId = 102, Title = "Chief Keef", IsPublic = true},
                     new Release {Id = 103, ProductVersionId = 103, Title = "2012", IsPublic = false},
-                    new Release {Id = 104, ProductVersionId = 103, Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true},
+                    new Release
+                    {
+                        Id = 104, ProductVersionId = 103,
+                        Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true
+                    },
+                    new Release {Id = 105, ProductVersionId = 102, Title = "ahhh shibal", IsPublic = false}
                 };
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
@@ -95,6 +100,15 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "Corona i Norge", Ingress = "Den er i Tromsø", Description = "unlucky, sier forskere",
                         WorkItemDescriptionHtml = htmlDummy3, WorkItemTitle = "Forbid escapism",
                         ClosedDate = new DateTime(2190, 7, 11, 06, 21, 21, 21)
+                    },
+                    new ReleaseNote
+                    {
+                        WorkItemId = 24, AuthorName = "Lost Sight", AuthorEmail = "IMLSXYZ9@gmail.com",
+                        Title = "Man malds on stream",
+                        Ingress = "Le Snek is malding over draft",
+                        Description = "This LCK color caster is losing follicles by the second",
+                        WorkItemDescriptionHtml = htmlDummy2, WorkItemTitle = "Cut the western bullshit",
+                        ClosedDate = new DateTime(1989, 3, 16, 02, 22, 42, 1)
                     },
                     new ReleaseNote
                     {

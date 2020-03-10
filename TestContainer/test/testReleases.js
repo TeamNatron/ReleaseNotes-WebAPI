@@ -24,18 +24,13 @@ const TEST_RELEASE_3 = {
   IsPublic: false
 };
 
-const TEST_RELEASE_4 = {
-  ProductVersionId: 9999999,
-  ReleaseNotesId: [1, 99999]
-};
-
 var accessToken;
 const addressReleases = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
 const addressGetFail = "/api/releases/1002";
-const addressDelete = "/api/releases/103";
+const addressDelete = "/api/releases/105";
 const addressDeleteFail = "/api/releases/1003";
 
 const init = () => {
@@ -45,7 +40,8 @@ const init = () => {
 describe("Releases POST", () => {
   before(() => init());
 
-  it("CREATE | Should return unauthorized", done => {
+  // should return 401 unauth
+  it("CREATE | Tries to create a release without being logged in", done => {
     chai
       .request(process.env.APP_URL)
       .post(addressReleases)
@@ -56,7 +52,8 @@ describe("Releases POST", () => {
       });
   });
 
-  it("PUT | Should return unauthorized", done => {
+  // should return a 401 unauth
+  it("PUT | Tries to update a release without being logged in", done => {
     chai
       .request(process.env.APP_URL)
       .put(addressPut)
@@ -67,7 +64,8 @@ describe("Releases POST", () => {
       });
   });
 
-  it("CREATE | Should return created", done => {
+  // should return 200 OK
+  it("CREATE | Successfully creating a release", done => {
     chai
       .request(process.env.APP_URL)
       .post(addressReleases)
@@ -83,7 +81,8 @@ describe("Releases POST", () => {
       });
   });
 
-  it("CREATE | Should return release name already in use", done => {
+  // should return 400 Bad Request
+  it("CREATE | Tries to create a already created release", done => {
     chai
       .request(process.env.APP_URL)
       .post(addressReleases)
@@ -148,7 +147,7 @@ describe("Releases POST", () => {
       .put(addressCheckAfterCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .send(TEST_RELEASE_4)
+      .send(TEST_RELEASE_3)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
@@ -166,7 +165,6 @@ describe("Releases POST", () => {
       });
   });
 });
-
 describe("Releases GET", () => {
   before(() => init());
 
@@ -188,8 +186,7 @@ describe("Releases GET", () => {
       });
   });
 
-  // failure case: Logged in and attempting to get a release that does not exist
-  it("GET | Should return a 204 no content", done => {
+  it("GET | Attempting to get a non-existant release", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetFail)
@@ -216,13 +213,11 @@ describe("Releases GET", () => {
           done(err.response.text);
         }
         res.should.have.status(200);
-        expect(res.body.id).to.equal(102);
-        expect(res.body.title).to.equal("Chief Keef");
         expect(res.body.isPublic).to.equal(true);
         expect(res.body.productVersion).to.be.not.empty;
         expect(res.body.releaseNotes).to.be.a("array");
         expect(res.body.releaseNotes).to.be.empty;
-        expect(correctDateFormat(res.body.date)).to.be.true;
+        expect(correctDateFormat(res.body.date)).to.be.false;
         done();
       });
   });
@@ -230,8 +225,7 @@ describe("Releases GET", () => {
 
 describe("Releases DELETE", () => {
   before(() => init());
-  // DELETE | Should return a 401 unauth
-  it("DELETE | Tries to delete a release note without authorization", done => {
+  it("DELETE | Tries to delete a release without logging in", done => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -241,7 +235,6 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // Should return a 400 Bad Request
   it("DELETE | Tries to delete a non-existant release", done => {
     chai
       .request(process.env.APP_URL)
@@ -254,43 +247,36 @@ describe("Releases DELETE", () => {
       });
   });
 
-  // DELETE | Should return a 401 unath
-  it("DELETE | Tries to delet a non-existant release without authorization", done => {
+  // success case: deletes a release
+  it("DELETE | Should delete a release and return a copy of the deleted release", done => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDeleteFail)
-      .end(err => {
-        expect(err.should.have.status(401));
-        done();
-      });
-  });
-
-  // DELETE | Should return a ok 200, and a copy of the deleted release
-  it("DELETE | Deletes a release correctly", done => {
-    chai
-      .request(process.env.APP_URL)
-      .delete(addressDelete)
+      .delete(addressCheckAfterCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
         if (err) {
-          done(err.response.text);
+          done(err.response);
         }
         res.should.have.status(200);
         expect(res.body.id).to.equal(103);
-        expect(res.body.title).to.equal("2012");
-        expect(res.body.isPublic).to.equal(false);
-        expect(res.body.productVersion).to.be.not.empty;
-        expect(res.body.releaseNotes).to.be.a("array").that.is.empty;
+        expect(res.body.title).to.equal(TEST_RELEASE_2.Title);
+        expect(res.body.isPublic).to.equal(TEST_RELEASE_3.IsPublic);
+        expect(res.body.productVersion.id).to.equal(
+          TEST_RELEASE_2.ProductVersionId
+        );
+        expect(res.body.releaseNotes[0].id).to.equal(
+          TEST_RELEASE_2.ReleaseNotesId[0]
+        );
         done();
       });
   });
 
-  // DELETE | Should return 400
+  // failure case: Tries to delete a already deleted release
   it("DELETE | Tries to delete a already deleted release", done => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDelete)
+      .delete(addressCheckAfterCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end(err => {
