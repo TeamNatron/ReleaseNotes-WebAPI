@@ -24,7 +24,7 @@ const TEST_RELEASE_3 = {
 };
 
 var accessToken;
-const addressCreate = "/api/releases";
+const addressReleases = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
 const addressGet = "/api/releases/102";
@@ -34,7 +34,6 @@ const addressDeleteFail = "/api/releases/1003";
 
 const init = () => {
   accessToken = TokenHandler.getAccessToken();
-  console.log(addressPut);
 };
 
 describe("Releases POST", () => {
@@ -44,7 +43,7 @@ describe("Releases POST", () => {
   it("CREATE | Tries to create a release without being logged in", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .send(TEST_RELEASE_1)
       .end(err => {
         err.should.have.status(401);
@@ -68,7 +67,7 @@ describe("Releases POST", () => {
   it("CREATE | Successfully creating a release", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -85,7 +84,7 @@ describe("Releases POST", () => {
   it("CREATE | Tries to create a already created release", done => {
     chai
       .request(process.env.APP_URL)
-      .post(addressCreate)
+      .post(addressReleases)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
@@ -140,6 +139,30 @@ describe("Releases POST", () => {
         done();
       });
   });
+
+  it("PUT | Should handle unknown values", done => {
+    chai
+      .request(process.env.APP_URL)
+      .put(addressCheckAfterCreate)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .send(TEST_RELEASE_3)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        expect(res.body.productVersion.id).to.equal(
+          TEST_RELEASE_2.ProductVersionId
+        );
+        expect(res.body.title).to.equal(TEST_RELEASE_2.Title);
+        expect(res.body.isPublic).to.equal(TEST_RELEASE_3.IsPublic);
+        expect(res.body.releaseNotes.length).to.equal(1);
+        expect(res.body.releaseNotes[0].id).to.equal(
+          TEST_RELEASE_2.ReleaseNotesId[0]
+        );
+        done();
+      });
+  });
 });
 describe("Releases GET", () => {
   before(() => init());
@@ -147,7 +170,7 @@ describe("Releases GET", () => {
   it("Should return all releases", done => {
     chai
       .request(process.env.APP_URL)
-      .get(addressCreate)
+      .get(addressReleases)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
@@ -168,10 +191,12 @@ describe("Releases GET", () => {
       .get(addressGetFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .end(err => {
-        if (err === null) {
-          done();
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
         }
+        res.should.have.status(204);
+        done();
       });
   });
 
@@ -226,7 +251,7 @@ describe("Releases DELETE", () => {
   it("DELETE | Should delete a release and return a copy of the deleted release", done => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDelete)
+      .delete(addressCheckAfterCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
@@ -234,11 +259,15 @@ describe("Releases DELETE", () => {
           done(err.response);
         }
         res.should.have.status(200);
-        expect(res.body.id).to.equal(105);
-        expect(res.body.title).to.equal("ahhh shibal");
-        expect(res.body.isPublic).to.equal(false);
-        expect(res.body.productVersion).to.be.not.empty;
-        expect(res.body.releaseNotes).to.be.a("array").that.is.empty;
+        expect(res.body.id).to.equal(103);
+        expect(res.body.title).to.equal(TEST_RELEASE_2.Title);
+        expect(res.body.isPublic).to.equal(TEST_RELEASE_3.IsPublic);
+        expect(res.body.productVersion.id).to.equal(
+          TEST_RELEASE_2.ProductVersionId
+        );
+        expect(res.body.releaseNotes[0].id).to.equal(
+          TEST_RELEASE_2.ReleaseNotesId[0]
+        );
         done();
       });
   });
@@ -247,7 +276,7 @@ describe("Releases DELETE", () => {
   it("DELETE | Tries to delete a already deleted release", done => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDelete)
+      .delete(addressCheckAfterCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end(err => {

@@ -96,7 +96,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     },
                     new ReleaseNote
                     {
-                        WorkItemId = 22, AuthorName = "Liu chi", AuthorEmail = "luichi@natron.rno",
+                        WorkItemId = 22, AuthorName = "Liu chi", AuthorEmail = "luichi@natron.no",
                         Title = "Corona i Norge", Ingress = "Den er i Tromsø", Description = "unlucky, sier forskere",
                         WorkItemDescriptionHtml = htmlDummy3, WorkItemTitle = "Forbid escapism",
                         ClosedDate = new DateTime(2190, 7, 11, 06, 21, 21, 21)

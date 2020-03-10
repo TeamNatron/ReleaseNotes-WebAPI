@@ -22,19 +22,9 @@ const init = () => {
 
 describe("Release notes GET", () => {
   before(() => init());
-  // Should return a 401 unauth
-  it("GET | Get all notes without auth", done => {
-    chai
-      .request(process.env.APP_URL)
-      .get(addressGet)
-      .end(err => {
-        err.should.have.status(401);
-        done();
-      });
-  });
 
   // should return 200 OK and a array of release notes
-  it("GET | Returns all the release note dummy data", done => {
+  it("GET | Returns all the release notes", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGet)
@@ -44,6 +34,8 @@ describe("Release notes GET", () => {
         if (err) {
           done(err);
         }
+        expect(res.body).to.be.a("array");
+        expect(res.body.length).to.equal(5);
         res.should.have.status(200);
         done();
       });
@@ -55,6 +47,8 @@ describe("Release notes GET", () => {
       .request(process.env.APP_URL)
       .get(addressGetSingle)
       .end(err => {
+        // console.log(err);
+        // finnes ingen good sjekk her
         err.should.have.status(401);
         done();
       });
@@ -73,6 +67,14 @@ describe("Release notes GET", () => {
         }
         res.should.have.status(200);
         expect(res.body.id).to.equal(5);
+        expect(res.body.title).to.equal("Corona i Kina");
+        expect(res.body.ingress).to.equal(
+          "Det er nå påvist masse corona i Kina"
+        );
+        expect(res.body.authorName).to.equal("Ronnay Voudrait");
+        expect(res.body.authorEmail).to.equal("ronnay@natron.no");
+        expect(res.body.isPublic).to.equal(false);
+        expect(res.body.workItemId).to.equal(20);
         noteToDelete = res.body;
         done();
       });
@@ -85,9 +87,19 @@ describe("Release notes GET", () => {
       .get(addressGetSingleFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
+      /*
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          done(err.response);
+        }
+        console.log(res.body);
+        expect(res.response.status).to.equal(204);
+      });*/
       .end(err => {
         if (err === null) {
-          done();
+          // får absolut ikke noe annet enn "null" fra 204
+          done(err);
         }
       });
   });
@@ -114,7 +126,7 @@ describe("Release notes DELETE", () => {
   });
 
   // failure case: Tries to delete a non-existant release note
-  // shpuld return a 400 Bad Request
+  // should return a 400 Bad Request
   it("DELETE | Tries to delete a non-existant release note", done => {
     chai
       .request(process.env.APP_URL)
