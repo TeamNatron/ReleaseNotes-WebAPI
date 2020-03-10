@@ -24,19 +24,16 @@ describe("Release notes GET", () => {
   before(() => init());
 
   // should return 200 OK and a array of release notes
-  it("GET | Returns all the release notes", done => {
+  it("GET | Get all release notes", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGet)
-      .set("Content-Type", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
         if (err) {
           done(err);
         }
         expect(res.body).to.be.a("array");
         expect(res.body[0].title).to.be.a("string").that.is.not.empty;
-        expect(res.body[0].ingress).to.be.a("string").that.is.not.empty;
         expect(res.body[0].ingress).to.be.a("string").that.is.not.empty;
         expect(res.body[0].description).to.be.a("string").that.is.not.empty;
         expect(res.body[0].authorName).to.be.a("string").that.is.not.empty;
@@ -49,13 +46,24 @@ describe("Release notes GET", () => {
       });
   });
 
-  // should return a 401 unauth
-  it("GET | Tries to get a single release without auth", done => {
+  // should return a 200 OK and specified release note
+  it("GET | Get a single release", done => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetSingle)
-      .end(err => {
-        err.should.have.status(401);
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        expect(res.body.title).to.be.a("string").that.is.not.empty;
+        expect(res.body.ingress).to.be.a("string").that.is.not.empty;
+        expect(res.body.description).to.be.a("string").that.is.not.empty;
+        expect(res.body.authorName).to.be.a("string").that.is.not.empty;
+        expect(res.body.authorEmail).to.be.a("string").that.is.not.empty;
+        expect(res.body.workItemTitle).to.be.a("string").that.is.not.empty;
+        expect(res.body.isPublic).to.equal(false);
+        expect(res.body.workItemId).to.be.a("number");
+        res.should.have.status(200);
         done();
       });
   });
@@ -65,8 +73,6 @@ describe("Release notes GET", () => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetSingle)
-      .set("Content-Type", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
         if (err) {
           done(err.response);
@@ -89,8 +95,6 @@ describe("Release notes GET", () => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetSingleFail)
-      .set("Content-Type", "application/json")
-      .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
