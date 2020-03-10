@@ -36,7 +36,6 @@ describe("Release notes GET", () => {
         }
         expect(res.body).to.be.a("array");
         expect(res.body[0].title).to.be.a("string").that.is.not.empty;
-        //expect(res.body[0].title).to.equal("Trump bygger vegg mot Corona");
         expect(res.body[0].ingress).to.be.a("string").that.is.not.empty;
         expect(res.body[0].ingress).to.be.a("string").that.is.not.empty;
         expect(res.body[0].description).to.be.a("string").that.is.not.empty;
