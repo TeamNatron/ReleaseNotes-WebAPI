@@ -55,15 +55,32 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 var releases = new List<Release>
                 {
                     new Release {Id = 100, ProductVersionId = 100, Title = "Finally Rich", IsPublic = true},
-                    new Release {Id = 101, ProductVersionId = 101, Title = "Love Sosa", IsPublic = false},
-                    new Release {Id = 102, ProductVersionId = 102, Title = "Chief Keef", IsPublic = true},
-                    new Release {Id = 103, ProductVersionId = 103, Title = "2012", IsPublic = false},
+                    new Release
+                    {
+                        Id = 101, ProductVersionId = 101, Title = "Love Sosa", IsPublic = false,
+                        Date = new DateTime(2012, 7, 13, 16, 8, 24, 44)
+                    },
+                    new Release
+                    {
+                        Id = 102, ProductVersionId = 102, Title = "Chief Keef", IsPublic = true,
+                        Date = new DateTime(2013, 1, 26, 16, 8, 24, 44)
+                    },
+                    new Release
+                    {
+                        Id = 103, ProductVersionId = 103, Title = "2012", IsPublic = false,
+                        Date = new DateTime(2014, 2, 11, 16, 8, 24, 44)
+                    },
                     new Release
                     {
                         Id = 104, ProductVersionId = 103,
-                        Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true
+                        Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true,
+                        Date = new DateTime(2015, 3, 12, 16, 8, 24, 44)
                     },
-                    new Release {Id = 105, ProductVersionId = 102, Title = "ahhh shibal", IsPublic = false}
+                    new Release
+                    {
+                        Id = 105, ProductVersionId = 102, Title = "ahhh shibal", IsPublic = false,
+                        Date = new DateTime(2016, 5, 25, 16, 8, 24, 44)
+                    }
                 };
                 context.Releases.AddRange(releases);
                 context.SaveChanges();
