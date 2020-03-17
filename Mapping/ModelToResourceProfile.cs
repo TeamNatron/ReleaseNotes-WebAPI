@@ -29,7 +29,12 @@ namespace ReleaseNotes_WebAPI.Mapping
                         a => a.Expiration));
 
             CreateMap<Article, ArticleResource>();
-            CreateMap<Release, ReleaseResource>();
+            // CreateMap<Release, ReleaseResource>();
+            CreateMap<Release, ReleaseResource>()
+                .ForMember(rr => rr.ReleaseNotes,
+                    opt => opt.MapFrom(
+                        r => r.ReleaseReleaseNotes.Select(rrn => rrn.ReleaseNote)));
+            
             CreateMap<ProductVersion, ProductVersionResource>();
             CreateMap<Product, ProductResource>();
             CreateMap<ReleaseNote, ReleaseNoteResource>();
