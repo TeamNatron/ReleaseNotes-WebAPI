@@ -20,7 +20,6 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         
         public bool IsPublic { get; set; }
         
-        public ICollection<ReleaseNote> ReleaseNotes { get; set; } = new Collection<ReleaseNote>();
         public DateTime Date { get; set; }
     }
 }
