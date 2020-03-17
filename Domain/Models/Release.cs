@@ -22,6 +22,6 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         
         public DateTime Date { get; set; }
         
-        public IList<ReleaseReleaseNotes> ReleaseNotes { get; set; }
+        public ICollection<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
     }
 }

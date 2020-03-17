@@ -29,6 +29,6 @@ namespace ReleaseNotes_WebAPI.Domain.Models
 
         public bool IsPublic { get; set; } = false;
         
-        public IList<ReleaseReleaseNotes> Releases { get; set; }
+        public ICollection<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
     }
 }
