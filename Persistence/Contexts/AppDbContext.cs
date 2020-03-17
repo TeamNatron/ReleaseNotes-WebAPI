@@ -14,7 +14,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         public DbSet<ReleaseNote> ReleaseNotes { get; set; }
         public DbSet<ProductVersion> ProductVersions { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ReleaseReleaseNotes> ReleaseReleaseNotes { get; set; }
+        public DbSet<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -28,7 +28,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
             builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             builder.Entity<Release>().Property(r => r.Date).HasDefaultValue(DateTime.UtcNow);
-            builder.Entity<ReleaseReleaseNotes>().HasKey(
+            builder.Entity<ReleaseReleaseNote>().HasKey(
                 rrn => new {rrn.ReleaseId, rrn.ReleaseNoteId});
         }
     }
