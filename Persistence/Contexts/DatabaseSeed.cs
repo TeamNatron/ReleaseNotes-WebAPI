@@ -202,11 +202,11 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Date = new DateTime(2016, 5, 25, 16, 8, 24, 44)
                     }
                 };
-                var releaseReleaseNotes = new List<ReleaseReleaseNotes>();
+                var releaseReleaseNotes = new List<ReleaseReleaseNote>();
 
                 foreach (var releaseNote in releaseNotes)
                 {
-                    releaseReleaseNotes.Add(new ReleaseReleaseNotes
+                    releaseReleaseNotes.Add(new ReleaseReleaseNote
                         {ReleaseNote = releaseNote, Release = releases[0]});
                 }
 
