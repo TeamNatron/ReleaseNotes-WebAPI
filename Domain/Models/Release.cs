@@ -21,5 +21,7 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         public bool IsPublic { get; set; }
         
         public DateTime Date { get; set; }
+        
+        public IList<ReleaseReleaseNotes> ReleaseNotes { get; set; }
     }
 }
