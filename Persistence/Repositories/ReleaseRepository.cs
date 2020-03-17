@@ -67,6 +67,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
                 .Include(r => r.ProductVersion)
                 .ThenInclude(pv => pv.Product)
                 .Include(r => r.ReleaseReleaseNotes)
+                .ThenInclude(rrn => rrn.ReleaseNote)
                 .SingleOrDefaultAsync(r => r.Id == id);
         }
 
