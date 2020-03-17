@@ -27,23 +27,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
             builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             builder.Entity<Release>().Property(r => r.Date).HasDefaultValue(DateTime.UtcNow);
-
-            // RELEASE SETUP
-            // builder.Entity<Release>().Property(r => r.Id).UseHiLo();
-            // builder.Entity<Release>().Property(r => r.IsPublic).HasDefaultValue(true);
-
-            // ARTICLE SETUP
-            // builder.Entity<Article>().Property(a => a.Id).UseIdentityAlwaysColumn();
-            // builder.Entity<Article>().Property(a => a.IsPublic).HasDefaultValue(true);
-            // builder.Entity<Article>()
-            //     .HasOne(a => a.Release)
-            //     .WithOne(r => r.Article)
-            //     .HasForeignKey<Release>(r => r.ArticleId);
-            //
-            // builder.Entity<Article>().HasData
-            // (
-            //     new Article {Id = 100, Uri = "Article001"}
-            // );
         }
     }
 }
