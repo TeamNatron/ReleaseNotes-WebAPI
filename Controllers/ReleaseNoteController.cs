@@ -8,6 +8,7 @@ using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Extensions;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Controllers
 {
@@ -25,9 +26,9 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         // GET: api/releasenote
         [HttpGet]
-        public async Task<IEnumerable<ReleaseNoteResource>> GetAllAsync()
+        public async Task<IEnumerable<ReleaseNoteResource>> GetAllAsync([FromQuery] ReleaseNoteParameters queryParameters)
         {
-            var releaseNotes = await _releaseNoteService.ListAsync();
+            var releaseNotes = await _releaseNoteService.ListAsync(queryParameters);
             var resources = _mapper.Map<IEnumerable<ReleaseNoteResource>>(releaseNotes);
             return resources;
         }

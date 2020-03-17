@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Domain.Services
 {
     public interface IReleaseNoteService
     {
-        Task<IEnumerable<ReleaseNote>> ListAsync();
+        Task<IEnumerable<ReleaseNote>> ListAsync(ReleaseNoteParameters queryParameters);
 
         Task<ReleaseNoteResponse> GetReleaseNote(int id);
 
