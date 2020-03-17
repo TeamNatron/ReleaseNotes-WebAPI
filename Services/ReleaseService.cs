@@ -121,13 +121,29 @@ namespace ReleaseNotesWebAPI.Services
                 Release release;
                 try
                 {
+                    // Create new Release entity
                     release = new Release
                     {
                         Title = resource.Title,
                         IsPublic = resource.IsPublic,
                         ProductVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId),
-                        ReleaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId)
                     };
+
+                    // Create new ReleaseReleaseNotes entity
+                    var releaseReleaseNotes = new List<ReleaseReleaseNote>();
+                    
+                    // Retrieve all ReleaseNotes from database
+                    var releaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
+                    
+                    // Map each ReleaseNote to this Release
+                    foreach (var releaseNote in releaseNotes)
+                    {
+                        releaseReleaseNotes.Add(new ReleaseReleaseNote { Release = release, ReleaseNote = releaseNote});
+                    }
+                    
+                    // Add ReleaseReleaseNote to the Release
+                    release.ReleaseReleaseNotes = releaseReleaseNotes;
+
                 }
                 catch (Exception e)
                 {
