@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -26,22 +27,25 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         // GET: api/releasenote
         [HttpGet]
-        public async Task<IEnumerable<ReleaseNoteResource>> GetAllAsync(
+        public async Task<ActionResult<ReleaseNoteResource>> GetAllAsync(
             [FromQuery] ReleaseNoteParameters queryParameters)
         {
             var releaseNotes = await _releaseNoteService.ListAsync(queryParameters);
-            // see if filtering is needed
             if (queryParameters.StartDate.HasValue && queryParameters.EndDate.HasValue)
             {
-                // filter the relNotes, this returns a ReleaseNotesResponse, collection ver of noteResp
+                if (queryParameters.StartDate.Value.CompareTo(queryParameters.EndDate.Value) > 0)
+                {
+                    return BadRequest(ModelState);
+                }
+
                 var filteredNotes = await _releaseNoteService.FilterDates(releaseNotes, queryParameters);
-                // map the resp to IEnum<relNote>
                 var releaseNote = _mapper.Map<List<ReleaseNote>, IEnumerable<ReleaseNote>>(filteredNotes.List);
                 var res = _mapper.Map<IEnumerable<ReleaseNoteResource>>(releaseNote);
-                return res;
+                return Ok(res);
             }
+
             var resources = _mapper.Map<IEnumerable<ReleaseNoteResource>>(releaseNotes);
-            return resources;
+            return Ok(resources);
         }
 
         // GET: api/releasenote/{id}

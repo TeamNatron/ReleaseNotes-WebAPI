@@ -34,8 +34,6 @@ namespace ReleaseNotes_WebAPI.Mapping
             CreateMap<ProductVersion, ProductVersionResource>();
             CreateMap<Product, ProductResource>();
             CreateMap<ReleaseNote, ReleaseNoteResource>();
-            CreateMap<ReleaseNotesResponse, List<ReleaseNote>>();
-            CreateMap<ReleaseNotesResponse, IEnumerable<ReleaseNote>>();
         }
     }
 }
