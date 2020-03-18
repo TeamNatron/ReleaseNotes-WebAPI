@@ -1,4 +1,5 @@
-﻿using ReleaseNotes_WebAPI.Domain.Models;
+﻿using System.Collections.Generic;
+using ReleaseNotes_WebAPI.Domain.Models;
 
 namespace ReleaseNotes_WebAPI.Domain.Services.Communication
 {
@@ -21,7 +22,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services.Communication
         }
 
         /// <summary>
-        /// Creates am error response.
+        /// Creates an error response.
         /// </summary>
         /// <param name="message">Error message.</param>
         /// <returns>Response.</returns>
