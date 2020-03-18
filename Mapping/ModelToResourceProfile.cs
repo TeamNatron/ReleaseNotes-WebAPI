@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using ReleaseNotes_WebAPI.Domain.Models;
@@ -33,6 +34,8 @@ namespace ReleaseNotes_WebAPI.Mapping
             CreateMap<ProductVersion, ProductVersionResource>();
             CreateMap<Product, ProductResource>();
             CreateMap<ReleaseNote, ReleaseNoteResource>();
+            CreateMap<ReleaseNotesResponse, List<ReleaseNote>>();
+            CreateMap<ReleaseNotesResponse, IEnumerable<ReleaseNote>>();
         }
     }
 }

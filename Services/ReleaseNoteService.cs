@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
@@ -26,6 +29,38 @@ namespace ReleaseNotes_WebAPI.Services
             return await _releaseNoteRepository.ListAsync(queryParameters);
         }
 
+        public async Task<ReleaseNotesResponse> FilterDates(IEnumerable<ReleaseNote> notes,
+            ReleaseNoteParameters queryParameters)
+        {
+            // TODO: remove valid notes apporach, use noteRes instead
+            DateTime start = queryParameters.StartDate.Value;
+            DateTime end = queryParameters.EndDate.Value;
+            int res = start.CompareTo(end);
+            if (res < 0)
+            {
+                // Ordinary filter request
+                var validNotes = notes.Where(rn => rn.ClosedDate >= start && rn.ClosedDate <= end);
+                return new ReleaseNotesResponse(validNotes.ToList());
+            }
+
+            if (res == 0)
+            {
+                // StartDate and EndDate are the same
+                var validNotes = notes.Where(rn =>
+                    rn.ClosedDate.CompareTo(start) == 0);
+                return new ReleaseNotesResponse(validNotes.ToList());
+            }
+
+            if (res > 0)
+            {
+                // EndDate occurs before StartDate
+                Console.WriteLine("adasd");
+                return new ReleaseNotesResponse("Slutt dato kan ikke være før start dato!");
+            }
+            Console.WriteLine("asdasdasd");
+            return new ReleaseNotesResponse("Det oppsto en feil");
+        }
+
         public async Task<ReleaseNoteResponse> GetReleaseNote(int id)
         {
             var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
@@ -44,10 +79,6 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        public async Task<ReleaseNoteResponse> filterDateQuery()
-        {
-            return new ReleaseNoteResponse();
-        }
 
         public async Task<ReleaseNoteResponse> RemoveReleaseNote(int id)
         {
