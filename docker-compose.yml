@@ -46,8 +46,10 @@ services:
     command:
       npm start
     volumes:
-    - ../ReleaseNotes-WebApp/:/usr/src/app
-      
+      - ../ReleaseNotes-WebApp/:/usr/src/app
+    networks:
+      - dockerapi-dev
+
   test-runner:
     image: test-runner
     build:
