@@ -19,5 +19,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
         Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note);
 
         Task<ReleaseNotesResponse> FilterDates(IEnumerable<ReleaseNote> notes, ReleaseNoteParameters queryParameters);
+
+        Task<ReleaseNoteResponse> CreateReleaseNote(EditReleaseNoteResource note);
     }
 }

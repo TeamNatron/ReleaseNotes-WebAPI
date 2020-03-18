@@ -174,31 +174,31 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
 
                 var releases = new List<Release>
                 {
-                    new Release {Id = 100, ProductVersionId = 100, Title = "Finally Rich", IsPublic = true},
+                    new Release {Id = 100, ProductVersionId = 100, Title = "Release 2.1", IsPublic = true},
                     new Release
                     {
-                        Id = 101, ProductVersionId = 101, Title = "Love Sosa", IsPublic = false,
+                        Id = 101, ProductVersionId = 101, Title = "Release 2.2", IsPublic = false,
                         Date = new DateTime(2012, 7, 13, 16, 8, 24, 44)
                     },
                     new Release
                     {
-                        Id = 102, ProductVersionId = 102, Title = "Chief Keef", IsPublic = true,
+                        Id = 102, ProductVersionId = 102, Title = "Release 2.3", IsPublic = true,
                         Date = new DateTime(2013, 1, 26, 16, 8, 24, 44)
                     },
                     new Release
                     {
-                        Id = 103, ProductVersionId = 103, Title = "2012", IsPublic = false,
+                        Id = 103, ProductVersionId = 103, Title = "Release 3.1", IsPublic = false,
                         Date = new DateTime(2014, 2, 11, 16, 8, 24, 44)
                     },
                     new Release
                     {
                         Id = 104, ProductVersionId = 103,
-                        Title = "Han kunne ikke fordra paprika, men så skjedde dette ", IsPublic = true,
+                        Title = "Release 3.2", IsPublic = true,
                         Date = new DateTime(2015, 3, 12, 16, 8, 24, 44)
                     },
                     new Release
                     {
-                        Id = 105, ProductVersionId = 102, Title = "ahhh shibal", IsPublic = false,
+                        Id = 105, ProductVersionId = 102, Title = "Release 3.3", IsPublic = false,
                         Date = new DateTime(2016, 5, 25, 16, 8, 24, 44)
                     }
                 };

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
@@ -17,11 +18,13 @@ namespace ReleaseNotes_WebAPI.Services
     {
         private readonly IReleaseNoteRepository _releaseNoteRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ReleaseNoteService(IReleaseNoteRepository releaseNoteRepository, IUnitOfWork unitOfWork)
+        public ReleaseNoteService(IReleaseNoteRepository releaseNoteRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _releaseNoteRepository = releaseNoteRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<ReleaseNote>> ListAsync(ReleaseNoteParameters queryParameters)
@@ -117,6 +120,21 @@ namespace ReleaseNotes_WebAPI.Services
                 _releaseNoteRepository.UpdateReleaseNote(existingReleaseNote);
                 await _unitOfWork.CompleteAsync();
                 return new ReleaseNoteResponse(existingReleaseNote);
+            }
+            catch (Exception e)
+            {
+                return new ReleaseNoteResponse($"Det oppsto en feil: {e.Message}");
+            }
+        }
+
+        public async Task<ReleaseNoteResponse> CreateReleaseNote(EditReleaseNoteResource note)
+        {
+            try
+            {
+                var noteModel = _mapper.Map<ReleaseNote>(note);
+                _releaseNoteRepository.AddAsync(noteModel);
+                await _unitOfWork.CompleteAsync();
+                return new ReleaseNoteResponse(noteModel);
             }
             catch (Exception e)
             {

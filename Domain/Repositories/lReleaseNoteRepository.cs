@@ -9,7 +9,7 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
     {
         Task<IEnumerable<ReleaseNote>> ListAsync(ReleaseNoteParameters queryParameters);
         
-        Task AddAsync(ReleaseNote releaseNote);
+        void AddAsync(ReleaseNote releaseNote);
 
         Task<ReleaseNote> FindAsync(int id);
 
