@@ -3,6 +3,9 @@ version: "3.7"
 networks:
   dockerapi-dev:
     driver: bridge
+    
+volumes:
+  db_volume_prod:
 
 services:
   proxy:
@@ -20,6 +23,12 @@ services:
 
   dockerapi:
     image: dockerapi:latest
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSW: ${DB_PASSW}
+      HOST: ${HOST}
+      PORT: ${PORT}
     depends_on:
       - "postgres_image"
     build:
@@ -27,11 +36,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000"
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      DB_CONNECTION_STRING: "host=postgres_image;port=5432;database=releasenotedb;username=dbuser;password=dbpassword;"
     networks:
       - dockerapi-dev
+    command: "dotnet ReleaseNotes-WebApi.dll --environment=Production"
 
   postgres_image:
     image: postgres:latest
@@ -39,7 +46,7 @@ services:
       - "5432"
     restart: always
     volumes:
-      - db_volume:/var/lib/postgresql/data
+      - db_volume_prod:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "dbuser"
       POSTGRES_PASSWORD: "dbpassword"
@@ -59,6 +66,3 @@ services:
       - ../ReleaseNotes-WebApp/:/usr/src/app
     networks:
       - dockerapi-dev
-
-volumes:
-  db_volume:

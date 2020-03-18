@@ -47,3 +47,4 @@ msbuild.wrn
 .vs/
 /publickey.txt
 /TestContainer/node_modules/
+/.env

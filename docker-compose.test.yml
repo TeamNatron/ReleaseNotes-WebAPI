@@ -7,6 +7,12 @@ networks:
 services:
   dockerapi:
     image: dockerapi:latest
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSW: ${DB_PASSW}
+      HOST: ${HOST}
+      PORT: ${PORT}
     depends_on:
       - "postgres_image"
     build:
@@ -14,11 +20,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000"
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      DB_CONNECTION_STRING: "host=postgres_image;port=5432;database=releasenotedb;username=dbuser;password=dbpassword;"
     networks:
       - dockerapi-dev
+    command: "dotnet ReleaseNotes-WebApi.dll --environment=Development"
 
   postgres_image:
     image: postgres:latest
