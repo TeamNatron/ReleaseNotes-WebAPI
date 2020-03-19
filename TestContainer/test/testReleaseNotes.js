@@ -23,6 +23,11 @@ const RELEASE_NOTE_WITHOUT_DESCRIPTION = {
   authorName: "postman@ungspiller.no"
 };
 
+const CORRECT_DATE_FILTER =
+  "?startDate=2019-11-04T09:50:00.000Z&endDate=2020-03-11T09:50:33.789Z";
+const startDate = new Date("2019-11-04T09:50:00.000Z");
+const endDate = new Date("2020-03-11T09:50:33.789Z");
+
 var noteToDelete;
 
 const init = () => {
@@ -109,6 +114,31 @@ describe("Release notes GET", () => {
           done(err.response.text);
         }
         res.should.have.status(204);
+        done();
+      });
+  });
+
+  it("GET | Get Release Notes from a set date interval", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressGet + CORRECT_DATE_FILTER)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        // Checking if each object's date corresponds to filter
+        res.body.map(obj => {
+          const date = new Date(obj.closedDate);
+          expect(date.getTime()).to.satisfy(num => {
+            console.log(":::::::::::::::::::NUM:::::::::::::::::");
+            console.log(num);
+            console.log(":::::::::::::::::::END_DATE:::::::::::::::::");
+            console.log(endDate);
+            console.log(":::::::::::::::::::START_DATE:::::::::::::::::");
+            console.log(startDate);
+            return num >= startDate.getTime() && num <= endDate.getTime();
+          });
+        });
         done();
       });
   });
