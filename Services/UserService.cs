@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Repositories;
@@ -37,6 +38,11 @@ namespace ReleaseNotes_WebAPI.Services
         public async Task<User> FindByEmailAsync(string email)
         {
             return await _userRepository.FindByEmailAsync(email);
+        }
+
+        public async Task<IEnumerable<User>> ListAsync()
+        {
+            return await _userRepository.ListAsync();
         }
     }
 }
