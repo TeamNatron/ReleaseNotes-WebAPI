@@ -53,11 +53,16 @@ namespace ReleaseNotesWebAPI.Services
             if (resource.IsPublic != null) existingRelease.IsPublic = resource.IsPublic;
             if (resource.ReleaseNotesId != null)
             {
+                // Retrieve all ReleaseNotes from database
                 var releaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
-                if (releaseNotes != null)
-                {
-                    existingRelease.ReleaseNotes = releaseNotes;
 
+                // Remove all items from existing list
+                existingRelease.ReleaseReleaseNotes.Clear();
+                
+                // Map each ReleaseNote to this Release
+                foreach (var releaseNote in releaseNotes)
+                {
+                    existingRelease.ReleaseReleaseNotes.Add(new ReleaseReleaseNote { Release = existingRelease, ReleaseNote = releaseNote});
                 }
             }
             if (resource.ProductVersionId > 0 && resource.ProductVersionId != existingRelease.ProductVersionId)
@@ -121,13 +126,29 @@ namespace ReleaseNotesWebAPI.Services
                 Release release;
                 try
                 {
+                    // Create new Release entity
                     release = new Release
                     {
                         Title = resource.Title,
                         IsPublic = resource.IsPublic,
                         ProductVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId),
-                        ReleaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId)
                     };
+
+                    // Create new ReleaseReleaseNotes entity
+                    var releaseReleaseNotes = new List<ReleaseReleaseNote>();
+                    
+                    // Retrieve all ReleaseNotes from database
+                    var releaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
+                    
+                    // Map each ReleaseNote to this Release
+                    foreach (var releaseNote in releaseNotes)
+                    {
+                        releaseReleaseNotes.Add(new ReleaseReleaseNote { Release = release, ReleaseNote = releaseNote});
+                    }
+                    
+                    // Add ReleaseReleaseNote to the Release
+                    release.ReleaseReleaseNotes = releaseReleaseNotes;
+
                 }
                 catch (Exception e)
                 {

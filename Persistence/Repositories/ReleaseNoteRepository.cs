@@ -19,7 +19,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             return await _context.ReleaseNotes.ToListAsync();
         }
 
-        public async Task AddAsync(ReleaseNote releaseNote)
+        public async void AddAsync(ReleaseNote releaseNote)
         {
             await _context.ReleaseNotes.AddAsync(releaseNote);
         }
