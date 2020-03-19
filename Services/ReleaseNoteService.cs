@@ -7,6 +7,7 @@ using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Resources;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Services
 {
@@ -28,6 +29,11 @@ namespace ReleaseNotes_WebAPI.Services
             return await _releaseNoteRepository.ListAsync();
         }
 
+        public async Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters)
+        {
+            return await _releaseNoteRepository.FilterDates(queryParameters);
+        }
+
         public async Task<ReleaseNoteResponse> GetReleaseNote(int id)
         {
             var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
@@ -45,6 +51,7 @@ namespace ReleaseNotes_WebAPI.Services
                 return new ReleaseNoteResponse($"Det oppsto en feil: {e.Message}");
             }
         }
+
 
         public async Task<ReleaseNoteResponse> RemoveReleaseNote(int id)
         {

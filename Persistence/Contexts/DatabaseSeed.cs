@@ -98,7 +98,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "Sletting av faktura", Ingress = "Det er nå mulig å slette faktura i faktura-systemet",
                         Description = htmlDummy6, WorkItemDescriptionHtml = htmlDummy1,
                         WorkItemTitle = "Test item please ignore",
-                        ClosedDate = new DateTime(2001, 7, 11, 23, 5, 12, 23)
+                        ClosedDate = new DateTime(2019, 11, 05, 10, 52, 02, 22)
                     },
                     new ReleaseNote
                     {
@@ -108,7 +108,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                             "Microsofts nye filutforsker gir trolig et bilde inn i fremtiden også for Windows 10.",
                         Description = htmlDummy8,
                         WorkItemDescriptionHtml = htmlDummy8, WorkItemTitle = "Receive Nobel Price",
-                        ClosedDate = new DateTime(2012, 6, 16, 16, 8, 24, 44)
+                        ClosedDate = new DateTime(2020, 01, 16, 16, 8, 24, 44)
                     },
                     new ReleaseNote
                     {
@@ -118,7 +118,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                             "Electronic Arts har avslørt lanseringsdatoen for «Command & Conquer Remastered Collection».",
                         Description = htmlDummy9,
                         WorkItemDescriptionHtml = htmlDummy3, WorkItemTitle = "Forbid escapism",
-                        ClosedDate = new DateTime(2190, 7, 11, 06, 21, 21, 21)
+                        ClosedDate = new DateTime(2019, 11, 04, 09, 50, 00, 0)
                     },
                     new ReleaseNote
                     {

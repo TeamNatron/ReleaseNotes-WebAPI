@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
+using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Persistence.Contexts;
+using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Persistence.Repositories
 {
@@ -13,10 +18,17 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
         }
 
-        // basic list all
         public async Task<IEnumerable<ReleaseNote>> ListAsync()
         {
-            return await _context.ReleaseNotes.ToListAsync();
+            IQueryable<ReleaseNote> releaseNoteQuery = _context.ReleaseNotes.AsNoTracking();
+            return await releaseNoteQuery.ToListAsync();
+        }
+
+        public async Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters)
+        {
+            IQueryable<ReleaseNote> releaseNoteQuery = _context.ReleaseNotes.AsNoTracking();
+            return releaseNoteQuery.Where(rn =>
+                rn.ClosedDate >= queryParameters.StartDate.Value && rn.ClosedDate <= queryParameters.EndDate.Value);
         }
 
         public async void AddAsync(ReleaseNote releaseNote)

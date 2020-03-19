@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using ReleaseNotes_WebAPI.Domain.Models;
