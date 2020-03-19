@@ -31,4 +31,4 @@ Include all fields that are represented in the example below
 
 `docker-compose -f docker-compose.test.yml up --build`
 
-`docker-compose down --volumes`
+`docker-compose -f docker-compose.test.yml down --volumes`
