@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using ReleaseNotes_WebAPI.Utilities;
 
@@ -21,11 +22,16 @@ namespace ReleaseNotes_WebAPI.Security.Tokens
                 var writer = new StringWriter();
                 ExportPublicKey(provider, writer);
                 PublicKeyPem = writer.ToString();
-                FileHandler.WriteFileAsync("", "publickey.txt", PublicKeyPem);
+                WriteFile();
                 Console.WriteLine("PUBLIC KEY FROM FIELD: \n" + PublicKeyPem);
             }
 
             SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.RsaSha256);
+        }
+
+        private async void WriteFile()
+        {
+            await FileHandler.WriteFileAsync("", "publickey.txt", PublicKeyPem);
         }
 
         /**

@@ -1,0 +1,57 @@
+version: "3.7"
+
+networks:
+  dockerapi-dev:
+    driver: bridge
+
+volumes:
+  db_volume_dev:
+
+services:
+  dockerapi:
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSW: ${DB_PASSW}
+      HOST: ${HOST}
+      PORT: ${PORT}
+    image: dockerapi:latest
+    depends_on:
+      - "postgres_image"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - dockerapi-dev
+    command: "dotnet ReleaseNotes-WebApi.dll --environment=Development"
+
+  postgres_image:
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSW}
+      POSTGRES_DB: ${DB_NAME}
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - db_volume_dev:/var/lib/postgresql/data
+    networks:
+      - dockerapi-dev
+
+  webapp:
+    image: webapp:latest
+    environment:
+      REACT_APP_APP_URL: http://localhost:5000
+    build:
+      context: ../ReleaseNotes-WebApp/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    command: npm start
+    volumes:
+      - ../ReleaseNotes-WebApp/:/usr/src/app
+    networks:
+      - dockerapi-dev

@@ -39,12 +39,20 @@ namespace ReleaseNotes_WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // GRABBING ENVIRONMENT VARIABLES
+            // Need to do the construction of the connectionString inside StartUp,
+            // since it's hard to do string manipulation in docker-world
+            var host = Environment.GetEnvironmentVariable("HOST");
+            var port = Environment.GetEnvironmentVariable("PORT");
+            var db = Environment.GetEnvironmentVariable("DB_NAME");
+            var user = Environment.GetEnvironmentVariable("DB_USER");
+            var passw = Environment.GetEnvironmentVariable("DB_PASSW");
+            var connectionString =
+                "host=" + host + ";port=" + port + ";database=" + db + ";username=" + user + ";password=" + passw + ";";
+
             // ADDS DATABASE SERVICE
             // CONNECTS WEB-API TO DB
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDbContext<AppDbContext>(options => { options.UseNpgsql(connectionString); });
 
             // Enable CORS
             services.AddCors(options =>
@@ -101,34 +109,34 @@ namespace ReleaseNotes_WebAPI
                         IssuerSigningKey = signingConfigurations.Key,
                         ClockSkew = TimeSpan.Zero
                     };
-                    jwtBearerOptions.Events = new JwtBearerEvents()
-                    {
-                        OnChallenge = context =>
-                        {
-                            Console.WriteLine("OnChallenge: " + context.Response.StatusCode);
-                            return Task.CompletedTask;
-                        },
-                        OnAuthenticationFailed = context =>
-                        {
-                            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-                            return Task.CompletedTask;
-                        },
-                        OnForbidden = context =>
-                        {
-                            Console.WriteLine("OnForbidden: " + context.Response.StatusCode);
-                            return Task.CompletedTask;
-                        },
-                        OnMessageReceived = context =>
-                        {
-                            Console.WriteLine("OnMessageReceived: " + context.Response.StatusCode);
-                            return Task.CompletedTask;
-                        },
-                        OnTokenValidated = context =>
-                        {
-                            Console.WriteLine("OnTokenValidated: " + context.Response.StatusCode);
-                            return Task.CompletedTask;
-                        }
-                    };
+                    // jwtBearerOptions.Events = new JwtBearerEvents()
+                    // {
+                    //     OnChallenge = context =>
+                    //     {
+                    //         Console.WriteLine("OnChallenge: " + context.Response.StatusCode);
+                    //         return Task.CompletedTask;
+                    //     },
+                    //     OnAuthenticationFailed = context =>
+                    //     {
+                    //         Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+                    //         return Task.CompletedTask;
+                    //     },
+                    //     OnForbidden = context =>
+                    //     {
+                    //         Console.WriteLine("OnForbidden: " + context.Response.StatusCode);
+                    //         return Task.CompletedTask;
+                    //     },
+                    //     OnMessageReceived = context =>
+                    //     {
+                    //         Console.WriteLine("OnMessageReceived: " + context.Response.StatusCode);
+                    //         return Task.CompletedTask;
+                    //     },
+                    //     OnTokenValidated = context =>
+                    //     {
+                    //         Console.WriteLine("OnTokenValidated: " + context.Response.StatusCode);
+                    //         return Task.CompletedTask;
+                    //     }
+                    // };
                 });
 
             // May be wrong to use current parameter, was added to resolve error
