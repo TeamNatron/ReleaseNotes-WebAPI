@@ -3,7 +3,8 @@
 This is the the repository for the application server for the bachelor
 project Release Notes System.
 ---
-Setup
+Setup:
+
 Create a new file `.env` to host all environment variables.
 
 Include all fields that are represented in the example below
