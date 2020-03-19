@@ -26,13 +26,41 @@ namespace ReleaseNotes_WebAPI.Services
             var existingUser = await _userRepository.FindByEmailAsync(user.Email);
             if (existingUser != null)
                 return new CreateUserResponse(false, "Email already in use", null);
-
             user.Password = _passwordHasher.HashPassword(user.Password);
 
             await _userRepository.AddAsync(user, userRoles);
             await _unitOfWork.CompleteAsync();
 
             return new CreateUserResponse(true, null, user);
+        }
+
+        public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string newPassword)
+        {
+            // confirm the user's existence
+            var existingUser = await _userRepository.FindByEmailAsync(user.Email);
+            if (existingUser != null)
+            {
+                return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
+            }
+
+            // check if the passwords are the same
+            if (_passwordHasher.PasswordMatches(newPassword, user.Password))
+            {
+                return new CreateUserResponse(false, "Brukeren bruker dette passorder nå", null);
+            }
+
+            // set the new password
+            user.Password = _passwordHasher.HashPassword(user.Password);
+
+            await _unitOfWork.CompleteAsync();
+
+            return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
+
+            /*
+            user.Password = _passwordHasher.HashPassword(user.Password);
+
+            return new CreateUserResponse(true, "Brukeren har nå fått endret sitt passord", user);
+            */
         }
 
         public async Task<User> FindByEmailAsync(string email)

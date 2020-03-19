@@ -30,7 +30,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             var usersResource = _mapper.Map<IEnumerable<UserResource>>(users);
             return Ok(usersResource);
         }
-        
+
         [HttpPost]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> CreateUserAsync([FromBody] UserCredentialResource userCredentials)
@@ -43,6 +43,30 @@ namespace ReleaseNotes_WebAPI.Controllers
             var user = _mapper.Map<UserCredentialResource, User>(userCredentials);
 
             var response = await _userService.CreateUserAsync(user, ERole.Administrator);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+
+            var userResource = _mapper.Map<User, UserResource>(response.User);
+            return Ok(userResource);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> ChangeUserPassword([FromBody] UpdateUserPasswordResource
+            updateUserPasswordResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Get the user
+            var user = _mapper.Map<UpdateUserPasswordResource, User>(updateUserPasswordResource);
+
+            // Change the user's password
+            var response = await _userService.ChangeUserPasswordAsync(user, updateUserPasswordResource.Password);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
