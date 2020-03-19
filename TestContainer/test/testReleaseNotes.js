@@ -130,12 +130,6 @@ describe("Release notes GET", () => {
         res.body.map(obj => {
           const date = new Date(obj.closedDate);
           expect(date.getTime()).to.satisfy(num => {
-            console.log(":::::::::::::::::::NUM:::::::::::::::::");
-            console.log(num);
-            console.log(":::::::::::::::::::END_DATE:::::::::::::::::");
-            console.log(endDate);
-            console.log(":::::::::::::::::::START_DATE:::::::::::::::::");
-            console.log(startDate);
             return num >= startDate.getTime() && num <= endDate.getTime();
           });
         });
