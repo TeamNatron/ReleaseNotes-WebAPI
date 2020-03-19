@@ -13,6 +13,15 @@ const addressPut = "/api/releasenote/100";
 const addressPutFail = "api/releasenote/123123125";
 const addressDelete = "/api/releasenote/5";
 const addressDeleteFail = "/api/releasenote/897324";
+const addressReleaseNote = "/api/releasenote";
+
+const RELEASE_NOTE_WITHOUT_DESCRIPTION = {
+  title: "Ny dag, ny release note",
+  ingress:
+    "Det er en tirsdag i 2020. Det neste du leser vil absolutt blåse minnet ditt.",
+  isPublic: "false",
+  authorName: "postman@ungspiller.no"
+};
 
 var noteToDelete;
 
@@ -108,6 +117,25 @@ describe("Release notes GET", () => {
 describe("Release note PUT", () => {
   before(() => init());
   // TODO: create tests
+});
+
+describe("Release note POST", () => {
+  before(() => init());
+
+  it("POST | Tries to create release note without providing a description", done => {
+    chai
+      .request(process.env.APP_URL)
+      .post(addressReleaseNote)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .send(RELEASE_NOTE_WITHOUT_DESCRIPTION)
+      .end(err => {
+        console.log("err");
+        console.log(err);
+        expect(err.should.have.status(400));
+        done();
+      });
+  });
 });
 
 describe("Release notes DELETE", () => {
