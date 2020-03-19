@@ -43,6 +43,8 @@ services:
 
   webapp:
     image: webapp:latest
+    environment:
+      APP_URL: http://dockerapi:5000
     build:
       context: ../ReleaseNotes-WebApp/
       dockerfile: Dockerfile

@@ -56,6 +56,8 @@ services:
 
   webapp:
     image: webapp:latest
+    environment:
+      APP_URL: http://markuran-releasenotessystem.uials.no
     build:
       context: ../ReleaseNotes-WebApp/
       dockerfile: Dockerfile
