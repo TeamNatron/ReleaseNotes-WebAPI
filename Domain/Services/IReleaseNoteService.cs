@@ -12,13 +12,13 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     {
         Task<IEnumerable<ReleaseNote>> ListAsync();
 
+        Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters);
+
         Task<ReleaseNoteResponse> GetReleaseNote(int id);
 
         Task<ReleaseNoteResponse> RemoveReleaseNote(int id);
 
         Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note);
-
-        Task<ReleaseNotesResponse> FilterDates(IEnumerable<ReleaseNote> notes, ReleaseNoteParameters queryParameters);
 
         Task<ReleaseNoteResponse> CreateReleaseNote(EditReleaseNoteResource note);
     }

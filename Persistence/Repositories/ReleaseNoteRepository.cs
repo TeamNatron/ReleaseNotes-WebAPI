@@ -24,6 +24,13 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             return await releaseNoteQuery.ToListAsync();
         }
 
+        public async Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters)
+        {
+            IQueryable<ReleaseNote> releaseNoteQuery = _context.ReleaseNotes.AsNoTracking();
+            return releaseNoteQuery.Where(rn =>
+                rn.ClosedDate >= queryParameters.StartDate.Value && rn.ClosedDate <= queryParameters.EndDate.Value);
+        }
+
         public async void AddAsync(ReleaseNote releaseNote)
         {
             await _context.ReleaseNotes.AddAsync(releaseNote);

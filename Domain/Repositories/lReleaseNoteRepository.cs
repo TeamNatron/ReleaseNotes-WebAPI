@@ -8,6 +8,8 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
     public interface IReleaseNoteRepository
     {
         Task<IEnumerable<ReleaseNote>> ListAsync();
+
+        Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters);
         
         void AddAsync(ReleaseNote releaseNote);
 

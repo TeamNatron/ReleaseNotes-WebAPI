@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services;
-using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Extensions;
 using ReleaseNotes_WebAPI.Resources;
 using ReleaseNotes_WebAPI.Utilities;
@@ -30,20 +28,22 @@ namespace ReleaseNotes_WebAPI.Controllers
         public async Task<ActionResult<ReleaseNoteResource>> GetAllAsync(
             [FromQuery] ReleaseNoteParameters queryParameters)
         {
-            var releaseNotes = await _releaseNoteService.ListAsync();
+            // see if date filtering is required
             if (queryParameters.StartDate.HasValue && queryParameters.EndDate.HasValue)
             {
+                // Check if the endDate happens before the startDate
                 if (queryParameters.StartDate.Value.CompareTo(queryParameters.EndDate.Value) > 0)
                 {
                     return BadRequest(ModelState);
                 }
 
-                var filteredNotes = await _releaseNoteService.FilterDates(releaseNotes, queryParameters);
-                var releaseNote = _mapper.Map<List<ReleaseNote>, IEnumerable<ReleaseNote>>(filteredNotes.List);
-                var res = _mapper.Map<IEnumerable<ReleaseNoteResource>>(releaseNote);
+                var filteredDates = await _releaseNoteService.FilterDates(queryParameters);
+                var res = _mapper.Map<IEnumerable<ReleaseNoteResource>>(filteredDates);
                 return Ok(res);
             }
 
+            // no date filtering needed, return all release notes
+            var releaseNotes = await _releaseNoteService.ListAsync();
             var resources = _mapper.Map<IEnumerable<ReleaseNoteResource>>(releaseNotes);
             return Ok(resources);
         }
@@ -82,10 +82,11 @@ namespace ReleaseNotes_WebAPI.Controllers
             var releaseNoteResource = _mapper.Map<ReleaseNote, ReleaseNoteResource>(result.ReleaseNote);
             return Ok(releaseNoteResource);
         }
-        
+
         [HttpPost()]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<ActionResult<ReleaseNoteResource>> CreateReleaseNoteAsync([FromBody] EditReleaseNoteResource resource)
+        public async Task<ActionResult<ReleaseNoteResource>> CreateReleaseNoteAsync(
+            [FromBody] EditReleaseNoteResource resource)
         {
             if (!ModelState.IsValid)
             {

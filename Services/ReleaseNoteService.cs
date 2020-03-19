@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
@@ -32,36 +29,9 @@ namespace ReleaseNotes_WebAPI.Services
             return await _releaseNoteRepository.ListAsync();
         }
 
-        public async Task<ReleaseNotesResponse> FilterDates(IEnumerable<ReleaseNote> notes,
-            ReleaseNoteParameters queryParameters)
+        public async Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters)
         {
-            try
-            {
-                DateTime start = queryParameters.StartDate.Value;
-                DateTime end = queryParameters.EndDate.Value;
-                int res = start.CompareTo(end);
-                if (res < 0)
-                {
-                    // Ordinary filter request
-                    var validNotes = notes.Where(rn => rn.ClosedDate >= start && rn.ClosedDate <= end);
-                    return new ReleaseNotesResponse(validNotes.ToList());
-                }
-
-                if (res == 0)
-                {
-                    // StartDate and EndDate are the same
-                    var validNotes = notes.Where(rn =>
-                        rn.ClosedDate.CompareTo(start) == 0);
-                    return new ReleaseNotesResponse(validNotes.ToList());
-                }
-            }
-            catch (Exception e)
-            {
-                // if none of the above is entered => assume that the query is incorrect:
-                return new ReleaseNotesResponse($"Det oppsto en feil: {e.Message}");
-            }
-
-            return new ReleaseNotesResponse("Det oppsto en feil!");
+            return await _releaseNoteRepository.FilterDates(queryParameters);
         }
 
         public async Task<ReleaseNoteResponse> GetReleaseNote(int id)
