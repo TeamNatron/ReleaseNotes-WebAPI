@@ -9,6 +9,6 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
         Task AddAsync(User user, ERole[] userRoles);
         Task<User> FindByEmailAsync(string email);
         Task<IEnumerable<User>> ListAsync();
-        Task<User> ChangePassword(User user, string newPassword);
+        Task ChangePassword(User user);
     }
 }

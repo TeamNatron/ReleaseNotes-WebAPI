@@ -13,6 +13,7 @@ namespace ReleaseNotes_WebAPI.Mapping
         public ResourceToModelProfile()
         {
             CreateMap<UserCredentialResource, User>();
+            CreateMap<UpdateUserPasswordResource, User>();
             CreateMap<ReleaseNoteResource, ReleaseNote>();
             CreateMap<EditReleaseNoteResource, ReleaseNote>();
             CreateMap<SaveReleaseResource, Release>();

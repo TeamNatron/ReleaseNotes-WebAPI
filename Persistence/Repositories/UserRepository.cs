@@ -36,21 +36,9 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             _context.Users.Add(user);
         }
 
-        public async Task<User> ChangePassword(User user, string newPassword)
+        public async Task ChangePassword(User user)
         {
-            // TODO: confirm if user is needed
-            
-            /* pepega 2
-            // update the user's info
-            _context.Users.Update(user)
-            // return the user 
-            return await _context.Users.FindAsync(user);
-            */
-            /* Pepega 
-            var existingUser = await _context.Users.FindAsync(user);
-            var replace = existingUser.Password.Replace(user.Password, newPassword);
-            Console.WriteLine(replace);
-            */
+            _context.Users.Update(user);
         }
 
         public async Task<User> FindByEmailAsync(string email)
