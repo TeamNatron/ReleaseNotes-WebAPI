@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 
@@ -7,5 +8,6 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
     {
         Task AddAsync(User user, ERole[] userRoles);
         Task<User> FindByEmailAsync(string email);
+        Task<IEnumerable<User>> ListAsync();
     }
 }
