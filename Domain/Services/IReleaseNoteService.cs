@@ -10,7 +10,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 {
     public interface IReleaseNoteService
     {
-        Task<IEnumerable<ReleaseNote>> ListAsync(ReleaseNoteParameters queryParameters);
+        Task<IEnumerable<ReleaseNote>> ListAsync();
 
         Task<ReleaseNoteResponse> GetReleaseNote(int id);
 

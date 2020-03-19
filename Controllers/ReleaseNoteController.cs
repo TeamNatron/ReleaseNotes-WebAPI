@@ -30,7 +30,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         public async Task<ActionResult<ReleaseNoteResource>> GetAllAsync(
             [FromQuery] ReleaseNoteParameters queryParameters)
         {
-            var releaseNotes = await _releaseNoteService.ListAsync(queryParameters);
+            var releaseNotes = await _releaseNoteService.ListAsync();
             if (queryParameters.StartDate.HasValue && queryParameters.EndDate.HasValue)
             {
                 if (queryParameters.StartDate.Value.CompareTo(queryParameters.EndDate.Value) > 0)

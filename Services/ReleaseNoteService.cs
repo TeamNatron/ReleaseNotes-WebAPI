@@ -27,7 +27,7 @@ namespace ReleaseNotes_WebAPI.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ReleaseNote>> ListAsync(ReleaseNoteParameters queryParameters)
+        public async Task<IEnumerable<ReleaseNote>> ListAsync()
         {
             return await _releaseNoteRepository.ListAsync();
         }
