@@ -1,0 +1,70 @@
+version: "3.7"
+
+networks:
+  dockerapi-dev:
+    driver: bridge
+    
+volumes:
+  db_volume_prod:
+
+services:
+  proxy:
+    image: proxy:latest
+    build:
+      context: ../ReleaseNotes-Proxy
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - "../ReleaseNotes-Proxy/logs/:/var/log/nginx/"
+    networks:
+      - dockerapi-dev
+
+  dockerapi:
+    image: dockerapi:latest
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSW: ${DB_PASSW}
+      HOST: ${HOST}
+      PORT: ${PORT}
+    depends_on:
+      - "postgres_image"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000"
+    networks:
+      - dockerapi-dev
+    command: "dotnet ReleaseNotes-WebApi.dll --environment=Production"
+
+  postgres_image:
+    image: postgres:latest
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume_prod:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "dbuser"
+      POSTGRES_PASSWORD: "dbpassword"
+      POSTGRES_DB: "releasenotedb"
+    networks:
+      - dockerapi-dev
+
+  webapp:
+    image: webapp:latest
+    environment:
+      REACT_APP_APP_URL: http://markuran-releasenotessystem.uials.no
+    build:
+      context: ../ReleaseNotes-WebApp/
+      dockerfile: Dockerfile
+    ports:
+      - "3000"
+    command: npm start
+    volumes:
+      - ../ReleaseNotes-WebApp/:/usr/src/app
+    networks:
+      - dockerapi-dev
