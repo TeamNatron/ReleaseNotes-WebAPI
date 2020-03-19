@@ -1,6 +1,6 @@
 namespace ReleaseNotes_WebAPI.Domain.Models
 {
-    public class ReleaseNotes
+    public class ReleaseReleaseNote
     {
         public int ReleaseId { get; set; }
         public Release Release { get; set; }

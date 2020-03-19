@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,12 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             return await _context.Users.Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .SingleOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<IEnumerable<User>> ListAsync()
+        {
+            return await _context.Users.Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role).ToListAsync();
         }
     }
 }
