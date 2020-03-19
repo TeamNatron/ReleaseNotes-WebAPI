@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +22,15 @@ namespace ReleaseNotes_WebAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> ListAsync()
+        {
+            var users = await _userService.ListAsync();
+            var usersResource = _mapper.Map<IEnumerable<UserResource>>(users);
+            return Ok(usersResource);
+        }
+        
         [HttpPost]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> CreateUserAsync([FromBody] UserCredentialResource userCredentials)

@@ -102,6 +102,7 @@ namespace ReleaseNotes_WebAPI.Services
             try
             {
                 var noteModel = _mapper.Map<ReleaseNote>(note);
+                noteModel.ClosedDate = DateTime.Now;
                 _releaseNoteRepository.AddAsync(noteModel);
                 await _unitOfWork.CompleteAsync();
                 return new ReleaseNoteResponse(noteModel);
