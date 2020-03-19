@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
@@ -36,22 +37,17 @@ namespace ReleaseNotes_WebAPI.Services
 
         public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string newPassword)
         {
-            var existingUser = await _userRepository.FindByEmailAsync(user.Email);
-            if (existingUser == null)
+            try
             {
-                return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
+                user.Password = _passwordHasher.HashPassword(newPassword);
+                _userRepository.Update(user);
+                await _unitOfWork.CompleteAsync();
+                return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
             }
-
-            if (_passwordHasher.PasswordMatches(newPassword, user.Password))
+            catch (Exception e)
             {
-                return new CreateUserResponse(false, "Brukeren bruker dette passorder nå", null);
+                return new CreateUserResponse(false, $"Det oppsto en feil: {e.Message}", null);
             }
-
-            existingUser.Password = _passwordHasher.HashPassword(user.Password);
-            await _userRepository.ChangePassword(existingUser);
-            await _unitOfWork.CompleteAsync();
-
-            return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
         }
 
         public async Task<User> FindByEmailAsync(string email)
