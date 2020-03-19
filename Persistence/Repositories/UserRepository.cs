@@ -36,7 +36,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             _context.Users.Add(user);
         }
 
-        public async Task ChangePassword(User user)
+        public void Update(User user)
         {
             _context.Users.Update(user);
         }
