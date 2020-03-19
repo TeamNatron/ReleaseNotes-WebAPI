@@ -14,6 +14,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         public DbSet<ReleaseNote> ReleaseNotes { get; set; }
         public DbSet<ProductVersion> ProductVersions { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -27,23 +28,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
             builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             builder.Entity<Release>().Property(r => r.Date).HasDefaultValue(DateTime.UtcNow);
-
-            // RELEASE SETUP
-            // builder.Entity<Release>().Property(r => r.Id).UseHiLo();
-            // builder.Entity<Release>().Property(r => r.IsPublic).HasDefaultValue(true);
-
-            // ARTICLE SETUP
-            // builder.Entity<Article>().Property(a => a.Id).UseIdentityAlwaysColumn();
-            // builder.Entity<Article>().Property(a => a.IsPublic).HasDefaultValue(true);
-            // builder.Entity<Article>()
-            //     .HasOne(a => a.Release)
-            //     .WithOne(r => r.Article)
-            //     .HasForeignKey<Release>(r => r.ArticleId);
-            //
-            // builder.Entity<Article>().HasData
-            // (
-            //     new Article {Id = 100, Uri = "Article001"}
-            // );
+            builder.Entity<ReleaseReleaseNote>().HasKey(
+                rrn => new {rrn.ReleaseId, rrn.ReleaseNoteId});
         }
     }
 }

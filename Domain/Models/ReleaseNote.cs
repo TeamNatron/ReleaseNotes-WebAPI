@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,5 +28,7 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         public DateTime ClosedDate { get; set; }
 
         public bool IsPublic { get; set; } = false;
+        
+        public ICollection<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
     }
 }
