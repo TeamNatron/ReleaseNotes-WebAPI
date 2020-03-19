@@ -3,7 +3,8 @@
 This is the the repository for the application server for the bachelor
 project Release Notes System.
 ---
-###Setup
+Setup:
+
 Create a new file `.env` to host all environment variables.
 
 Include all fields that are represented in the example below
@@ -19,15 +20,15 @@ Include all fields that are represented in the example below
 `DB_PASSW=dbpassword`
 
 ---
-###To run the application in developer-mode use:
+To run the application in developer-mode use:
 
 `docker-compose -f docker-compose.dev.yml  up --build`
 
-###To run the application in production-mode use:
+To run the application in production-mode use:
 
 `docker-compose -f docker-compose.prod.yml  up --build`
 
-###To run the integration tests for web-api
+To run the integration tests for web-api
 
 `docker-compose -f docker-compose.test.yml up --build`
 
