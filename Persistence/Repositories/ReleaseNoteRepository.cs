@@ -18,7 +18,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
         }
 
-        public async Task<IEnumerable<ReleaseNote>> ListAsync(ReleaseNoteParameters queryParameters)
+        public async Task<IEnumerable<ReleaseNote>> ListAsync()
         {
             IQueryable<ReleaseNote> releaseNoteQuery = _context.ReleaseNotes.AsNoTracking();
             return await releaseNoteQuery.ToListAsync();

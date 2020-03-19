@@ -29,7 +29,7 @@ namespace ReleaseNotes_WebAPI.Services
 
         public async Task<IEnumerable<ReleaseNote>> ListAsync(ReleaseNoteParameters queryParameters)
         {
-            return await _releaseNoteRepository.ListAsync(queryParameters);
+            return await _releaseNoteRepository.ListAsync();
         }
 
         public async Task<ReleaseNotesResponse> FilterDates(IEnumerable<ReleaseNote> notes,
