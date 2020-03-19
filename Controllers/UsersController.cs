@@ -52,7 +52,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(userResource);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> ChangeUserPassword([FromBody] UpdateUserPasswordResource
             updateUserPasswordResource)
@@ -62,18 +62,14 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Get the user
-            var user = _mapper.Map<UpdateUserPasswordResource, User>(updateUserPasswordResource);
-
-            // Change the user's password
+            var user = await _userService.FindByEmailAsync(updateUserPasswordResource.Email);
             var response = await _userService.ChangeUserPasswordAsync(user, updateUserPasswordResource.Password);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
             }
 
-            var userResource = _mapper.Map<User, UserResource>(response.User);
-            return Ok(userResource);
+            return Ok();
         }
     }
 }
