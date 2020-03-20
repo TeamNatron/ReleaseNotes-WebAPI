@@ -68,7 +68,7 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return BadRequest(response.Message);
             }
 
-            return Ok("Passordet er nå endret!");
+            return Ok(response.Message);
         }
     }
 }
