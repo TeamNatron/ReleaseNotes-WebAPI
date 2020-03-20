@@ -15,7 +15,9 @@ namespace ReleaseNotes_WebAPI.Mapping
             CreateMap<UserCredentialResource, User>();
             CreateMap<UpdateUserPasswordResource, User>();
             CreateMap<ReleaseNoteResource, ReleaseNote>();
-            CreateMap<EditReleaseNoteResource, ReleaseNote>();
+            CreateMap<EditReleaseNoteResource, ReleaseNote>().ForAllMembers(
+                opt => opt.Condition((src, dest, sourceMember) => sourceMember != null));
+            CreateMap<CreateReleaseNoteResource, ReleaseNote>();
             CreateMap<SaveReleaseResource, Release>();
             CreateMap<SaveProductResource, Product>();
         }
