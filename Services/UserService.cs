@@ -39,7 +39,12 @@ namespace ReleaseNotes_WebAPI.Services
         {
             if (user == null)
             {
-                return new CreateUserResponse(false, $"Denne brukeren eksisterer ikke", null);
+                return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
+            }
+
+            if (_passwordHasher.PasswordMatches(newPassword, user.Password))
+            {
+                return new CreateUserResponse(false, "Passordet kan ikke være likt det gamle!", null);
             }
 
             try
