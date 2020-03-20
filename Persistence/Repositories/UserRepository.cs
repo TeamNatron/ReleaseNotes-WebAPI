@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,11 +36,23 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             _context.Users.Add(user);
         }
 
+        public void Update(User user)
+        {
+            _context.Users.Update(user);
+        }
+
         public async Task<User> FindByEmailAsync(string email)
         {
             return await _context.Users.Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .SingleOrDefaultAsync(u => u.Email == email);
+        }
+        
+        public async Task<User> FindByIdAsync(int id)
+        {
+            return await _context.Users.Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .SingleOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<IEnumerable<User>> ListAsync()
