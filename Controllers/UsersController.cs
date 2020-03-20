@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Services;
-using ReleaseNotes_WebAPI.Extensions;
 using ReleaseNotes_WebAPI.Resources.Auth;
 
 namespace ReleaseNotes_WebAPI.Controllers
@@ -30,7 +29,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             var usersResource = _mapper.Map<IEnumerable<UserResource>>(users);
             return Ok(usersResource);
         }
-        
+
         [HttpPost]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> CreateUserAsync([FromBody] UserCredentialResource userCredentials)
@@ -50,6 +49,26 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var userResource = _mapper.Map<User, UserResource>(response.User);
             return Ok(userResource);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> ChangeUserPassword(int id, [FromBody] UpdateUserPasswordResource
+            updateUserPasswordResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userService.FindByIdAsync(id);
+            var response = await _userService.ChangeUserPasswordAsync(user, updateUserPasswordResource.Password);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return Ok(response.Message);
         }
     }
 }
