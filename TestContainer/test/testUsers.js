@@ -71,7 +71,7 @@ describe("Users POST", () => {
   });
 });
 
-describe("Users PUT", () => {
+describe("Change password", () => {
   before(() => init());
 
   it("PUT | Password got changed successfully", done => {
@@ -86,6 +86,21 @@ describe("Users PUT", () => {
           done(err.response.text);
         }
         res.should.have.status(200);
+        done();
+      });
+  });
+
+  it("POST | Logging in with new password", done => {
+    chai
+      .request(process.env.APP_URL)
+      .post("/api/login")
+      .send(CORRECT_INPUT_USER_NEW_PASSWORD)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        res.body.should.have.property("accessToken");
         done();
       });
   });
