@@ -41,6 +41,7 @@ namespace ReleaseNotes_WebAPI.Services
             {
                 return new CreateUserResponse(false, $"Denne brukeren eksisterer ikke", null);
             }
+
             try
             {
                 user.Password = _passwordHasher.HashPassword(newPassword);
@@ -58,7 +59,7 @@ namespace ReleaseNotes_WebAPI.Services
         {
             return await _userRepository.FindByEmailAsync(email);
         }
-        
+
         public async Task<User> FindByIdAsync(int id)
         {
             return await _userRepository.FindByIdAsync(id);
