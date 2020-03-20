@@ -86,7 +86,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         [HttpPost()]
         [Authorize(Roles = ("Administrator"))]
         public async Task<ActionResult<ReleaseNoteResource>> CreateReleaseNoteAsync(
-            [FromBody] EditReleaseNoteResource resource)
+            [FromBody] CreateReleaseNoteResource resource)
         {
             if (!ModelState.IsValid)
             {

@@ -83,10 +83,7 @@ namespace ReleaseNotes_WebAPI.Services
 
             try
             {
-                existingReleaseNote.Title = note.Title;
-                existingReleaseNote.Ingress = note.Ingress;
-                existingReleaseNote.Description = note.Description;
-                existingReleaseNote.IsPublic = note.IsPublic;
+                _mapper.Map(note, existingReleaseNote);
                 _releaseNoteRepository.UpdateReleaseNote(existingReleaseNote);
                 await _unitOfWork.CompleteAsync();
                 return new ReleaseNoteResponse(existingReleaseNote);
@@ -97,7 +94,7 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        public async Task<ReleaseNoteResponse> CreateReleaseNote(EditReleaseNoteResource note)
+        public async Task<ReleaseNoteResponse> CreateReleaseNote(CreateReleaseNoteResource note)
         {
             try
             {
