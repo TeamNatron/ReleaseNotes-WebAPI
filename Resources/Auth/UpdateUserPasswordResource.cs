@@ -9,6 +9,6 @@ namespace ReleaseNotes_WebAPI.Resources.Auth
         [StringLength(255)]
         public string Email { get; set; }
 
-        [Required] [StringLength(32)] public string Password { get; set; }
+        [Required] [MinLength(5)] public string Password { get; set; }
     }
 }
