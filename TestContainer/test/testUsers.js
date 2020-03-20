@@ -5,19 +5,23 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-const CORRECT_INPUT_USER_ID = 1;
+const CORRECT_INPUT_USER_ID = 2;
 const CORRECT_INPUT_USER = {
   email: "frank@ungspiller.no",
   password: "123345678"
 };
 
 const CORRECT_INPUT_USER_NEW_PASSWORD = {
-  email: "frank@ungspiller.no",
+  email: "admin@ungspiller.no",
   password: "1233456789"
 };
 
-const WRONG_INPUT_USER = {
-  email: "frank@ungspiller.no",
+const CORRECT_INPUT_NEW_PASSWORD = {
+  password: "1233456789"
+};
+
+const WRONG_INPUT_USER_ID = 420;
+const WRONG_INPUT_PASSWORD = {
   password: "1234"
 };
 
@@ -80,7 +84,7 @@ describe("Change password", () => {
       .put("/api/users/" + CORRECT_INPUT_USER_ID)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .send(CORRECT_INPUT_USER_NEW_PASSWORD)
+      .send(CORRECT_INPUT_NEW_PASSWORD)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
@@ -111,7 +115,7 @@ describe("Change password", () => {
       .put("/api/users/" + WRONG_INPUT_USER_ID)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .send(CORRECT_INPUT_USER_NEW_PASSWORD)
+      .send(CORRECT_INPUT_NEW_PASSWORD)
       .end(err => {
         err.should.have.status(400);
         done();
@@ -124,7 +128,7 @@ describe("Change password", () => {
       .put("/api/users/" + CORRECT_INPUT_USER_ID)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .send(CORRECT_INPUT_USER_NEW_PASSWORD)
+      .send(CORRECT_INPUT_NEW_PASSWORD)
       .end(err => {
         err.should.have.status(400);
         done();
@@ -137,7 +141,7 @@ describe("Change password", () => {
       .put("/api/users/" + CORRECT_INPUT_USER_ID)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .send(WRONG_INPUT_USER)
+      .send(WRONG_INPUT_PASSWORD)
       .end(err => {
         err.should.have.status(400);
         done();
