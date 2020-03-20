@@ -53,7 +53,7 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<IActionResult> ChangeUserPassword([FromBody] UpdateUserPasswordResource
+        public async Task<IActionResult> ChangeUserPassword(int id, [FromBody] UpdateUserPasswordResource
             updateUserPasswordResource)
         {
             if (!ModelState.IsValid)
@@ -61,7 +61,7 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userService.FindByEmailAsync(updateUserPasswordResource.Email);
+            var user = await _userService.FindByIdAsync(id);
             var response = await _userService.ChangeUserPasswordAsync(user, updateUserPasswordResource.Password);
             if (!response.Success)
             {

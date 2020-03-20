@@ -8,6 +8,7 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
     {
         Task AddAsync(User user, ERole[] userRoles);
         Task<User> FindByEmailAsync(string email);
+        Task<User> FindByIdAsync(int id);
         Task<IEnumerable<User>> ListAsync();
         void Update(User user);
     }

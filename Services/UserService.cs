@@ -58,6 +58,11 @@ namespace ReleaseNotes_WebAPI.Services
         {
             return await _userRepository.FindByEmailAsync(email);
         }
+        
+        public async Task<User> FindByIdAsync(int id)
+        {
+            return await _userRepository.FindByIdAsync(id);
+        }
 
         public async Task<IEnumerable<User>> ListAsync()
         {

@@ -11,6 +11,8 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 
         Task<User> FindByEmailAsync(string email);
 
+        Task<User> FindByIdAsync(int id);
+
         Task<IEnumerable<User>> ListAsync();
 
         Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string newPassword);
