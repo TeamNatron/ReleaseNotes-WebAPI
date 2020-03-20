@@ -37,6 +37,10 @@ namespace ReleaseNotes_WebAPI.Services
 
         public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string newPassword)
         {
+            if (user == null)
+            {
+                return new CreateUserResponse(false, $"Denne brukeren eksisterer ikke", null);
+            }
             try
             {
                 user.Password = _passwordHasher.HashPassword(newPassword);
