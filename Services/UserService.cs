@@ -39,30 +39,21 @@ namespace ReleaseNotes_WebAPI.Services
             return new CreateUserResponse(true, null, user);
         }
 
-        public async Task<CreateUserResponse> UpdateUserAsync(User user, UpdateUserResource updateUserResource)
+        public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user, ChangeUserPasswordResource changeUserPasswordResource)
         {
             if (user == null)
             {
                 return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
             }
 
-            if (_passwordHasher.PasswordMatches(updateUserResource.Password, user.Password))
+            if (_passwordHasher.PasswordMatches(changeUserPasswordResource.Password, user.Password))
             {
                 return new CreateUserResponse(false, "Passordet kan ikke være likt det gamle!", null);
             }
 
             try
             {
-                user.Password = _passwordHasher.HashPassword(updateUserResource.Password);
-                if (updateUserResource.AzureInformation != null)
-                {
-                    if (user.AzureInformation == null)
-                    {
-                        _azureInformationRepository.AddAsync(updateUserResource.AzureInformation);
-                    }
-                    user.AzureInformation = updateUserResource.AzureInformation;
-                }
-
+                user.Password = _passwordHasher.HashPassword(changeUserPasswordResource.Password);
                 await _unitOfWork.CompleteAsync();
                 return new CreateUserResponse(true, "Endring vellykket!", user);
             }
