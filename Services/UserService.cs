@@ -6,6 +6,7 @@ using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Security;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
+using ReleaseNotes_WebAPI.Resources.Auth;
 
 namespace ReleaseNotes_WebAPI.Services
 {
@@ -35,22 +36,25 @@ namespace ReleaseNotes_WebAPI.Services
             return new CreateUserResponse(true, null, user);
         }
 
-        public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string newPassword)
+        public async Task<CreateUserResponse> UpdateUserAsync(User user, UpdateUserResource updateUserResource)
         {
             if (user == null)
             {
                 return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
             }
 
-            if (_passwordHasher.PasswordMatches(newPassword, user.Password))
+            if (_passwordHasher.PasswordMatches(updateUserResource.Password, user.Password))
             {
                 return new CreateUserResponse(false, "Passordet kan ikke være likt det gamle!", null);
             }
 
             try
             {
-                user.Password = _passwordHasher.HashPassword(newPassword);
-                _userRepository.Update(user);
+                user.Password = _passwordHasher.HashPassword(updateUserResource.Password);
+                if (updateUserResource.AzureInformation != null)
+                {
+                    user.AzureInformation = updateUserResource.AzureInformation;
+                }
                 await _unitOfWork.CompleteAsync();
                 return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
             }
