@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Security;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
+using ReleaseNotes_WebAPI.Resources;
 using ReleaseNotes_WebAPI.Resources.Auth;
 
 namespace ReleaseNotes_WebAPI.Services
@@ -16,14 +18,16 @@ namespace ReleaseNotes_WebAPI.Services
         private readonly IAzureInformationRepository _azureInformationRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IMapper _mapper;
 
         public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IPasswordHasher passwordHasher,
-            IAzureInformationRepository azureInformationRepository)
+            IAzureInformationRepository azureInformationRepository, IMapper mapper)
         {
             _azureInformationRepository = azureInformationRepository;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
+            _mapper = mapper;
         }
 
         public async Task<CreateUserResponse> CreateUserAsync(User user, params ERole[] userRoles)
@@ -60,6 +64,34 @@ namespace ReleaseNotes_WebAPI.Services
             catch (Exception e)
             {
                 return new CreateUserResponse(false, $"Det oppsto en feil: {e.Message}", null);
+            }
+        }
+
+        public async Task<CreateUserResponse> UpdateUserAsync(int id, UpdateUserResource userResource)
+        {
+            try
+            {
+                var user = await FindByIdAsync(id);
+                if (user == null)
+                {
+                    return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
+                }
+                if (userResource.AzureInformation == null)
+                {
+                    if (user.AzureInformation == null)
+                    {
+                        _azureInformationRepository.AddAsync(userResource.AzureInformation);
+                    }
+                    _mapper.Map(userResource.AzureInformation, user.AzureInformation);
+                    user.AzureInformation = userResource.AzureInformation;
+                }
+
+                await _unitOfWork.CompleteAsync();
+                return new CreateUserResponse(true, "Bruker oppdatert.", user);
+            }
+            catch (Exception e)
+            {
+                return new CreateUserResponse(false, "En feil oppstod", null);
             }
         }
 
