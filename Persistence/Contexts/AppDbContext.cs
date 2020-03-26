@@ -15,6 +15,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         public DbSet<ProductVersion> ProductVersions { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
+        public DbSet<AzureInformation> AzureInformations { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

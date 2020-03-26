@@ -45,6 +45,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
             return await _context.Users.Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
+                .Include(u => u.AzureInformation)
                 .SingleOrDefaultAsync(u => u.Email == email);
         }
         
@@ -52,6 +53,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
             return await _context.Users.Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
+                .Include(u => u.AzureInformation)
                 .SingleOrDefaultAsync(u => u.Id == id);
         }
 
