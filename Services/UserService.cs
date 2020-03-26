@@ -13,11 +13,14 @@ namespace ReleaseNotes_WebAPI.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IAzureInformationRepository _azureInformationRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
 
-        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
+        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IPasswordHasher passwordHasher,
+            IAzureInformationRepository azureInformationRepository)
         {
+            _azureInformationRepository = azureInformationRepository;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
@@ -53,10 +56,15 @@ namespace ReleaseNotes_WebAPI.Services
                 user.Password = _passwordHasher.HashPassword(updateUserResource.Password);
                 if (updateUserResource.AzureInformation != null)
                 {
+                    if (user.AzureInformation == null)
+                    {
+                        _azureInformationRepository.AddAsync(updateUserResource.AzureInformation);
+                    }
                     user.AzureInformation = updateUserResource.AzureInformation;
                 }
+
                 await _unitOfWork.CompleteAsync();
-                return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
+                return new CreateUserResponse(true, "Endring vellykket!", user);
             }
             catch (Exception e)
             {
