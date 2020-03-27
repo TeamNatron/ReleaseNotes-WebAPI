@@ -18,7 +18,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
         Task<IEnumerable<User>> ListAsync();
 
         Task<CreateUserResponse> ChangeUserPasswordAsync(User user,
-            ChangeUserPasswordResource changeUserPasswordResource);
+            string password);
 
         Task<CreateUserResponse> UpdateUserAsync(User user, UpdateUserResource userResource);
     }

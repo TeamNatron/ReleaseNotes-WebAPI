@@ -45,22 +45,21 @@ namespace ReleaseNotes_WebAPI.Services
             return new CreateUserResponse(true, null, user);
         }
 
-        public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user,
-            ChangeUserPasswordResource changeUserPasswordResource)
+        public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string newPassword)
         {
             if (user == null)
             {
                 return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
             }
 
-            if (_passwordHasher.PasswordMatches(changeUserPasswordResource.Password, user.Password))
+            if (_passwordHasher.PasswordMatches(newPassword, user.Password))
             {
                 return new CreateUserResponse(false, "Passordet kan ikke være likt det gamle!", null);
             }
 
             try
             {
-                user.Password = _passwordHasher.HashPassword(changeUserPasswordResource.Password);
+                user.Password = _passwordHasher.HashPassword(newPassword);
                 return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
             }
             catch (Exception e)
@@ -86,12 +85,13 @@ namespace ReleaseNotes_WebAPI.Services
                         _azureInformationRepository.AddAsync(newAzureInfo);
                         user.AzureInformation = newAzureInfo;
                     }
-                    else if(user.AzureInformationId != null)
+                    else if (user.AzureInformationId != null)
                     {
                         var aid = (int) user.AzureInformationId;
                         var existingAzureInfo = await _azureInformationRepository.FindById(aid);
                         _mapper.Map(userResource.AzureInformation, existingAzureInfo);
                     }
+
                     await _unitOfWork.CompleteAsync();
                     return new CreateUserResponse(true, "Bruker oppdatert.", user);
                 }

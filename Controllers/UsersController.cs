@@ -55,8 +55,8 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<IActionResult> ChangeUserPassword(int id, [FromBody] ChangeUserPasswordResource
-            changeUserPasswordResource)
+        public async Task<IActionResult> ChangeUserPassword(int id, [FromBody] UpdateUserPasswordResource
+            updateUserPasswordResource)
         {
             if (!ModelState.IsValid)
             {
@@ -64,7 +64,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             }
 
             var user = await _userService.FindByIdAsync(id);
-            var response = await _userService.ChangeUserPasswordAsync(user, changeUserPasswordResource);
+            var response = await _userService.ChangeUserPasswordAsync(user, updateUserPasswordResource);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
