@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Repositories;
@@ -10,7 +9,6 @@ using ReleaseNotes_WebAPI.Domain.Security;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Resources;
-using ReleaseNotes_WebAPI.Resources.Auth;
 
 namespace ReleaseNotes_WebAPI.Services
 {
@@ -60,6 +58,8 @@ namespace ReleaseNotes_WebAPI.Services
             try
             {
                 user.Password = _passwordHasher.HashPassword(newPassword);
+                _userRepository.Update(user);
+                await _unitOfWork.CompleteAsync();
                 return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
             }
             catch (Exception e)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -64,7 +63,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             }
 
             var user = await _userService.FindByIdAsync(id);
-            var response = await _userService.ChangeUserPasswordAsync(user, updateUserPasswordResource);
+            var response = await _userService.ChangeUserPasswordAsync(user, updateUserPasswordResource.Password);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
