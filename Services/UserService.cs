@@ -97,7 +97,7 @@ namespace ReleaseNotes_WebAPI.Services
                     return new CreateUserResponse(true, "Bruker oppdatert.", user);
                 }
 
-                return new CreateUserResponse(true, "Bruker ikke oppdatert.", null);
+                return new CreateUserResponse(false, "Bruker ikke oppdatert.", null);
             }
             catch (Exception e)
             {

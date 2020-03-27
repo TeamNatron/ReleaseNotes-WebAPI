@@ -82,19 +82,18 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            Console.WriteLine(updateUserResource.AzureInformation);
             var currentUserEmail = User.FindFirst(claim =>
                 claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
             var currentUser = await _userService.FindByEmailAsync(currentUserEmail);
             var response = await _userService.UpdateUserAsync(currentUser, updateUserResource);
-
+            
             if (!response.Success)
             {
                 return BadRequest(response.Message);
             }
-
-            return Ok(response);
+            var userResource = _mapper.Map<User, UserResource>(response.User);
+            return Ok(userResource);
         }
     }
 }
