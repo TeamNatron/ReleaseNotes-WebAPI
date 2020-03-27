@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Security;
@@ -43,7 +45,8 @@ namespace ReleaseNotes_WebAPI.Services
             return new CreateUserResponse(true, null, user);
         }
 
-        public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user, ChangeUserPasswordResource changeUserPasswordResource)
+        public async Task<CreateUserResponse> ChangeUserPasswordAsync(User user,
+            ChangeUserPasswordResource changeUserPasswordResource)
         {
             if (user == null)
             {
@@ -67,31 +70,38 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        public async Task<CreateUserResponse> UpdateUserAsync(int id, UpdateUserResource userResource)
+        public async Task<CreateUserResponse> UpdateUserAsync(User user, UpdateUserResource userResource)
         {
             try
             {
-                var user = await FindByIdAsync(id);
                 if (user == null)
                 {
                     return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
                 }
-                if (userResource.AzureInformation == null)
+
+                if (userResource.AzureInformation != null)
                 {
                     if (user.AzureInformation == null)
                     {
-                        _azureInformationRepository.AddAsync(userResource.AzureInformation);
+                        var newAzureInfo = _mapper.Map<AzureInformation>(userResource.AzureInformation);
+                        _azureInformationRepository.AddAsync(newAzureInfo);
+                        user.AzureInformation = newAzureInfo;
                     }
-                    _mapper.Map(userResource.AzureInformation, user.AzureInformation);
-                    user.AzureInformation = userResource.AzureInformation;
+                    else if(user.AzureInformationId != null)
+                    {
+                        var aid = (int) user.AzureInformationId;
+                        var existingAzureInfo = await _azureInformationRepository.FindById(aid);
+                        _mapper.Map(userResource.AzureInformation, existingAzureInfo);
+                    }
+                    await _unitOfWork.CompleteAsync();
+                    return new CreateUserResponse(true, "Bruker oppdatert.", user);
                 }
 
-                await _unitOfWork.CompleteAsync();
-                return new CreateUserResponse(true, "Bruker oppdatert.", user);
+                return new CreateUserResponse(true, "Bruker ikke oppdatert.", null);
             }
             catch (Exception e)
             {
-                return new CreateUserResponse(false, "En feil oppstod", null);
+                return new CreateUserResponse(false, "En feil oppstod: " + e.Message, null);
             }
         }
 

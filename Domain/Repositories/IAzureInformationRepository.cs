@@ -10,5 +10,6 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
 
         void Update(AzureInformation product);
 
+        Task<AzureInformation> FindById(int id);
     }
 }

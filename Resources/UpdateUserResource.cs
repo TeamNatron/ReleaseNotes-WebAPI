@@ -4,6 +4,6 @@ namespace ReleaseNotes_WebAPI.Resources
 {
     public class UpdateUserResource
     {
-        public AzureInformation AzureInformation { get; set; }
+        public AzureInformationResource AzureInformation { get; set; }
     }
 }

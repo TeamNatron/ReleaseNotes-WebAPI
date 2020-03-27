@@ -20,6 +20,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
         Task<CreateUserResponse> ChangeUserPasswordAsync(User user,
             ChangeUserPasswordResource changeUserPasswordResource);
 
-        Task<CreateUserResponse> UpdateUserAsync(int id, UpdateUserResource userResource);
+        Task<CreateUserResponse> UpdateUserAsync(User user, UpdateUserResource userResource);
     }
 }

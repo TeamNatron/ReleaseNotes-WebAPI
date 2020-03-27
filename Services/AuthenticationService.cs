@@ -29,7 +29,6 @@ namespace ReleaseNotes_WebAPI.API.Services
             }
 
             var token = _tokenHandler.CreateAccessToken(user);
-
             return new TokenResponse(true, null, token);
         }
 

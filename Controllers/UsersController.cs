@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -52,7 +53,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(userResource);
         }
 
-        [HttpPut("{id}/update_password")]
+        [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> ChangeUserPassword(int id, [FromBody] ChangeUserPasswordResource
             changeUserPasswordResource)
@@ -72,22 +73,28 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(response.Message);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserResource updateUserResource)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserResource updateUserResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var response = await _userService.UpdateUserAsync(id, updateUserResource);
-            
+
+            Console.WriteLine(updateUserResource.AzureInformation);
+            var currentUserEmail = User.FindFirst(claim =>
+                claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var currentUser = await _userService.FindByEmailAsync(currentUserEmail);
+            var response = await _userService.UpdateUserAsync(currentUser, updateUserResource);
+
             if (!response.Success)
             {
                 return BadRequest(response.Message);
             }
 
-            return Ok(response.Message);
+            return Ok(response);
         }
     }
 }
