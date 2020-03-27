@@ -91,7 +91,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             {
                 return BadRequest(response.Message);
             }
-            var userResource = _mapper.Map<User, UserResource>(response.User);
+            var userResource = _mapper.Map<User, UserDetailedResource>(response.User);
             return Ok(userResource);
         }
     }

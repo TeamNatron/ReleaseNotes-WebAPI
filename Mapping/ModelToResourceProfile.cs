@@ -16,7 +16,9 @@ namespace ReleaseNotes_WebAPI.Mapping
         {
             CreateMap<User, UserResource>()
                 .ForMember(u => u.Roles, opt => opt.MapFrom(u => u.UserRoles.Select(ur => ur.Role.Name)));
-
+            CreateMap<User, UserDetailedResource>()
+                .ForMember(u => u.Roles, opt => opt.MapFrom(u => u.UserRoles.Select(ur => ur.Role.Name)));
+            
             CreateMap<AccessToken, AccessTokenResource>()
                 .ForMember(
                     a => a.AccessToken,

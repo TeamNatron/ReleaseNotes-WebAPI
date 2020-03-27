@@ -8,6 +8,5 @@ namespace ReleaseNotes_WebAPI.Resources.Auth
         public int Id { get; set; }
         public string Email { get; set; }
         public IEnumerable<string> Roles { get; set; }
-        public AzureInformation AzureInformation { get; set; }
     }
 }
