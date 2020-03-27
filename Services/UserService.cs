@@ -61,8 +61,7 @@ namespace ReleaseNotes_WebAPI.Services
             try
             {
                 user.Password = _passwordHasher.HashPassword(changeUserPasswordResource.Password);
-                await _unitOfWork.CompleteAsync();
-                return new CreateUserResponse(true, "Endring vellykket!", user);
+                return new CreateUserResponse(true, "Brukeren har nå fått et nytt passord!", user);
             }
             catch (Exception e)
             {
