@@ -1,25 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Security;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
+using ReleaseNotes_WebAPI.Resources;
 
 namespace ReleaseNotes_WebAPI.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IAzureInformationRepository _azureInformationRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
+        public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IPasswordHasher passwordHasher,
+            IAzureInformationRepository azureInformationRepository, IMapper mapper)
         {
+            _azureInformationRepository = azureInformationRepository;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
+            _mapper = mapper;
         }
 
         public async Task<CreateUserResponse> CreateUserAsync(User user, params ERole[] userRoles)
@@ -57,6 +65,42 @@ namespace ReleaseNotes_WebAPI.Services
             catch (Exception e)
             {
                 return new CreateUserResponse(false, $"Det oppsto en feil: {e.Message}", null);
+            }
+        }
+
+        public async Task<CreateUserResponse> UpdateUserAsync(User user, UpdateUserResource userResource)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return new CreateUserResponse(false, "Denne brukeren eksisterer ikke!", null);
+                }
+
+                if (userResource.AzureInformation != null)
+                {
+                    if (user.AzureInformation == null)
+                    {
+                        var newAzureInfo = _mapper.Map<AzureInformation>(userResource.AzureInformation);
+                        _azureInformationRepository.AddAsync(newAzureInfo);
+                        user.AzureInformation = newAzureInfo;
+                    }
+                    else if (user.AzureInformationId != null)
+                    {
+                        var aid = (int) user.AzureInformationId;
+                        var existingAzureInfo = await _azureInformationRepository.FindById(aid);
+                        _mapper.Map(userResource.AzureInformation, existingAzureInfo);
+                    }
+
+                    await _unitOfWork.CompleteAsync();
+                    return new CreateUserResponse(true, "Bruker oppdatert.", user);
+                }
+
+                return new CreateUserResponse(false, "Bruker ikke oppdatert.", null);
+            }
+            catch (Exception e)
+            {
+                return new CreateUserResponse(false, "En feil oppstod: " + e.Message, null);
             }
         }
 

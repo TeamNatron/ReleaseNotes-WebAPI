@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ReleaseNotes_WebAPI.Domain.Models;
 
 namespace ReleaseNotes_WebAPI.Resources.Auth
 {

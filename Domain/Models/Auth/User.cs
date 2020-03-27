@@ -16,5 +16,9 @@ namespace ReleaseNotes_WebAPI.Domain.Models.Auth
         [Required] public string Password { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; } = new Collection<UserRole>();
+        
+        
+        public int? AzureInformationId { get; set; }                    
+        public AzureInformation AzureInformation { get; set; }
     }
 }

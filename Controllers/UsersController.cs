@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Resources;
 using ReleaseNotes_WebAPI.Resources.Auth;
 
 namespace ReleaseNotes_WebAPI.Controllers
@@ -69,6 +70,29 @@ namespace ReleaseNotes_WebAPI.Controllers
             }
 
             return Ok(response.Message);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserResource updateUserResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var currentUserEmail = User.FindFirst(claim =>
+                claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var currentUser = await _userService.FindByEmailAsync(currentUserEmail);
+            var response = await _userService.UpdateUserAsync(currentUser, updateUserResource);
+            
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+            var userResource = _mapper.Map<User, UserDetailedResource>(response.User);
+            return Ok(userResource);
         }
     }
 }

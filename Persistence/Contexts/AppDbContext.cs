@@ -15,6 +15,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         public DbSet<ProductVersion> ProductVersions { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
+        public DbSet<AzureInformation> AzureInformations { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -25,6 +26,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             base.OnModelCreating(builder);
 
             builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
+            builder.Entity<AzureInformation>().Property(ai => ai.Id).ValueGeneratedOnAdd();
             builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
             builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             builder.Entity<Release>().Property(r => r.Date).HasDefaultValue(DateTime.UtcNow);

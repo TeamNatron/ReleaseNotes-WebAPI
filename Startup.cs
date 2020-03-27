@@ -71,6 +71,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IReleaseNoteRepository, ReleaseNoteRepository>();
             services.AddScoped<IReleaseRepository, ReleaseRepository>();
             services.AddScoped<IProductVersionRepository, ProductVersionRepository>();
+            services.AddScoped<IAzureInformationRepository, AzureInformationRepository>();
 
             // BIND ALL SERVICES
             services.AddScoped<IUnitOfWork, UnitOfWork>();
