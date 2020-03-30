@@ -10,12 +10,15 @@ namespace ReleaseNotes_WebAPI.Services
 {
     public class ProductService : IProductService
     {
+        private readonly IProductVersionRepository _productVersionRepository;
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
+        public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork,
+            IProductVersionRepository productVersionRepository)
         {
             _productRepository = productRepository;
+            _productVersionRepository = productVersionRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -34,8 +37,10 @@ namespace ReleaseNotes_WebAPI.Services
                 {
                     return new ProductResponse("Produkt med navnet: " + product.Name + " finnes allerede i databasen.");
                 }
-                
+
+                var defaultVersion = new ProductVersion {Product = product, Version = "1.0", IsPublic = product.IsPublic};
                 await _productRepository.AddAsync(product);
+                _productVersionRepository.AddAsync(defaultVersion);
                 await _unitOfWork.CompleteAsync();
 
                 return new ProductResponse(product);
