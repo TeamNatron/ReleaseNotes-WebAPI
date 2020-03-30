@@ -21,5 +21,10 @@ namespace ReleaseNotes_WebAPI.Services
         {
             return await _productVersionRepository.ListAsync();
         }
+
+        public void AddAsync(ProductVersion productVersion)
+        {
+            _productVersionRepository.AddAsync(productVersion);
+        }
     }
 }

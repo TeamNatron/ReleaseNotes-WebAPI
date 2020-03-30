@@ -18,5 +18,9 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             return await _context.ProductVersions.Include(pv => pv.Product).ToListAsync();
         }
 
+        public async void AddAsync(ProductVersion productVersion)
+        {
+            await _context.ProductVersions.AddAsync(productVersion);
+        }
     }
 }
