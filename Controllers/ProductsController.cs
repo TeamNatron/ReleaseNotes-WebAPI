@@ -22,7 +22,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         private readonly IMapper _mapper;
 
         public ProductsController(
-            IProductService productService, 
+            IProductService productService,
             IProductVersionService productVersionService,
             IMapper mapper)
         {
@@ -63,12 +63,14 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         [HttpPost]
         [Route("{id}/version")]
+        [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> AddVersionAsync(int id, [FromBody] CreateProductVersionResource resource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             var newProductVersion = _mapper.Map<ProductVersion>(resource);
             newProductVersion.ProductId = id;
             var result = await _productVersionService.AddAsync(newProductVersion);
@@ -76,6 +78,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             {
                 return BadRequest(result.Message);
             }
+
             var response = _mapper.Map<CreateProductVersionResource>(result.ProductVersion);
             return Ok(response);
         }
