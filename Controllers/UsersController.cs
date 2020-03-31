@@ -56,20 +56,18 @@ namespace ReleaseNotes_WebAPI.Controllers
         [Route("/api/users/azure")]
         [HttpGet]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<IActionResult> GetAzureInformation([FromBody] UserResource userResource)
+        public async Task<IActionResult> GetAzureInformation()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // find the user of the request-er
             var currentUserEmail = User.FindFirst(claim =>
                 claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
             var currentUser = await _userService.FindByEmailAsync(currentUserEmail);
 
-            // confirm that request params and user requesting are the same
-            if (currentUser.Email == userResource.Email && currentUser.Id == userResource.Id)
+            if (currentUser != null)
             {
                 return Ok(currentUser.AzureInformation);
             }
