@@ -7,7 +7,7 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
     public interface IProductVersionRepository
     {
         Task<IEnumerable<ProductVersion>> ListAsync();
-        void AddAsync(ProductVersion productVersion);
-
+        Task AddAsync(ProductVersion productVersion);
+        Task<bool> AnyAsync(ProductVersion version);
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Domain.Services.Communication;
 
 namespace ReleaseNotes_WebAPI.Services
 {
@@ -22,9 +23,16 @@ namespace ReleaseNotes_WebAPI.Services
             return await _productVersionRepository.ListAsync();
         }
 
-        public void AddAsync(ProductVersion productVersion)
+        public async Task<ProductVersionResponse> AddAsync(ProductVersion productVersion)
         {
-            _productVersionRepository.AddAsync(productVersion);
+            var exists = await _productVersionRepository.AnyAsync(productVersion);
+            if (exists)
+            {
+                return new ProductVersionResponse(false, "Produktet har allerede denne versjonen!");
+            }
+            await _productVersionRepository.AddAsync(productVersion);
+            await _unitOfWork.CompleteAsync();
+            return new ProductVersionResponse(true, "Opprettet", productVersion);
         }
     }
 }

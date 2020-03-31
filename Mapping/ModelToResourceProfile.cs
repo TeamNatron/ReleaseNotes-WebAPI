@@ -15,6 +15,7 @@ namespace ReleaseNotes_WebAPI.Mapping
     {
         public ModelToResourceProfile()
         {
+            CreateMap<ProductVersion, CreateProductVersionResource>();
             CreateMap<User, UserResource>()
                 .ForMember(u => u.Roles, opt => opt.MapFrom(u => u.UserRoles.Select(ur => ur.Role.Name)));
             CreateMap<User, UserDetailedResource>()
