@@ -20,6 +20,23 @@ const TEST_RELEASE_2 = {
   ReleaseNotesId: [1]
 };
 
+const TEST_RELEASE_NEW_RELEASE_NOTE = {
+  isPublic: false,
+  title: "Release-7",
+  ProductVersionId: 100,
+  releaseNotes: [
+    {
+      AuthorEmail: "markuran@ntnu.no",
+      AuthorName: "Markus Randa",
+      ClosedDate: "2020-03-26T18:38:58.993Z",
+      WorkItemDescriptionHtml:
+        '<div>Wireframe:</div><div><a href="https://confluence.uials.no/pages/viewpage.action?pageId=57378685">https://confluence.uials.no/pages/viewpage.action?pageId=57378685</a></div><div><br></div><div>ERD:</div><div><a href="https://confluence.uials.no/pages/viewpage.action?pageId=57377417">https://confluence.uials.no/pages/viewpage.action?pageId=57377417</a><br></div>',
+      WorkitemId: 235,
+      WorkItemTitle: "Front-end: Oppdater state med azure-projects"
+    }
+  ]
+};
+
 const TEST_RELEASE_3 = {
   IsPublic: false
 };
@@ -77,6 +94,26 @@ describe("Releases POST", () => {
           done(err.response.text);
         }
         res.should.have.status(200);
+        done();
+      });
+  });
+
+  // should return 200 OK
+  it("CREATE | Successfully creating a release with non existing Release Note", done => {
+    chai
+      .request(process.env.APP_URL)
+      .post(addressReleases)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .send(TEST_RELEASE_NEW_RELEASE_NOTE)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(200);
+        res.body.releaseNotes.should.be.a("array");
+        res.body.releaseNotes.should.not.be.empty;
+        res.body.releaseNotes.should;
         done();
       });
   });
