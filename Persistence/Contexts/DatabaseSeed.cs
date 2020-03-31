@@ -270,7 +270,9 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 var users = new List<User>
                 {
                     new User {Email = "admin@ungspiller.no", Password = passwordHasher.HashPassword("12345678")},
-                    new User {Email = "common@ungspiller.no", Password = passwordHasher.HashPassword("12345678")}
+                    new User {Email = "common@ungspiller.no", Password = passwordHasher.HashPassword("12345678")},
+                    new User {Email = "dadrimmer420@gmail.com", Password = passwordHasher.HashPassword("gmailsniffer69"), AzureInformation = new AzureInformation
+                        {Id = 1, Organization = "Kevin Penkin", Pat = "Extra strong menthol flavoured gum", UserId = "giga nice userId"}}
                 };
 
                 users[0].UserRoles.Add(new UserRole
