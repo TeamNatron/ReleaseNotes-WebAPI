@@ -271,8 +271,16 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             {
                 var users = new List<User>
                 {
-                    new User {Email = "admin@ungspiller.no", Password = passwordHasher.HashPassword("12345678")},
-                    new User {Email = "common@ungspiller.no", Password = passwordHasher.HashPassword("12345678")}
+                    new User
+                    {
+                        Email = "admin@ungspiller.no", Password = passwordHasher.HashPassword("12345678"),
+                        AzureInformation = new AzureInformation
+                            {Id = 123,UserId = "test.testovitch@testnes.no", Pat = "123123asdasd", Organization = "ReleaseNotesSystem"}
+                    },
+                    new User
+                    {
+                        Email = "common@ungspiller.no", Password = passwordHasher.HashPassword("12345678")
+                    }
                 };
 
                 users[0].UserRoles.Add(new UserRole
