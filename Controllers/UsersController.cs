@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Resources;
 using ReleaseNotes_WebAPI.Resources.Auth;
 
@@ -52,6 +53,28 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(userResource);
         }
 
+        [Route("/api/users/azure")]
+        [HttpGet]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> GetAzureInformation()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var currentUserEmail = User.FindFirst(claim =>
+                claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            var currentUser = await _userService.FindByEmailAsync(currentUserEmail);
+
+            if (currentUser != null)
+            {
+                return Ok(currentUser.AzureInformation);
+            }
+
+            return NotFound();
+        }
+
         [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> ChangeUserPassword(int id, [FromBody] UpdateUserPasswordResource
@@ -86,11 +109,12 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var currentUser = await _userService.FindByEmailAsync(currentUserEmail);
             var response = await _userService.UpdateUserAsync(currentUser, updateUserResource);
-            
+
             if (!response.Success)
             {
                 return BadRequest(response.Message);
             }
+
             var userResource = _mapper.Map<User, UserDetailedResource>(response.User);
             return Ok(userResource);
         }
