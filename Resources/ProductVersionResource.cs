@@ -7,5 +7,7 @@ namespace ReleaseNotes_WebAPI.Resources
         public ProductResource Product { get; set; }
         
         public string Version { get; set; }
+        
+        public string FullName { get; set; }
     }
 }

@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Services;
@@ -15,11 +17,17 @@ namespace ReleaseNotes_WebAPI.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IProductVersionService _productVersionService;
+
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductService productService, IMapper mapper)
+        public ProductsController(
+            IProductService productService,
+            IProductVersionService productVersionService,
+            IMapper mapper)
         {
             _productService = productService;
+            _productVersionService = productVersionService;
             _mapper = mapper;
         }
 
@@ -31,7 +39,7 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             return resources;
         }
-        
+
         [HttpPost]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> CreateProductAsync([FromBody] SaveProductResource productResource)
@@ -51,6 +59,28 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var userResource = _mapper.Map<Product, ProductResource>(response.Product);
             return Ok(userResource);
+        }
+
+        [HttpPost]
+        [Route("{id}/version")]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> AddVersionAsync(int id, [FromBody] CreateProductVersionResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var newProductVersion = _mapper.Map<ProductVersion>(resource);
+            newProductVersion.ProductId = id;
+            var result = await _productVersionService.AddAsync(newProductVersion);
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var response = _mapper.Map<CreateProductVersionResource>(result.ProductVersion);
+            return Ok(response);
         }
     }
 }

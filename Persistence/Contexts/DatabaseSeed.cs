@@ -8,7 +8,7 @@ using ReleaseNotes_WebAPI.Domain.Security;
 namespace ReleaseNotes_WebAPI.Persistence.Contexts
 {
     /// <summary>
-    /// EF Core already supports database seeding throught overriding "OnModelCreating", but I decided to create a separate seed class to avoid 
+    /// EF Core already supports database seeding through overriding "OnModelCreating", but I decided to create a separate seed class to avoid 
     /// injecting IPasswordHasher into AppDbContext.
     /// To understand how to use database seeding into DbContext classes, check this link: https://docs.microsoft.com/en-us/ef/core/modeling/data-seeding
     /// </summary>
@@ -37,13 +37,15 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // If there are no ProductVersions
             if (!context.ProductVersions.Any())
             {
+                Console.WriteLine(context.Products);
                 var productVersions = new List<ProductVersion>
                 {
-                    new ProductVersion {Id = 100, ProductId = 100, Version = "2.5.4"},
-                    new ProductVersion {Id = 101, ProductId = 100, Version = "3.1.1"},
-                    new ProductVersion {Id = 102, ProductId = 101, Version = "5.3"},
-                    new ProductVersion {Id = 103, ProductId = 102, Version = "4.2"},
-                    new ProductVersion {Id = 104, ProductId = 103, Version = "2.4"}
+                    new ProductVersion {Id = 100, ProductId = 100, Version = "1.0"},
+                    new ProductVersion {Id = 101, ProductId = 100, Version = "2.0"},
+                    new ProductVersion {Id = 105, ProductId = 100, Version = "2.1-Beta", IsPublic = false},
+                    new ProductVersion {Id = 102, ProductId = 101, Version = "3.0"},
+                    new ProductVersion {Id = 103, ProductId = 102, Version = "1.1"},
+                    new ProductVersion {Id = 104, ProductId = 103, Version = "1.0"}
                 };
                 context.ProductVersions.AddRange(productVersions);
                 context.SaveChanges();

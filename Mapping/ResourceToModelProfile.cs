@@ -21,6 +21,7 @@ namespace ReleaseNotes_WebAPI.Mapping
             CreateMap<CreateReleaseNoteResource, ReleaseNote>();
             CreateMap<SaveReleaseResource, Release>();
             CreateMap<SaveProductResource, Product>();
+            CreateMap<CreateProductVersionResource, ProductVersion>();
             CreateMap<AzureInformationResource, AzureInformation>();
         }
     }

@@ -16,7 +16,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
 
         public async Task<IEnumerable<Product>> ListAsync()
         {
-            return await _context.Products
+            return await _context.Products.Include(p => p.ProductVersions)
                 .ToListAsync();
         }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ReleaseNotes_WebAPI.Domain.Models
@@ -10,5 +11,7 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         public string Name { get; set; }
         
         public bool IsPublic { get; set; }
+        
+        public List<ProductVersion> ProductVersions { get; set; }
     }
 }
