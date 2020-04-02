@@ -140,7 +140,7 @@ namespace ReleaseNotesWebAPI.Services
                     // Retrieve all ReleaseNotes from database
                     IEnumerable<ReleaseNote> releaseNotes;
 
-                    if (resource.ReleaseNotesId != null && resource.ReleaseNotes != null)
+                    if (resource.ReleaseNotesId != null)
                     {
                         releaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
                     }
