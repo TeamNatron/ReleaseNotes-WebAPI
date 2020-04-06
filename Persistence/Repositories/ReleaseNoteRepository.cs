@@ -43,15 +43,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
 
         public async Task<ReleaseNote> FindAsync(int id, bool includeReleases)
         {
-            if (includeReleases)
-            {
-                return await _context.ReleaseNotes
-                    .Where(note => note.Id == id)
-                    .Include(rn => rn.ReleaseReleaseNotes)
-                    .ThenInclude(rrn => rrn.Release)
-                    .SingleAsync();
-            }
-            return await _context.ReleaseNotes.FindAsync(id);
+            return await _context.ReleaseNotes
+                .Include(rn => rn.ReleaseReleaseNotes)
+                .ThenInclude(rrn => rrn.Release)
+                .SingleOrDefaultAsync(note => note.Id == id);
         }
 
         public void UpdateReleaseNote(ReleaseNote note)
