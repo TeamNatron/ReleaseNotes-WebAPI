@@ -20,7 +20,7 @@ const RELEASE_NOTE_WITHOUT_DESCRIPTION = {
   ingress:
     "Det er en tirsdag i 2020. Det neste du leser vil absolutt blåse minnet ditt.",
   isPublic: "false",
-  authorName: "postman@ungspiller.no"
+  authorName: "postman@ungspiller.no",
 };
 
 const CORRECT_DATE_FILTER =
@@ -38,7 +38,7 @@ describe("Release notes GET", () => {
   before(() => init());
 
   // should return 200 OK and a array of release notes
-  it("GET | Get all release notes", done => {
+  it("GET | Get all release notes", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressGet)
@@ -60,30 +60,8 @@ describe("Release notes GET", () => {
       });
   });
 
-  // should return a 200 OK and specified release note
-  it("GET | Get a single release", done => {
-    chai
-      .request(process.env.APP_URL)
-      .get(addressGetSingle)
-      .end((err, res) => {
-        if (err) {
-          done(err.response.text);
-        }
-        expect(res.body.title).to.be.a("string").that.is.not.empty;
-        expect(res.body.ingress).to.be.a("string").that.is.not.empty;
-        expect(res.body.description).to.be.a("string").that.is.not.empty;
-        expect(res.body.authorName).to.be.a("string").that.is.not.empty;
-        expect(res.body.authorEmail).to.be.a("string").that.is.not.empty;
-        expect(res.body.workItemTitle).to.be.a("string").that.is.not.empty;
-        expect(res.body.isPublic).to.equal(false);
-        expect(res.body.workItemId).to.be.a("number");
-        res.should.have.status(200);
-        done();
-      });
-  });
-
   // should return 200 OK and  a singe release note
-  it("GET | Successfully gets a single release note", done => {
+  it("GET | Successfully gets a single release note", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetSingle)
@@ -104,8 +82,31 @@ describe("Release notes GET", () => {
       });
   });
 
+  // should return 200 OK and  a singe release note
+  it("GET | Successfully gets a single release note with associated releases", (done) => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressGetSingle)
+      .query("includeReleases")
+      .end((err, res) => {
+        if (err) {
+          done(err.response);
+        }
+        res.should.have.status(200);
+        expect(res.body.id).to.be.a("number");
+        expect(res.body.title).to.be.a("string").that.is.not.empty;
+        expect(res.body.ingress).to.be.a("string").that.is.not.empty;
+        expect(res.body.authorName).to.be.a("string").that.is.not.empty;
+        expect(res.body.authorEmail).to.be.a("string").that.is.not.empty;
+        expect(res.body.isPublic).to.be.a("boolean");
+        expect(res.body.workItemId).to.be.a("number");
+        expect(res.body.releases).to.be.a("array").that.is.not.empty;
+        done();
+      });
+  });
+
   // should return a 204 No Content
-  it("GET | requests a non-existant release note", done => {
+  it("GET | requests a non-existant release note", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetSingleFail)
@@ -118,7 +119,7 @@ describe("Release notes GET", () => {
       });
   });
 
-  it("GET | Get Release Notes from a set date interval", done => {
+  it("GET | Get Release Notes from a set date interval", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressGet + CORRECT_DATE_FILTER)
@@ -127,9 +128,9 @@ describe("Release notes GET", () => {
           done(err.response.text);
         }
         // Checking if each object's date corresponds to filter
-        res.body.map(obj => {
+        res.body.map((obj) => {
           const date = new Date(obj.closedDate);
-          expect(date.getTime()).to.satisfy(num => {
+          expect(date.getTime()).to.satisfy((num) => {
             return num >= startDate.getTime() && num <= endDate.getTime();
           });
         });
@@ -146,14 +147,14 @@ describe("Release note PUT", () => {
 describe("Release note POST", () => {
   before(() => init());
 
-  it("POST | Tries to create release note without providing a description", done => {
+  it("POST | Tries to create release note without providing a description", (done) => {
     chai
       .request(process.env.APP_URL)
       .post(addressReleaseNote)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(RELEASE_NOTE_WITHOUT_DESCRIPTION)
-      .end(err => {
+      .end((err) => {
         expect(err.should.have.status(400));
         done();
       });
@@ -165,11 +166,11 @@ describe("Release notes DELETE", () => {
 
   // failure case: Tries to delete a release note without being logged in
   // should return a 401 unauth
-  it("DELETE | Tries to delete a release note without being logged in", done => {
+  it("DELETE | Tries to delete a release note without being logged in", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
-      .end(err => {
+      .end((err) => {
         expect(err.should.have.status(401));
         done();
       });
@@ -177,13 +178,13 @@ describe("Release notes DELETE", () => {
 
   // failure case: Tries to delete a non-existant release note
   // should return a 400 Bad Request
-  it("DELETE | Tries to delete a non-existant release note", done => {
+  it("DELETE | Tries to delete a non-existant release note", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .end(err => {
+      .end((err) => {
         expect(err.should.have.status(400));
         done();
       });
@@ -191,7 +192,7 @@ describe("Release notes DELETE", () => {
 
   // succes case: deletes a release note
   // should return a 200 OK and a copy of the newly deleted release note
-  it("DELETE | Should return a OK 200 and a copy of the deleted release note", done => {
+  it("DELETE | Should return a OK 200 and a copy of the deleted release note", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
@@ -209,13 +210,13 @@ describe("Release notes DELETE", () => {
 
   // failure case: Tries to delete a already deleted release note
   // should return a 400 Bad Request
-  it("DELETE | Tries to delete a already deleted release note", done => {
+  it("DELETE | Tries to delete a already deleted release note", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .end(err => {
+      .end((err) => {
         expect(err.should.have.status(400));
         done();
       });

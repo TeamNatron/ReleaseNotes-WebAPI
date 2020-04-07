@@ -14,7 +14,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 
         Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters);
 
-        Task<ReleaseNoteResponse> GetReleaseNote(int id);
+        Task<ReleaseNoteResponse> GetReleaseNote(int id, bool includeReleases);
 
         Task<ReleaseNoteResponse> RemoveReleaseNote(int id);
 

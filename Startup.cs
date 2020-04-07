@@ -16,6 +16,7 @@ using ReleaseNotes_WebAPI.Domain.Models.Auth.Token;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Security;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.ModelBinder;
 using ReleaseNotes_WebAPI.Persistence.Contexts;
 using ReleaseNotes_WebAPI.Persistence.Repositories;
 using ReleaseNotes_WebAPI.Security.Tokens;
@@ -144,8 +145,16 @@ namespace ReleaseNotes_WebAPI
             services.AddAutoMapper(typeof(Startup));
 
             // ADD ALL CONTROLLERS (ENDPOINTS)
-            services.AddControllers().AddNewtonsoftJson(
-                options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            services.AddControllers(
+                options =>
+                {
+                    options.ModelBinderProviders.Insert(0, new BooleanModelBinderProvider());
+                }
+                ).AddNewtonsoftJson(
+                options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

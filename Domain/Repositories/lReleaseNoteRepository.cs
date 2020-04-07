@@ -13,6 +13,7 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
         
         void AddAsync(ReleaseNote releaseNote);
 
+        Task<ReleaseNote> FindAsync(int id, bool includeReleases);
         Task<ReleaseNote> FindAsync(int id);
 
         void UpdateReleaseNote(ReleaseNote note);
