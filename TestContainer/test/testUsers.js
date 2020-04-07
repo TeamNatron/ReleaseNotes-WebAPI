@@ -2,6 +2,7 @@ var TokenHandler = require("../TokenHandler");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const should = chai.should();
+const { expect } = require("chai");
 
 chai.use(chaiHttp);
 
@@ -24,6 +25,13 @@ const WRONG_INPUT_USER_ID = 420;
 const WRONG_INPUT_PASSWORD = {
   password: "1234"
 };
+
+// Response messages
+const PW_CHANGE_SUCCESS_RESPONSE = "Brukeren har nå fått et nytt passord!";
+const NONEXISTANT_USER = "Denne brukeren eksisterer ikke!"
+const SAME_PW_RESPONSE = "Passordet kan ikke være likt det gamle!";
+const TOO_FEW_CHARACTERS_RESPONSE = '{"Password":["The field Password must be a string or array type with a minimum length of \'5\'."]}';
+
 
 var accessToken;
 
@@ -89,6 +97,7 @@ describe("Change password", () => {
         if (err) {
           done(err.response.text);
         }
+        expect(res.text).to.equal(PW_CHANGE_SUCCESS_RESPONSE);
         res.should.have.status(200);
         done();
       });
@@ -117,6 +126,7 @@ describe("Change password", () => {
       .set("Authorization", "Bearer " + accessToken)
       .send(CORRECT_INPUT_NEW_PASSWORD)
       .end(err => {
+        expect(err.response.text).to.equal(NONEXISTANT_USER);
         err.should.have.status(400);
         done();
       });
@@ -130,6 +140,7 @@ describe("Change password", () => {
       .set("Authorization", "Bearer " + accessToken)
       .send(CORRECT_INPUT_NEW_PASSWORD)
       .end(err => {
+        expect(err.response.text).to.equal(SAME_PW_RESPONSE);
         err.should.have.status(400);
         done();
       });
@@ -143,6 +154,7 @@ describe("Change password", () => {
       .set("Authorization", "Bearer " + accessToken)
       .send(WRONG_INPUT_PASSWORD)
       .end(err => {
+        expect(err.response.text).to.equal(TOO_FEW_CHARACTERS_RESPONSE);
         err.should.have.status(400);
         done();
       });
