@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 var accessToken;
 const addressGet = "/api/releasenote";
-const addressGetSingle = "/api/releasenote/5";
+const ADDRESS_RELEASE_NOTE_1 = "/api/releasenote/1";
 const addressGetSingleFail = "/api/releasenote/23123";
 const addressPut = "/api/releasenote/100";
 const addressPutFail = "api/releasenote/123123125";
@@ -38,7 +38,7 @@ describe("Release notes GET", () => {
   before(() => init());
 
   // should return 200 OK and a array of release notes
-  it("GET | Get all release notes", (done) => {
+  it("GET | Get all release notes without logging in", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressGet)
@@ -53,7 +53,7 @@ describe("Release notes GET", () => {
         expect(res.body[0].authorName).to.be.a("string").that.is.not.empty;
         expect(res.body[0].authorEmail).to.be.a("string").that.is.not.empty;
         expect(res.body[0].workItemTitle).to.be.a("string").that.is.not.empty;
-        expect(res.body[0].isPublic).to.equal(false);
+        expect(res.body[0].isPublic).to.equal(true);
         expect(res.body[0].workItemId).to.be.a("number");
         res.should.have.status(200);
         done();
@@ -61,10 +61,10 @@ describe("Release notes GET", () => {
   });
 
   // should return 200 OK and  a singe release note
-  it("GET | Successfully gets a single release note", (done) => {
+  it("GET | Successfully gets a single release note without logging in", (done) => {
     chai
       .request(process.env.APP_URL)
-      .get(addressGetSingle)
+      .get(ADDRESS_RELEASE_NOTE_1)
       .end((err, res) => {
         if (err) {
           done(err.response);
@@ -86,7 +86,7 @@ describe("Release notes GET", () => {
   it("GET | Successfully gets a single release note with associated releases", (done) => {
     chai
       .request(process.env.APP_URL)
-      .get(addressGetSingle)
+      .get(ADDRESS_RELEASE_NOTE_1)
       .query("includeReleases")
       .end((err, res) => {
         if (err) {
@@ -169,7 +169,7 @@ describe("Release notes DELETE", () => {
   it("DELETE | Tries to delete a release note without being logged in", (done) => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDelete)
+      .delete(ADDRESS_RELEASE_NOTE_1)
       .end((err) => {
         expect(err.should.have.status(401));
         done();
@@ -195,7 +195,7 @@ describe("Release notes DELETE", () => {
   it("DELETE | Should return a OK 200 and a copy of the deleted release note", (done) => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDelete)
+      .delete(ADDRESS_RELEASE_NOTE_1)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
@@ -213,7 +213,7 @@ describe("Release notes DELETE", () => {
   it("DELETE | Tries to delete a already deleted release note", (done) => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDelete)
+      .delete(ADDRESS_RELEASE_NOTE_1)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end((err) => {
