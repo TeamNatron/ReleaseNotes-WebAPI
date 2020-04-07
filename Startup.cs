@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,7 @@ namespace ReleaseNotes_WebAPI
             var connectionString =
                 "host=" + host + ";port=" + port + ";database=" + db + ";username=" + user + ";password=" + passw + ";";
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // ADDS DATABASE SERVICE
             // CONNECTS WEB-API TO DB
             services.AddDbContext<AppDbContext>(options => { options.UseNpgsql(connectionString); });
