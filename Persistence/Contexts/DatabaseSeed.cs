@@ -100,7 +100,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "Sletting av faktura", Ingress = "Det er nå mulig å slette faktura i faktura-systemet",
                         Description = htmlDummy6, WorkItemDescriptionHtml = htmlDummy1,
                         WorkItemTitle = "Test item please ignore",
-                        ClosedDate = new DateTime(2019, 11, 05, 10, 52, 02, 22)
+                        ClosedDate = new DateTime(2019, 11, 05, 10, 52, 02, 22),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
