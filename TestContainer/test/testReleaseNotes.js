@@ -6,14 +6,10 @@ const { expect } = require("chai");
 chai.use(chaiHttp);
 
 var accessToken;
-const addressGet = "/api/releasenote";
-const ADDRESS_RELEASE_NOTE_1 = "/api/releasenote/1";
-const addressGetSingleFail = "/api/releasenote/23123";
-const addressPut = "/api/releasenote/100";
-const addressPutFail = "api/releasenote/123123125";
-const addressDelete = "/api/releasenote/5";
-const addressDeleteFail = "/api/releasenote/897324";
-const addressReleaseNote = "/api/releasenote";
+const ADDRESS_GET_RELEASE_NOTE = "/api/releasenote";
+const ADDRESS_GET_RELEASE_NOTE_1 = ADDRESS_GET_RELEASE_NOTE + "/1";
+const ADDRESS_GET_RELEASE_NOTE_NON_EXISTING =
+  ADDRESS_GET_RELEASE_NOTE + "/23123";
 
 const RELEASE_NOTE_WITHOUT_DESCRIPTION = {
   title: "Ny dag, ny release note",
@@ -41,7 +37,7 @@ describe("Release notes GET", () => {
   it("GET | Get all release notes without logging in", (done) => {
     chai
       .request(process.env.APP_URL)
-      .get(addressGet)
+      .get(ADDRESS_GET_RELEASE_NOTE)
       .end((err, res) => {
         if (err) {
           done(err);
@@ -64,7 +60,7 @@ describe("Release notes GET", () => {
   it("GET | Successfully gets a single release note without logging in", (done) => {
     chai
       .request(process.env.APP_URL)
-      .get(ADDRESS_RELEASE_NOTE_1)
+      .get(ADDRESS_GET_RELEASE_NOTE_1)
       .end((err, res) => {
         if (err) {
           done(err.response);
@@ -86,7 +82,7 @@ describe("Release notes GET", () => {
   it("GET | Successfully gets a single release note with associated releases", (done) => {
     chai
       .request(process.env.APP_URL)
-      .get(ADDRESS_RELEASE_NOTE_1)
+      .get(ADDRESS_GET_RELEASE_NOTE_1)
       .query("includeReleases")
       .end((err, res) => {
         if (err) {
@@ -109,7 +105,7 @@ describe("Release notes GET", () => {
   it("GET | requests a non-existant release note", (done) => {
     chai
       .request(process.env.APP_URL)
-      .get(addressGetSingleFail)
+      .get(ADDRESS_GET_RELEASE_NOTE_NON_EXISTING)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
@@ -122,7 +118,7 @@ describe("Release notes GET", () => {
   it("GET | Get Release Notes from a set date interval", (done) => {
     chai
       .request(process.env.APP_URL)
-      .get(addressGet + CORRECT_DATE_FILTER)
+      .get(ADDRESS_GET_RELEASE_NOTE + CORRECT_DATE_FILTER)
       .end((err, res) => {
         if (err) {
           done(err.response.text);
@@ -150,7 +146,7 @@ describe("Release note POST", () => {
   it("POST | Tries to create release note without providing a description", (done) => {
     chai
       .request(process.env.APP_URL)
-      .post(addressReleaseNote)
+      .post(ADDRESS_GET_RELEASE_NOTE)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(RELEASE_NOTE_WITHOUT_DESCRIPTION)
@@ -169,7 +165,7 @@ describe("Release notes DELETE", () => {
   it("DELETE | Tries to delete a release note without being logged in", (done) => {
     chai
       .request(process.env.APP_URL)
-      .delete(ADDRESS_RELEASE_NOTE_1)
+      .delete(ADDRESS_GET_RELEASE_NOTE_1)
       .end((err) => {
         expect(err.should.have.status(401));
         done();
@@ -181,7 +177,7 @@ describe("Release notes DELETE", () => {
   it("DELETE | Tries to delete a non-existant release note", (done) => {
     chai
       .request(process.env.APP_URL)
-      .delete(addressDeleteFail)
+      .delete(ADDRESS_GET_RELEASE_NOTE_NON_EXISTING)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end((err) => {
@@ -195,7 +191,7 @@ describe("Release notes DELETE", () => {
   it("DELETE | Should return a OK 200 and a copy of the deleted release note", (done) => {
     chai
       .request(process.env.APP_URL)
-      .delete(ADDRESS_RELEASE_NOTE_1)
+      .delete(ADDRESS_GET_RELEASE_NOTE_1)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end((err, res) => {
@@ -213,7 +209,7 @@ describe("Release notes DELETE", () => {
   it("DELETE | Tries to delete a already deleted release note", (done) => {
     chai
       .request(process.env.APP_URL)
-      .delete(ADDRESS_RELEASE_NOTE_1)
+      .delete(ADDRESS_GET_RELEASE_NOTE_1)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .end((err) => {
