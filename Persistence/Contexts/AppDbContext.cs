@@ -57,14 +57,11 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             
             // All entities that require extra security for isPublic
             builder.Entity<Release>().HasQueryFilter(
-                r => r.IsPublic && !UserIsAdmin || !r.IsPublic && UserIsAdmin ||
-                     r.IsPublic && UserIsAdmin);
+                r => !(!r.IsPublic && !UserIsAdmin));
             builder.Entity<ProductVersion>().HasQueryFilter(
-                pr => pr.IsPublic && !UserIsAdmin || !pr.IsPublic && UserIsAdmin ||
-                     pr.IsPublic && UserIsAdmin);
+                pr => !(!pr.IsPublic && !UserIsAdmin));
             builder.Entity<ReleaseNote>().HasQueryFilter(
-                rn => rn.IsPublic && !UserIsAdmin || !rn.IsPublic && UserIsAdmin ||
-                     rn.IsPublic && UserIsAdmin);
+                rn => !(!rn.IsPublic && !UserIsAdmin));
         }
     }
 }
