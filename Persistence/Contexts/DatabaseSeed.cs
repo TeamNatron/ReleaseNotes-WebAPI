@@ -39,11 +39,11 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             {
                 var productVersions = new List<ProductVersion>
                 {
-                    new ProductVersion {Id = 100, ProductId = 100, Version = "1.0"},
+                    new ProductVersion {Id = 100, ProductId = 100, Version = "1.0", IsPublic = true},
                     new ProductVersion {Id = 101, ProductId = 100, Version = "2.0"},
                     new ProductVersion {Id = 105, ProductId = 100, Version = "2.1-Beta", IsPublic = false},
-                    new ProductVersion {Id = 102, ProductId = 101, Version = "3.0"},
-                    new ProductVersion {Id = 103, ProductId = 102, Version = "1.1"},
+                    new ProductVersion {Id = 102, ProductId = 101, Version = "3.0", IsPublic = true},
+                    new ProductVersion {Id = 103, ProductId = 102, Version = "1.1", IsPublic = true},
                     new ProductVersion {Id = 104, ProductId = 103, Version = "1.0"}
                 };
                 context.ProductVersions.AddRange(productVersions);
