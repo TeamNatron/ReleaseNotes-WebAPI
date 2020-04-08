@@ -37,7 +37,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // If there are no ProductVersions
             if (!context.ProductVersions.Any())
             {
-                Console.WriteLine(context.Products);
                 var productVersions = new List<ProductVersion>
                 {
                     new ProductVersion {Id = 100, ProductId = 100, Version = "1.0"},
