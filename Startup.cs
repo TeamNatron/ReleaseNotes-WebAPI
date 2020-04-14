@@ -21,6 +21,7 @@ using ReleaseNotes_WebAPI.ModelBinder;
 using ReleaseNotes_WebAPI.Persistence.Contexts;
 using ReleaseNotes_WebAPI.Persistence.Repositories;
 using ReleaseNotes_WebAPI.Security.Tokens;
+using ReleaseNotes_WebApi.Services;
 using ReleaseNotes_WebAPI.Services;
 using ReleaseNotesWebAPI.Services;
 using TokenHandler = ReleaseNotes_WebAPI.Security.Tokens.TokenHandler;
@@ -75,6 +76,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IReleaseRepository, ReleaseRepository>();
             services.AddScoped<IProductVersionRepository, ProductVersionRepository>();
             services.AddScoped<IAzureInformationRepository, AzureInformationRepository>();
+            services.AddScoped<IMappableRepository, MappableRepository>();
 
             // BIND ALL SERVICES
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -85,6 +87,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IReleaseNoteService, ReleaseNoteService>();
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IProductVersionService, ProductVersionService>();
+            services.AddScoped<IMappableService, MappableService>();
 
             // CONFIGURE AUTHENTICATION AND TOKEN OPTIONS
             services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));
