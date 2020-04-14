@@ -52,7 +52,7 @@ namespace ReleaseNotes_WebAPI
             var connectionString =
                 "host=" + host + ";port=" + port + ";database=" + db + ";username=" + user + ";password=" + passw + ";";
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
             // ADDS DATABASE SERVICE
             // CONNECTS WEB-API TO DB
             services.AddDbContext<AppDbContext>(options => { options.UseNpgsql(connectionString); });
