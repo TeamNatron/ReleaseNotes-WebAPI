@@ -29,7 +29,6 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            Console.WriteLine(file.Name);
             var response = await _imageService.SaveToFilesystem(file);
             if (!response.Success)
             {
