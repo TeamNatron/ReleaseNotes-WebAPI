@@ -15,10 +15,15 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
         {
         }
         
-        public async Task<IEnumerable<MappableField>> ListAsync()
+        public async Task<IEnumerable<MappableField>> GetMappableFields()
         {
            return await _context.MappableFields.ToListAsync();
         }
 
+        public async Task<IEnumerable<ReleaseNoteMapping>> GetMappedFields()
+        {
+            return await _context.ReleaseNoteMappings.Include(
+                rrm => rrm.MappableField).ToListAsync();
+        }
     }
 }
