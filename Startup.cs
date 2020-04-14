@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -61,6 +62,9 @@ namespace ReleaseNotes_WebAPI
                 options.AddPolicy(MyAllowSpecificOrigins,
                     builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
+            
+            // Give developers access to HttpContext
+            services.AddHttpContextAccessor(); 
 
             services.AddSingleton<IPasswordHasher, Security.Hashing.PasswordHasher>();
             services.AddSingleton<ITokenHandler, TokenHandler>();
@@ -83,6 +87,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IReleaseNoteService, ReleaseNoteService>();
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IProductVersionService, ProductVersionService>();
+            services.AddScoped<IImageService, ImageService>();
 
             // CONFIGURE AUTHENTICATION AND TOKEN OPTIONS
             services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));
@@ -146,15 +151,9 @@ namespace ReleaseNotes_WebAPI
 
             // ADD ALL CONTROLLERS (ENDPOINTS)
             services.AddControllers(
-                options =>
-                {
-                    options.ModelBinderProviders.Insert(0, new BooleanModelBinderProvider());
-                }
-                ).AddNewtonsoftJson(
-                options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
+                options => { options.ModelBinderProviders.Insert(0, new BooleanModelBinderProvider()); }
+            ).AddNewtonsoftJson(
+                options => { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -169,9 +168,14 @@ namespace ReleaseNotes_WebAPI
             {
                 app.UseHsts();
             }
-
+            
+            // Init static file serving
+            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
+            Directory.CreateDirectory(Path.Combine(env.WebRootPath, "images"));
+            app.UseStaticFiles();
+            
             // SHOULD BE ENABLED IN PRODUCTION ENVIRONMENTS
-            // app.UseHttpsRedirection();
+            // app.UseHttpsRedirections();
 
             app.UseRouting();
 
