@@ -292,6 +292,35 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 context.Users.AddRange(users);
                 context.SaveChanges();
             }
+            
+            // If there are no mappings
+            if (!context.MappableFields.Any())
+            {
+                var fields = new List<MappableField>
+                {
+                    new MappableField {Name = "Title"},
+                    new MappableField {Name = "Ingress"},
+                    new MappableField {Name = "Description"},
+                    new MappableField {Name = "WorkItemId"},
+                    new MappableField {Name = "AuthorName"},
+                    new MappableField {Name = "AuthorEmail"},
+                    new MappableField {Name = "WorkItemDescriptionHtml"},
+                    new MappableField {Name = "WorkItemTitle"},
+                    new MappableField {Name = "ClosedDate"}
+                };
+                
+                context.MappableFields.AddRange(fields);
+                if (!context.ReleaseNoteMappings.Any())
+                {
+                    var mappings = new List<ReleaseNoteMapping>();
+                    foreach (var mappableField in fields)
+                    {
+                        mappings.Add(new ReleaseNoteMapping {MappableField = mappableField});
+                    }
+                    context.AddRange(mappings);
+                }
+                context.SaveChanges();
+            }
         }
     }
 }
