@@ -37,14 +37,13 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // If there are no ProductVersions
             if (!context.ProductVersions.Any())
             {
-                Console.WriteLine(context.Products);
                 var productVersions = new List<ProductVersion>
                 {
-                    new ProductVersion {Id = 100, ProductId = 100, Version = "1.0"},
+                    new ProductVersion {Id = 100, ProductId = 100, Version = "1.0", IsPublic = true},
                     new ProductVersion {Id = 101, ProductId = 100, Version = "2.0"},
                     new ProductVersion {Id = 105, ProductId = 100, Version = "2.1-Beta", IsPublic = false},
-                    new ProductVersion {Id = 102, ProductId = 101, Version = "3.0"},
-                    new ProductVersion {Id = 103, ProductId = 102, Version = "1.1"},
+                    new ProductVersion {Id = 102, ProductId = 101, Version = "3.0", IsPublic = true},
+                    new ProductVersion {Id = 103, ProductId = 102, Version = "1.1", IsPublic = true},
                     new ProductVersion {Id = 104, ProductId = 103, Version = "1.0"}
                 };
                 context.ProductVersions.AddRange(productVersions);
@@ -100,7 +99,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "Sletting av faktura", Ingress = "Det er nå mulig å slette faktura i faktura-systemet",
                         Description = htmlDummy6, WorkItemDescriptionHtml = htmlDummy1,
                         WorkItemTitle = "Test item please ignore",
-                        ClosedDate = new DateTime(2019, 11, 05, 10, 52, 02, 22)
+                        ClosedDate = new DateTime(2019, 11, 05, 10, 52, 02, 22),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
