@@ -133,6 +133,21 @@ describe("Release notes GET", () => {
         done();
       });
   });
+
+  it("GET | Only retrieve Release Notes that's public", (done) => {
+    chai
+      .request(process.env.APP_URL)
+      .get(ADDRESS_GET_RELEASE_NOTE)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.body.map((rn) => {
+          expect(rn.isPublic).to.equal(true);
+        });
+        done();
+      });
+  });
 });
 
 describe("Release note PUT", () => {

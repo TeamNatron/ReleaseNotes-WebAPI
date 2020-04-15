@@ -258,6 +258,24 @@ describe("Releases GET", () => {
         done();
       });
   });
+
+  it("GET | Only retrieve Releases that's public", (done) => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressReleases)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.body.map((r) => {
+          if (r.productVersion) {
+            expect(r.productVersion.isPublic).to.equal(true);
+          }
+          expect(r.isPublic).to.equal(true);
+        });
+        done();
+      });
+  });
 });
 
 describe("Releases DELETE", () => {
