@@ -60,5 +60,34 @@ namespace ReleaseNotes_WebApi.Services
             
             return response;
         }
+
+        public async Task<MappingResponse> UpdateReleaseNoteMappingAsync(UpdateReleaseNoteMappingResource resource,
+            int id)
+        {
+            var existingMapping = await _mappableRepository.FindAsync(id);
+            if (existingMapping == null)
+            {
+                return new MappingResponse(false, "Mapping finnes ikke!");
+            }
+            
+            try
+            {
+                _mapper.Map(resource, existingMapping);
+                _mappableRepository.UpdateReleaseNoteMappingAsync(existingMapping);
+                await _unitOfWork.CompleteAsync();
+
+                // This extra mapping ensures that only resources gets returned
+                var result = _mapper.Map<ReleaseNoteMapping, ReleaseNoteMappingResource>(existingMapping);
+                return new MappingResponse(true, "Oppdatering vellykket!", result);
+            }
+            catch (Exception e)
+            {
+                return new MappingResponse(false, $"Det oppsto en feil: {e.Message}");
+            }
+
+            
+            
+            
+        }
     }
 }

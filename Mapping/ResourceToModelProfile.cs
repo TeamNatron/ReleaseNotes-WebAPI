@@ -23,6 +23,7 @@ namespace ReleaseNotes_WebAPI.Mapping
             CreateMap<SaveProductResource, Product>();
             CreateMap<CreateProductVersionResource, ProductVersion>();
             CreateMap<AzureInformationResource, AzureInformation>();
+            CreateMap<UpdateReleaseNoteMappingResource, ReleaseNoteMapping>();
         }
     }
 }
