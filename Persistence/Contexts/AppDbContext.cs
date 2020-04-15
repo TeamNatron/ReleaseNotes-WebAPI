@@ -28,6 +28,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         public DbSet<Product> Products { get; set; }
         public DbSet<ReleaseReleaseNote> ReleaseReleaseNotes { get; set; }
         public DbSet<AzureInformation> AzureInformations { get; set; }
+        public DbSet<MappableField> MappableFields { get; set; }
+        public DbSet<ReleaseNoteMapping> ReleaseNoteMappings { get; set; }
         private bool UserIsAdmin { get; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor accessor) : base(options)
@@ -47,14 +49,21 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             base.OnModelCreating(builder);
             
             builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
-            builder.Entity<AzureInformation>().Property(ai => ai.Id).ValueGeneratedOnAdd();
-            builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
-            builder.Entity<ProductVersion>().Property(pv => pv.Id).ValueGeneratedOnAdd();
             builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             builder.Entity<Release>().Property(r => r.Date).HasDefaultValue(DateTime.UtcNow);
             builder.Entity<ReleaseReleaseNote>().HasKey(
                 rrn => new {rrn.ReleaseId, rrn.ReleaseNoteId});
             
+            // Generate primary key on add
+            builder.Entity<AzureInformation>().Property(ai => ai.Id).ValueGeneratedOnAdd();
+            builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
+            builder.Entity<ProductVersion>().Property(pv => pv.Id).ValueGeneratedOnAdd();
+            builder.Entity<MappableField>().Property(mf => mf.Id).ValueGeneratedOnAdd();
+            builder.Entity<ReleaseNoteMapping>().Property(rnm => rnm.Id).ValueGeneratedOnAdd();
+            
+            // Generate unique constraint
+            builder.Entity<ReleaseNoteMapping>().HasIndex(mf => mf.MappableFieldId).IsUnique();
+
             // All entities that require extra security for isPublic
             builder.Entity<Release>().HasQueryFilter(
                 r => !(!r.IsPublic && !UserIsAdmin));
