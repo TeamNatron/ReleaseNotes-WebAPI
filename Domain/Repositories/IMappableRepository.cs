@@ -6,6 +6,7 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
 {
     public interface IMappableRepository
     {
-        Task<IEnumerable<MappableField>> ListAsync();
+        Task<IEnumerable<MappableField>> GetMappableFields();
+        Task<IEnumerable<ReleaseNoteMapping>> GetMappedFields();
     }
 }

@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Services;
-using ReleaseNotes_WebAPI.Resources;
 
 namespace ReleaseNotes_WebAPI.Controllers
 {
@@ -22,11 +20,21 @@ namespace ReleaseNotes_WebAPI.Controllers
         
         [HttpGet]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<IEnumerable<MappableFieldsResource>> ListAsync()
+        public async Task<IActionResult> ListAsync([FromQuery] bool mapped)
         {
-            var result = await _mappableService.ListAsync();
-            var mappableResource = _mapper.Map<IEnumerable<MappableFieldsResource>>(result);
-            return mappableResource;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var result = await _mappableService.ListAsync(mapped);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);
         }
     }
 }
