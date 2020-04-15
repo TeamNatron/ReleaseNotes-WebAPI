@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -22,11 +21,41 @@ namespace ReleaseNotes_WebAPI.Controllers
         
         [HttpGet]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<IEnumerable<MappableFieldsResource>> ListAsync()
+        public async Task<IActionResult> ListAsync([FromQuery] bool mapped)
         {
-            var result = await _mappableService.ListAsync();
-            var mappableResource = _mapper.Map<IEnumerable<MappableFieldsResource>>(result);
-            return mappableResource;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var result = await _mappableService.ListAsync(mapped);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);
+        }
+        
+        [HttpPut("{id}")]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> UpdateReleaseNoteMappingAsync(
+            int id, [FromBody] UpdateReleaseNoteMappingResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var result = await _mappableService.UpdateReleaseNoteMappingAsync(resource, id);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);
         }
     }
 }

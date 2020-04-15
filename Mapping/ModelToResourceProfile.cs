@@ -57,6 +57,7 @@ namespace ReleaseNotes_WebAPI.Mapping
                             src.ReleaseReleaseNotes.Select(rrn => rrn.Release).Select(r => 
                                 new Release() {Date = r.Date, Id = r.Id,Title = r.Title,IsPublic = r.IsPublic,ProductVersion = r.ProductVersion})));
             CreateMap<MappableField, MappableFieldsResource>();
+            CreateMap<ReleaseNoteMapping, ReleaseNoteMappingResource>();
         }
     }
 }
