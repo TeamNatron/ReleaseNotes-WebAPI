@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services;
-using ReleaseNotes_WebAPI.Domain.Services.Communication;
-using ReleaseNotes_WebAPI.Resources;
-using ReleaseNotes_WebAPI.Utilities;
 
 namespace ReleaseNotes_WebAPI.Controllers
 {
@@ -28,6 +22,11 @@ namespace ReleaseNotes_WebAPI.Controllers
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> ListAsync([FromQuery] bool mapped)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
             var result = await _mappableService.ListAsync(mapped);
 
             if (!result.Success)
