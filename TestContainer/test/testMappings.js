@@ -111,7 +111,6 @@ describe("Mappings PUT", () => {
         if (err) {
           done(err);
         }
-        console.log(res.body);
         expect(res.should.have.status(200));
         expect(res.body.entity.id).to.be.a("number");
         expect(res.body.entity.azureDevOpsField).to.equal(
