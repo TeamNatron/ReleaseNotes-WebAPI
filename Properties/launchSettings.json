@@ -18,7 +18,12 @@
     "ReleaseNotes_WebAPI": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "HOST": "localhost",
+        "PORT": "5432",
+        "DB_NAME": "releasenotedb",
+        "DB_USER": "dbuser",
+        "DB_PASSW": "dbpassword"
       },
       "applicationUrl": "http://0.0.0.0:5000"
     }

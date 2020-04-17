@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ using ReleaseNotes_WebAPI.ModelBinder;
 using ReleaseNotes_WebAPI.Persistence.Contexts;
 using ReleaseNotes_WebAPI.Persistence.Repositories;
 using ReleaseNotes_WebAPI.Security.Tokens;
+using ReleaseNotes_WebApi.Services;
 using ReleaseNotes_WebAPI.Services;
 using ReleaseNotesWebAPI.Services;
 using TokenHandler = ReleaseNotes_WebAPI.Security.Tokens.TokenHandler;
@@ -52,6 +54,7 @@ namespace ReleaseNotes_WebAPI
             var connectionString =
                 "host=" + host + ";port=" + port + ";database=" + db + ";username=" + user + ";password=" + passw + ";";
 
+            services.AddHttpContextAccessor();
             // ADDS DATABASE SERVICE
             // CONNECTS WEB-API TO DB
             services.AddDbContext<AppDbContext>(options => { options.UseNpgsql(connectionString); });
@@ -77,6 +80,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IReleaseRepository, ReleaseRepository>();
             services.AddScoped<IProductVersionRepository, ProductVersionRepository>();
             services.AddScoped<IAzureInformationRepository, AzureInformationRepository>();
+            services.AddScoped<IMappableRepository, MappableRepository>();
 
             // BIND ALL SERVICES
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -88,6 +92,7 @@ namespace ReleaseNotes_WebAPI
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IProductVersionService, ProductVersionService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IMappableService, MappableService>();
 
             // CONFIGURE AUTHENTICATION AND TOKEN OPTIONS
             services.Configure<TokenOptions>(Configuration.GetSection("TokenOptions"));

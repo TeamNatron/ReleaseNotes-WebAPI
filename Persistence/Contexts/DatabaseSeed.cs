@@ -37,14 +37,13 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             // If there are no ProductVersions
             if (!context.ProductVersions.Any())
             {
-                Console.WriteLine(context.Products);
                 var productVersions = new List<ProductVersion>
                 {
-                    new ProductVersion {Id = 100, ProductId = 100, Version = "1.0"},
+                    new ProductVersion {Id = 100, ProductId = 100, Version = "1.0", IsPublic = true},
                     new ProductVersion {Id = 101, ProductId = 100, Version = "2.0"},
                     new ProductVersion {Id = 105, ProductId = 100, Version = "2.1-Beta", IsPublic = false},
-                    new ProductVersion {Id = 102, ProductId = 101, Version = "3.0"},
-                    new ProductVersion {Id = 103, ProductId = 102, Version = "1.1"},
+                    new ProductVersion {Id = 102, ProductId = 101, Version = "3.0", IsPublic = true},
+                    new ProductVersion {Id = 103, ProductId = 102, Version = "1.1", IsPublic = true},
                     new ProductVersion {Id = 104, ProductId = 103, Version = "1.0"}
                 };
                 context.ProductVersions.AddRange(productVersions);
@@ -100,7 +99,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "Sletting av faktura", Ingress = "Det er nå mulig å slette faktura i faktura-systemet",
                         Description = htmlDummy6, WorkItemDescriptionHtml = htmlDummy1,
                         WorkItemTitle = "Test item please ignore",
-                        ClosedDate = new DateTime(2019, 11, 05, 10, 52, 02, 22)
+                        ClosedDate = new DateTime(2019, 11, 05, 10, 52, 02, 22),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
@@ -110,7 +110,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                             "Microsofts nye filutforsker gir trolig et bilde inn i fremtiden også for Windows 10.",
                         Description = htmlDummy8,
                         WorkItemDescriptionHtml = htmlDummy8, WorkItemTitle = "Receive Nobel Price",
-                        ClosedDate = new DateTime(2020, 01, 16, 16, 8, 24, 44)
+                        ClosedDate = new DateTime(2020, 01, 16, 16, 8, 24, 44),
+                        IsPublic = false
                     },
                     new ReleaseNote
                     {
@@ -120,7 +121,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                             "Electronic Arts har avslørt lanseringsdatoen for «Command & Conquer Remastered Collection».",
                         Description = htmlDummy9,
                         WorkItemDescriptionHtml = htmlDummy3, WorkItemTitle = "Forbid escapism",
-                        ClosedDate = new DateTime(2019, 11, 04, 09, 50, 00, 0)
+                        ClosedDate = new DateTime(2019, 11, 04, 09, 50, 00, 0),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
@@ -130,7 +132,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                             "Pentagon har allerede alle tillatelser de trenger for å skyte ned droner de oppfatter som trusler, men nå tar de steget videre for å gjøre dette til en mer effektiv sak.",
                         Description = htmlDummy7,
                         WorkItemDescriptionHtml = htmlDummy2, WorkItemTitle = "Cut the western bullshit",
-                        ClosedDate = new DateTime(1989, 3, 16, 02, 22, 42, 1)
+                        ClosedDate = new DateTime(1989, 3, 16, 02, 22, 42, 1),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
@@ -138,7 +141,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "Trump bygger vegg mot Corona", Ingress = "Kina skal betale for veggen",
                         Description = "Det hjelper fint lite, sier forskere",
                         WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
-                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
+                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
@@ -146,7 +150,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "Rudolf Blodstrupmoen", Ingress = "Hvem er denne mannen?",
                         Description = htmlDummy5,
                         WorkItemDescriptionHtml = htmlDummy5, WorkItemTitle = "Fix issues with the application",
-                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
+                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
@@ -154,7 +159,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "", Ingress = "",
                         Description = "Kan nå bruke websiden på Internet Explorer 6, selv om dette IKKE er anbefalt",
                         WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
-                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
+                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
@@ -162,7 +168,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "", Ingress = "",
                         Description = "Nettleseren koker ikke lengre over når man legger inn faktura.",
                         WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
-                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
+                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4),
+                        IsPublic = true
                     },
                     new ReleaseNote
                     {
@@ -170,7 +177,8 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         Title = "", Ingress = "",
                         Description = "Nettsiden har nå støtte for autofyll.",
                         WorkItemDescriptionHtml = htmlDummy4, WorkItemTitle = "Fix issues with the application",
-                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4)
+                        ClosedDate = new DateTime(2005, 7, 11, 14, 0, 59, 4),
+                        IsPublic = false
                     }
                 };
 
@@ -290,6 +298,35 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 });
 
                 context.Users.AddRange(users);
+                context.SaveChanges();
+            }
+            
+            // If there are no mappings
+            if (!context.MappableFields.Any())
+            {
+                var fields = new List<MappableField>
+                {
+                    new MappableField {Name = "Title"},
+                    new MappableField {Name = "Ingress"},
+                    new MappableField {Name = "Description"},
+                    new MappableField {Name = "WorkItemId"},
+                    new MappableField {Name = "AuthorName"},
+                    new MappableField {Name = "AuthorEmail"},
+                    new MappableField {Name = "WorkItemDescriptionHtml"},
+                    new MappableField {Name = "WorkItemTitle"},
+                    new MappableField {Name = "ClosedDate"}
+                };
+                
+                context.MappableFields.AddRange(fields);
+                if (!context.ReleaseNoteMappings.Any())
+                {
+                    var mappings = new List<ReleaseNoteMapping>();
+                    foreach (var mappableField in fields)
+                    {
+                        mappings.Add(new ReleaseNoteMapping {MappableField = mappableField});
+                    }
+                    context.AddRange(mappings);
+                }
                 context.SaveChanges();
             }
         }
