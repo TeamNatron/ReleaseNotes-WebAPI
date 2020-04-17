@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Resources;
 
 namespace ReleaseNotes_WebAPI.Controllers
 {
@@ -28,6 +29,26 @@ namespace ReleaseNotes_WebAPI.Controllers
             }
             
             var result = await _mappableService.ListAsync(mapped);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);
+        }
+        
+        [HttpPut("{id}")]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> UpdateReleaseNoteMappingAsync(
+            int id, [FromBody] UpdateReleaseNoteMappingResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var result = await _mappableService.UpdateReleaseNoteMappingAsync(resource, id);
 
             if (!result.Success)
             {

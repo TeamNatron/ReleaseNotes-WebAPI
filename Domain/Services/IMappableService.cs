@@ -10,5 +10,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     public interface IMappableService
     {
         Task<MappingResponse> ListAsync(bool mapped);
+        
+        Task<MappingResponse> UpdateReleaseNoteMappingAsync(UpdateReleaseNoteMappingResource resource, int id);
     }
 }
