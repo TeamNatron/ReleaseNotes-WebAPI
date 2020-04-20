@@ -1,3 +1,5 @@
+[![DeepScan grade](https://deepscan.io/api/teams/8238/projects/10387/branches/143548/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=8238&pid=10387&bid=143548)
+
 # ReleaseNotes-WebAPI
 
 This is the the repository for the application server for the bachelor

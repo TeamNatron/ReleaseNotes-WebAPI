@@ -34,9 +34,18 @@ namespace ReleaseNotes_WebAPI.Services
             return await _releaseNoteRepository.FilterDates(queryParameters);
         }
 
-        public async Task<ReleaseNoteResponse> GetReleaseNote(int id)
+        public async Task<ReleaseNoteResponse> GetReleaseNote(int id, bool includeReleases)
         {
-            var existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
+            ReleaseNote existingReleaseNote;
+            if (includeReleases)
+            {
+                existingReleaseNote = await _releaseNoteRepository.FindAsync(id, true);
+            }
+            else
+            {
+                existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
+
+            }
             if (existingReleaseNote == null)
             {
                 return new ReleaseNoteResponse("Release noten eksisterer ikke!");

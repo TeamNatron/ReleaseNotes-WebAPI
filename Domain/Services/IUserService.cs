@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReleaseNotes_WebAPI.Domain.Models.Auth;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
+using ReleaseNotes_WebAPI.Resources;
 
 namespace ReleaseNotes_WebAPI.Domain.Services
 {
@@ -15,6 +16,8 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 
         Task<IEnumerable<User>> ListAsync();
 
-        Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string newPassword);
+        Task<CreateUserResponse> ChangeUserPasswordAsync(User user, string password);
+
+        Task<CreateUserResponse> UpdateUserAsync(User user, UpdateUserResource userResource);
     }
 }

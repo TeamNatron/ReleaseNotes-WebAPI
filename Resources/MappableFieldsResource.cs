@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using ReleaseNotes_WebAPI.Domain.Models;
 
 namespace ReleaseNotes_WebAPI.Resources
 {
-    public class ProductResource
+    public class MappableFieldsResource
     {
         public int Id { get; set; }
+        
         public string Name { get; set; }
-        public List<ProductVersionResource> Versions { get; set; }
     }
 }

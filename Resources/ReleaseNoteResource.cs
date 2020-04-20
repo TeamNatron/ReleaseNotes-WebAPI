@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ReleaseNotes_WebAPI.Domain.Models;
 
 namespace ReleaseNotes_WebAPI.Resources
@@ -16,5 +17,6 @@ namespace ReleaseNotes_WebAPI.Resources
         public int WorkItemId { get; set; }
         public DateTime ClosedDate { get; set; }
         public bool IsPublic { get; set; }
+        public ICollection<Release> Releases { get; set; }
     }
 }

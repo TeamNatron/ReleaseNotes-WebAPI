@@ -148,3 +148,37 @@ describe("Change password", () => {
       });
   });
 });
+
+describe("Azure Info", () => {
+  before(() => init());
+
+  it("should return info", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get("/api/users/azure")
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        res.should.have.status(200);
+        res.body.userId.should.not.be.empty;
+        res.body.pat.should.not.be.empty;
+        res.body.organization.should.not.be.empty;
+        done();
+      });
+  });
+
+  it("should return unauthorized", done => {
+    chai
+      .request(process.env.APP_URL)
+      .get("/api/users/azure")
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + "asdasdasdqweqwe")
+      .end(err => {
+        err.should.have.status(401);
+        done();
+      });
+  });
+});

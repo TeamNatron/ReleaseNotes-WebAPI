@@ -43,6 +43,9 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
+# Files created at runtime
+/wwwroot/images
+
 # Visual Studio 2015
 .vs/
 /publickey.txt

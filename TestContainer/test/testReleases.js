@@ -10,18 +10,35 @@ const TEST_RELEASE_1 = {
   ProductVersionId: 100,
   Title: "Release 2.5 - Vannkanon",
   IsPublic: false,
-  ReleaseNotesId: [1, 2]
+  ReleaseNotesId: [3, 2],
 };
 
 const TEST_RELEASE_2 = {
   ProductVersionId: 101,
   Title: "Release 2.6 - Vannkanon",
   IsPublic: true,
-  ReleaseNotesId: [1]
+  ReleaseNotesId: [3],
+};
+
+const TEST_RELEASE_NEW_RELEASE_NOTE = {
+  isPublic: false,
+  title: "Release-7",
+  ProductVersionId: 100,
+  releaseNotes: [
+    {
+      AuthorEmail: "markuran@ntnu.no",
+      AuthorName: "Markus Randa",
+      ClosedDate: "2020-03-26T18:38:58.993Z",
+      WorkItemDescriptionHtml:
+        '<div>Wireframe:</div><div><a href="https://confluence.uials.no/pages/viewpage.action?pageId=57378685">https://confluence.uials.no/pages/viewpage.action?pageId=57378685</a></div><div><br></div><div>ERD:</div><div><a href="https://confluence.uials.no/pages/viewpage.action?pageId=57377417">https://confluence.uials.no/pages/viewpage.action?pageId=57377417</a><br></div>',
+      WorkitemId: 235,
+      WorkItemTitle: "Front-end: Oppdater state med azure-projects",
+    },
+  ],
 };
 
 const TEST_RELEASE_3 = {
-  IsPublic: false
+  IsPublic: false,
 };
 
 var accessToken;
@@ -41,31 +58,31 @@ describe("Releases POST", () => {
   before(() => init());
 
   // should return 401 unauth
-  it("CREATE | Tries to create a release without being logged in", done => {
+  it("CREATE | Tries to create a release without being logged in", (done) => {
     chai
       .request(process.env.APP_URL)
       .post(addressReleases)
       .send(TEST_RELEASE_1)
-      .end(err => {
+      .end((err) => {
         err.should.have.status(401);
         done();
       });
   });
 
   // should return a 401 unauth
-  it("PUT | Tries to update a release without being logged in", done => {
+  it("PUT | Tries to update a release without being logged in", (done) => {
     chai
       .request(process.env.APP_URL)
       .put(addressPut)
       .send(TEST_RELEASE_3)
-      .end(err => {
+      .end((err) => {
         err.should.have.status(401);
         done();
       });
   });
 
   // should return 200 OK
-  it("CREATE | Successfully creating a release", done => {
+  it("CREATE | Successfully creating a release", (done) => {
     chai
       .request(process.env.APP_URL)
       .post(addressReleases)
@@ -81,21 +98,41 @@ describe("Releases POST", () => {
       });
   });
 
+  // should return 200 OK
+  it("CREATE | Successfully creating a release with non existing Release Note", (done) => {
+    chai
+      .request(process.env.APP_URL)
+      .post(addressReleases)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .send(TEST_RELEASE_NEW_RELEASE_NOTE)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(200);
+        res.body.releaseNotes.should.be.a("array");
+        res.body.releaseNotes.should.not.be.empty;
+        res.body.releaseNotes.should;
+        done();
+      });
+  });
+
   // should return 400 Bad Request
-  it("CREATE | Tries to create a already created release", done => {
+  it("CREATE | Tries to create a already created release", (done) => {
     chai
       .request(process.env.APP_URL)
       .post(addressReleases)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
       .send(TEST_RELEASE_1)
-      .end(err => {
+      .end((err) => {
         err.should.have.status(400);
         done();
       });
   });
 
-  it("PUT | Should return same object as trying to put ", done => {
+  it("PUT | Should return same object as trying to put ", (done) => {
     chai
       .request(process.env.APP_URL)
       .put(addressCheckAfterCreate)
@@ -118,7 +155,7 @@ describe("Releases POST", () => {
       });
   });
 
-  it("PUT | Should return non null fields", done => {
+  it("PUT | Should return non null fields", (done) => {
     chai
       .request(process.env.APP_URL)
       .put(addressCheckAfterCreate)
@@ -141,7 +178,7 @@ describe("Releases POST", () => {
       });
   });
 
-  it("PUT | Should handle unknown values", done => {
+  it("PUT | Should handle unknown values", (done) => {
     chai
       .request(process.env.APP_URL)
       .put(addressCheckAfterCreate)
@@ -168,7 +205,7 @@ describe("Releases POST", () => {
 describe("Releases GET", () => {
   before(() => init());
 
-  it("Should return all releases", done => {
+  it("Should return all releases", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressReleases)
@@ -186,7 +223,7 @@ describe("Releases GET", () => {
       });
   });
 
-  it("GET | Attempting to get a non-existant release", done => {
+  it("GET | Attempting to get a non-existant release", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressGetFail)
@@ -202,7 +239,7 @@ describe("Releases GET", () => {
   });
 
   // success case for getting a single release
-  it("GET | Should return a specific release", done => {
+  it("GET | Should return a specific release", (done) => {
     chai
       .request(process.env.APP_URL)
       .get(addressGet)
@@ -221,34 +258,52 @@ describe("Releases GET", () => {
         done();
       });
   });
+
+  it("GET | Only retrieve Releases that's public", (done) => {
+    chai
+      .request(process.env.APP_URL)
+      .get(addressReleases)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.body.map((r) => {
+          if (r.productVersion) {
+            expect(r.productVersion.isPublic).to.equal(true);
+          }
+          expect(r.isPublic).to.equal(true);
+        });
+        done();
+      });
+  });
 });
 
 describe("Releases DELETE", () => {
   before(() => init());
-  it("DELETE | Tries to delete a release without logging in", done => {
+  it("DELETE | Tries to delete a release without logging in", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDelete)
-      .end(err => {
+      .end((err) => {
         expect(err.should.have.status(401));
         done();
       });
   });
 
-  it("DELETE | Tries to delete a non-existant release", done => {
+  it("DELETE | Tries to delete a non-existant release", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressDeleteFail)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .end(err => {
+      .end((err) => {
         expect(err.should.have.status(400));
         done();
       });
   });
 
   // success case: deletes a release
-  it("DELETE | Should delete a release and return a copy of the deleted release", done => {
+  it("DELETE | Should delete a release and return a copy of the deleted release", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressCheckAfterCreate)
@@ -273,13 +328,13 @@ describe("Releases DELETE", () => {
   });
 
   // failure case: Tries to delete a already deleted release
-  it("DELETE | Tries to delete a already deleted release", done => {
+  it("DELETE | Tries to delete a already deleted release", (done) => {
     chai
       .request(process.env.APP_URL)
       .delete(addressCheckAfterCreate)
       .set("Content-Type", "application/json")
       .set("Authorization", "Bearer " + accessToken)
-      .end(err => {
+      .end((err) => {
         expect(err.should.have.status(400));
         done();
       });

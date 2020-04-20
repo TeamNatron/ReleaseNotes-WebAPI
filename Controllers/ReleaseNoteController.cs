@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿ using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -50,9 +51,11 @@ namespace ReleaseNotes_WebAPI.Controllers
 
         // GET: api/releasenote/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ReleaseNoteResource>> GetSpecificReleaseNote(int id)
+        public async Task<ActionResult<ReleaseNoteResource>> GetSpecificReleaseNote(
+            [FromQuery] bool includeReleases, 
+            int id)
         {
-            var releaseNoteResponse = await _releaseNoteService.GetReleaseNote(id);
+            var releaseNoteResponse = await _releaseNoteService.GetReleaseNote(id, includeReleases);
             if (releaseNoteResponse == null)
             {
                 return NotFound();

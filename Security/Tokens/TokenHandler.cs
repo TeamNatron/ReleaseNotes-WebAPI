@@ -31,7 +31,7 @@ namespace ReleaseNotes_WebAPI.Security.Tokens
             var refreshToken = BuildRefreshToken();
             var accessToken = BuildAccessToken(user, refreshToken);
             _refreshTokens.Add(refreshToken);
-
+            
             return accessToken;
         }
 

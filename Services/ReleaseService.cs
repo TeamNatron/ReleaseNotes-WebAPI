@@ -138,7 +138,17 @@ namespace ReleaseNotesWebAPI.Services
                     var releaseReleaseNotes = new List<ReleaseReleaseNote>();
                     
                     // Retrieve all ReleaseNotes from database
-                    var releaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
+                    IEnumerable<ReleaseNote> releaseNotes;
+
+                    if (resource.ReleaseNotesId != null)
+                    {
+                        releaseNotes = await _releaseRepository.FindReleaseNotes(resource.ReleaseNotesId);
+                    }
+                    else
+                    {
+                        // Create new Release Notes
+                        releaseNotes = resource.ReleaseNotes;
+                    }
                     
                     // Map each ReleaseNote to this Release
                     foreach (var releaseNote in releaseNotes)
