@@ -175,7 +175,8 @@ namespace ReleaseNotes_WebAPI
             }
             
             // Init static file serving
-            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
+            var webRoot = Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
+            env.WebRootPath = webRoot.FullName;
             Directory.CreateDirectory(Path.Combine(env.WebRootPath, "images"));
             app.UseStaticFiles();
             
