@@ -10,5 +10,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
         Task<IEnumerable<ProductVersion>> ListAsync();
         Task<ProductVersionResponse> AddAsync(ProductVersion productVersion);
 
+        Task<ProductVersionResponse> UpdateAsync(ProductVersion productVersion);
     }
 }

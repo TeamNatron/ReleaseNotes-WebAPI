@@ -82,5 +82,27 @@ namespace ReleaseNotes_WebAPI.Controllers
             var response = _mapper.Map<CreateProductVersionResource>(result.ProductVersion);
             return Ok(response);
         }
+        
+        [HttpPut]
+        [Route("{id}/version")]
+        [Authorize(Roles = ("Administrator"))]
+        public async Task<IActionResult> UpdateVersionAsync(int id, [FromBody] CreateProductVersionResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var newProductVersion = _mapper.Map<ProductVersion>(resource);
+            newProductVersion.ProductId = id;
+            var result = await _productVersionService.UpdateAsync(newProductVersion);
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var response = _mapper.Map<CreateProductVersionResource>(result.ProductVersion);
+            return Ok(response);
+        }
     }
 }
