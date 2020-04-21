@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -11,12 +11,14 @@ namespace ReleaseNotes_WebAPI.Services
     public class ImageService : IImageService
     {
         private readonly string _imagesDirectory = "images";
+        private const string Api = "api";
         private readonly string _storedImagesPath;
         private readonly string _baseUrl;
 
         public ImageService(IWebHostEnvironment environment, IHttpContextAccessor httpContext)
         {
-            _baseUrl = Path.Combine("http://" + httpContext.HttpContext.Request.Host.Value, _imagesDirectory);
+            _imageRepository = imageRepository;
+            _baseUrl = Path.Combine("http://" + httpContext.HttpContext.Request.Host.Value, Api, _imagesDirectory);
             _storedImagesPath = Path.Combine(environment.WebRootPath, _imagesDirectory);
         }
 
