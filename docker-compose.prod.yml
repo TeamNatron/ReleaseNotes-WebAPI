@@ -29,6 +29,7 @@ services:
       DB_PASSW: ${DB_PASSW}
       HOST: ${HOST}
       PORT: ${PORT}
+      GATEWAY: ${GATEWAY}
     depends_on:
       - "postgres_image"
     build:
