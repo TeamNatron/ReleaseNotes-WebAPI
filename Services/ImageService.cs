@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
@@ -20,8 +21,16 @@ namespace ReleaseNotes_WebAPI.Services
         public ImageService(IWebHostEnvironment environment, IHttpContextAccessor httpContext, IImageRepository imageRepository)
         {
             _imageRepository = imageRepository;
-            _baseUrl = Path.Combine("http://" + httpContext.HttpContext.Request.Host.Value, Api, _imagesDirectory);
+            _baseUrl = Path.Combine("http://" + GetHost(httpContext, environment), Api, _imagesDirectory);
             _storedImagesPath = Path.Combine(environment.WebRootPath, _imagesDirectory);
+        }
+
+        private string GetHost(IHttpContextAccessor httpContext, IWebHostEnvironment env)
+        {
+            var input = httpContext.HttpContext.Request.Host.Value;
+            if (env.IsDevelopment()) return input;
+            var index = input.LastIndexOf(":", StringComparison.Ordinal);
+            return Environment.GetEnvironmentVariable("GATEWAY");
         }
 
         public async Task<ImageResponse> SaveToFilesystem(IFormFile file)

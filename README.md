@@ -21,6 +21,8 @@ Include all fields that are represented in the example below
 
 `DB_PASSW=dbpassword`
 
+`GATWAY=mywebsite.com`
+
 ---
 To run the application in developer-mode use:
 
