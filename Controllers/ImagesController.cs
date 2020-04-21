@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +35,15 @@ namespace ReleaseNotes_WebAPI.Controllers
             }
 
             return Ok(response);
+        }
+
+        [HttpGet("{imageUrl}")]
+        public async Task<IActionResult> GetImage([FromRoute] string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl)) return BadRequest("Finner ingen imageUrl i addressen..");
+
+            var fileStream = await _imageService.GetAsync(imageUrl);
+            return File(fileStream, "image/png");
         }
     }
 }

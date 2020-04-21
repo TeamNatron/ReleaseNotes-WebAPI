@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using ReleaseNotes_WebAPI.Domain.Services.Communication;
 
@@ -8,5 +9,6 @@ namespace ReleaseNotes_WebAPI.Domain.Services
     {
         Task<ImageResponse> SaveToFilesystem(IFormFile file);
 
+        Task<FileStream> GetAsync(string imageUrl);
     }
 }
