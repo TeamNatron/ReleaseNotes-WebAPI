@@ -2,8 +2,6 @@ namespace ReleaseNotes_WebAPI.Domain.Models
 {
     public class ReleaseNoteMapping
     {
-        //public int Id { get; set; }
-        
         public string AzureDevOpsField { get; set; }
         
         public int MappableFieldId { get; set; }
@@ -14,6 +12,5 @@ namespace ReleaseNotes_WebAPI.Domain.Models
         public int MappableTypeId { get; set; }
 
         public MappableType MappableType { get; set; }
-
     }
 }

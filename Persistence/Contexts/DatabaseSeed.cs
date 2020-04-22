@@ -285,7 +285,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                         AzureInformation = new AzureInformation
                         {
                             Id = 123, UserId = "test.testovitch@testnes.no", Pat = "123123asdasd",
-                            Organization = "ReleaseNotesSystem"
+                            Organization = "ReleaseNoteSystem"
                         }
                     },
                     new User
