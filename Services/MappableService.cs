@@ -25,12 +25,12 @@ namespace ReleaseNotes_WebApi.Services
             _mapper = mapper;
         }
 
-        public async Task<MappingResponse> ListAsync(bool mapped)
+        public async Task<MappingResponse> ListAsync(bool mapped, string type)
         {
             dynamic result;
             if (mapped)
             {
-                result =  await _mappableRepository.GetMappedFields();
+                result = await _mappableRepository.GetMappedFields(type);
             }
             else
             {
@@ -41,35 +41,37 @@ namespace ReleaseNotes_WebApi.Services
             // C#'s compiler doesn't recognize the use of default when using the TypeSwitch class..
             var response = new MappingResponse(
                 false, "Noe gikk galt, vennligst kontakt din lokale utvikler..");
-            
+
             TypeSwitch.Do(
                 result,
                 TypeSwitch.Case<IEnumerable<MappableField>>(() =>
                 {
                     var mappableFields = _mapper.Map<IEnumerable<MappableFieldsResource>>(result);
-                    response =  new MappingResponse(
+                    response = new MappingResponse(
                         true, "Innhenting av Mapped Fields er vellykket", mappableFields);
                 }),
                 TypeSwitch.Case<IEnumerable<ReleaseNoteMapping>>(() =>
                 {
-                    var releaseNoteMappings = _mapper.Map<IEnumerable<ReleaseNoteMapping>>(result);
+                    var releaseNoteMappings = _mapper.Map<IEnumerable<ReleaseNoteMappingResource>>(result);
                     response = new MappingResponse(
                         true, "Innhenting av Release Note Mappings er vellykket", releaseNoteMappings);
                 })
             );
-            
+
             return response;
         }
 
         public async Task<MappingResponse> UpdateReleaseNoteMappingAsync(UpdateReleaseNoteMappingResource resource,
-            int id)
+            string type, string mappableField)
         {
-            var existingMapping = await _mappableRepository.FindAsync(id);
+            
+            var existingMapping = await _mappableRepository.FindAsync(type, mappableField);
+
             if (existingMapping == null)
             {
                 return new MappingResponse(false, "Mapping finnes ikke!");
             }
-            
+
             try
             {
                 _mapper.Map(resource, existingMapping);
@@ -84,10 +86,6 @@ namespace ReleaseNotes_WebApi.Services
             {
                 return new MappingResponse(false, $"Det oppsto en feil: {e.Message}");
             }
-
-            
-            
-            
         }
     }
 }
