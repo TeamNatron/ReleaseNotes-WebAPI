@@ -20,7 +20,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
          * 
         */
         public DbSet<User> Users { get; set; }
-
         public DbSet<Role> Roles { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Release> Releases { get; set; }
@@ -31,8 +30,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         public DbSet<AzureInformation> AzureInformations { get; set; }
         public DbSet<MappableField> MappableFields { get; set; }
         public DbSet<ReleaseNoteMapping> ReleaseNoteMappings { get; set; }
-        public DbSet<MappableType> MappableTypes { get; set; }
-
         private bool UserIsAdmin { get; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor accessor) : base(options)
@@ -50,28 +47,23 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            // Generate default values
+            
+            builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
             builder.Entity<Article>().Property(a => a.Date).HasDefaultValue(DateTime.UtcNow);
             builder.Entity<Release>().Property(r => r.Date).HasDefaultValue(DateTime.UtcNow);
+            builder.Entity<ReleaseReleaseNote>().HasKey(
+                rrn => new {rrn.ReleaseId, rrn.ReleaseNoteId});
             
             // Generate primary key on add
             builder.Entity<AzureInformation>().Property(ai => ai.Id).ValueGeneratedOnAdd();
             builder.Entity<ReleaseNote>().Property(rn => rn.Id).ValueGeneratedOnAdd();
             builder.Entity<ProductVersion>().Property(pv => pv.Id).ValueGeneratedOnAdd();
             builder.Entity<MappableField>().Property(mf => mf.Id).ValueGeneratedOnAdd();
-            builder.Entity<MappableType>().Property(mt => mt.Id).ValueGeneratedOnAdd();
-
-            // Generate unique constraint
-            builder.Entity<MappableType>().HasIndex(mt => mt.Name).IsUnique();
-
-            // Generate key types
-            builder.Entity<UserRole>().HasKey(ur => new {ur.UserId, ur.RoleId});
-            builder.Entity<ReleaseNoteMapping>()
-                .HasKey(rnm => new {rnm.MappableFieldId, rnm.MappableTypeId});
-            builder.Entity<ReleaseReleaseNote>().HasKey(
-                rrn => new {rrn.ReleaseId, rrn.ReleaseNoteId});
+            builder.Entity<ReleaseNoteMapping>().Property(rnm => rnm.Id).ValueGeneratedOnAdd();
             
+            // Generate unique constraint
+            builder.Entity<ReleaseNoteMapping>().HasIndex(mf => mf.MappableFieldId).IsUnique();
+
             // All entities that require extra security for isPublic
             builder.Entity<Release>().HasQueryFilter(
                 r => !(!r.IsPublic && !UserIsAdmin));

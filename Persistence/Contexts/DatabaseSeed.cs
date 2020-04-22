@@ -283,10 +283,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     {
                         Email = "admin@ungspiller.no", Password = passwordHasher.HashPassword("12345678"),
                         AzureInformation = new AzureInformation
-                        {
-                            Id = 123, UserId = "test.testovitch@testnes.no", Pat = "123123asdasd",
-                            Organization = "ReleaseNoteSystem"
-                        }
+                            {Id = 123,UserId = "test.testovitch@testnes.no", Pat = "123123asdasd", Organization = "ReleaseNotesSystem"}
                     },
                     new User
                     {
@@ -303,18 +300,7 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 context.Users.AddRange(users);
                 context.SaveChanges();
             }
-
-            if (!context.MappableTypes.Any())
-            {
-                var types = new List<MappableType>
-                {
-                    new MappableType {Name = "task"},
-                    new MappableType {Name = "bug"},
-                };
-                context.MappableTypes.AddRange(types);
-                context.SaveChanges();
-            }
-
+            
             // If there are no mappings
             if (!context.MappableFields.Any())
             {
@@ -330,23 +316,17 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     new MappableField {Name = "WorkItemTitle"},
                     new MappableField {Name = "ClosedDate"}
                 };
-
+                
                 context.MappableFields.AddRange(fields);
                 if (!context.ReleaseNoteMappings.Any())
                 {
                     var mappings = new List<ReleaseNoteMapping>();
-                    foreach (var mappableType in context.MappableTypes.ToList())
+                    foreach (var mappableField in fields)
                     {
-                        foreach (var mappableField in fields)
-                        {
-                            mappings.Add(new ReleaseNoteMapping
-                                {MappableField = mappableField, MappableType = mappableType});
-                        }
+                        mappings.Add(new ReleaseNoteMapping {MappableField = mappableField});
                     }
-
                     context.AddRange(mappings);
                 }
-
                 context.SaveChanges();
             }
         }

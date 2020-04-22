@@ -21,14 +21,14 @@ namespace ReleaseNotes_WebAPI.Controllers
         
         [HttpGet]
         [Authorize(Roles = ("Administrator"))]
-        public async Task<IActionResult> ListAsync([FromQuery] bool mapped, [FromQuery] string type)
+        public async Task<IActionResult> ListAsync([FromQuery] bool mapped)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             
-            var result = await _mappableService.ListAsync(mapped, type);
+            var result = await _mappableService.ListAsync(mapped);
 
             if (!result.Success)
             {
@@ -38,17 +38,17 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(result);
         }
         
-        [HttpPut("{type}/{mappableField}")]
+        [HttpPut("{id}")]
         [Authorize(Roles = ("Administrator"))]
         public async Task<IActionResult> UpdateReleaseNoteMappingAsync(
-            [FromBody] UpdateReleaseNoteMappingResource resource, string type, string mappableField)
+            int id, [FromBody] UpdateReleaseNoteMappingResource resource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             
-            var result = await _mappableService.UpdateReleaseNoteMappingAsync(resource, type, mappableField);
+            var result = await _mappableService.UpdateReleaseNoteMappingAsync(resource, id);
 
             if (!result.Success)
             {

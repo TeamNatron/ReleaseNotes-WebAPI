@@ -46,29 +46,18 @@ namespace ReleaseNotes_WebAPI.Mapping
                         opt.MapFrom(pv => pv.Product.Name + " " + pv.Version));
 
             CreateMap<Product, ProductResource>()
-                .ForMember(dest => dest.Versions,
-                    opt =>
+                .ForMember(dest => dest.Versions, 
+                    opt => 
                         opt.MapFrom(src => src.ProductVersions));
 
             CreateMap<ReleaseNote, ReleaseNoteResource>()
                 .ForMember(dest => dest.Releases,
                     opt =>
                         opt.MapFrom(src =>
-                            src.ReleaseReleaseNotes.Select(rrn => rrn.Release).Select(r =>
-                                new Release()
-                                {
-                                    Date = r.Date, Id = r.Id, Title = r.Title, IsPublic = r.IsPublic,
-                                    ProductVersion = r.ProductVersion
-                                })));
-
+                            src.ReleaseReleaseNotes.Select(rrn => rrn.Release).Select(r => 
+                                new Release() {Date = r.Date, Id = r.Id,Title = r.Title,IsPublic = r.IsPublic,ProductVersion = r.ProductVersion})));
             CreateMap<MappableField, MappableFieldsResource>();
-            CreateMap<ReleaseNoteMapping, ReleaseNoteMappingResource>()
-                .ForMember(dest => dest.MappableType,
-                    opt => 
-                        opt.MapFrom(src => src.MappableType.Name))
-                .ForMember(dest => dest.MappableField,
-                    opt => 
-                        opt.MapFrom(src => src.MappableField.Name));
+            CreateMap<ReleaseNoteMapping, ReleaseNoteMappingResource>();
         }
     }
 }
