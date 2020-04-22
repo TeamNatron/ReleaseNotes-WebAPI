@@ -9,5 +9,7 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
         Task<IEnumerable<ProductVersion>> ListAsync();
         Task AddAsync(ProductVersion productVersion);
         Task<bool> AnyAsync(ProductVersion version);
+        void Update(ProductVersion productVersion);
+        Task<ProductVersion> FindAsync(ProductVersion productVersion);
     }
 }

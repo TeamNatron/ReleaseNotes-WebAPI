@@ -28,5 +28,15 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             return await _context.ProductVersions.AnyAsync(pv =>
                 pv.ProductId == version.ProductId && pv.Version == version.Version);
         }
+
+        public void Update(ProductVersion productVersion)
+        {
+            _context.ProductVersions.Update(productVersion);
+        }
+
+        public async Task<ProductVersion> FindAsync(ProductVersion productVersion)
+        {
+            return await _context.ProductVersions.FindAsync(productVersion.Id);
+        }
     }
 }
