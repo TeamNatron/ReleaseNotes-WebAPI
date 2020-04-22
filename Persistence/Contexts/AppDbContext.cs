@@ -63,7 +63,6 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             builder.Entity<MappableType>().Property(mt => mt.Id).ValueGeneratedOnAdd();
 
             // Generate unique constraint
-            //builder.Entity<ReleaseNoteMapping>().HasIndex(mf => mf.MappableFieldId).IsUnique();
             builder.Entity<MappableType>().HasIndex(mt => mt.Name).IsUnique();
 
             // Generate key types
