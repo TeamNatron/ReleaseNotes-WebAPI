@@ -1,9 +1,10 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services;
 using ReleaseNotes_WebAPI.Extensions;
@@ -52,7 +53,7 @@ namespace ReleaseNotes_WebAPI.Controllers
         // GET: api/releasenote/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<ReleaseNoteResource>> GetSpecificReleaseNote(
-            [FromQuery] bool includeReleases, 
+            [FromQuery] bool includeReleases,
             int id)
         {
             var releaseNoteResponse = await _releaseNoteService.GetReleaseNote(id, includeReleases);
@@ -97,6 +98,27 @@ namespace ReleaseNotes_WebAPI.Controllers
             }
 
             var result = await _releaseNoteService.CreateReleaseNote(resource);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var releaseNoteResource = _mapper.Map<ReleaseNote, ReleaseNoteResource>(result.ReleaseNote);
+            return Ok(releaseNoteResource);
+        }
+
+        [HttpPost("{mappableType}")]
+        public async Task<ActionResult<ReleaseNoteResource>> CreateReleaseNoteFromMapAsync(
+            [FromRoute] string mappableType,
+            [FromBody] JObject resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var result = await _releaseNoteService.CreateReleaseNoteFromMap(resource, mappableType);
 
             if (!result.Success)
             {

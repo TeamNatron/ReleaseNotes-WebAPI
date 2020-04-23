@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json.Linq;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
 using ReleaseNotes_WebAPI.Domain.Services;
@@ -16,10 +19,13 @@ namespace ReleaseNotes_WebAPI.Services
         private readonly IReleaseNoteRepository _releaseNoteRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMappableService _mappableService;
 
-        public ReleaseNoteService(IReleaseNoteRepository releaseNoteRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public ReleaseNoteService(IReleaseNoteRepository releaseNoteRepository, IMappableService mappableService,
+            IUnitOfWork unitOfWork, IMapper mapper)
         {
             _releaseNoteRepository = releaseNoteRepository;
+            _mappableService = mappableService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -44,8 +50,8 @@ namespace ReleaseNotes_WebAPI.Services
             else
             {
                 existingReleaseNote = await _releaseNoteRepository.FindAsync(id);
-
             }
+
             if (existingReleaseNote == null)
             {
                 return new ReleaseNoteResponse("Release noten eksisterer ikke!");
@@ -117,6 +123,61 @@ namespace ReleaseNotes_WebAPI.Services
             {
                 return new ReleaseNoteResponse($"Det oppsto en feil: {e.Message}");
             }
+        }
+
+        public async Task<ReleaseNoteResponse> CreateReleaseNoteFromMap(JObject mapFrom, string mappableType)
+        {
+            var mappings = _mappableService.ListMappedAsync(mappableType);
+            var note = new ReleaseNote();
+
+            foreach (var mapping in mappings.Result.Entity)
+            {
+                var value = GetValueFromField(mapFrom, mapping.AzureDevOpsField);
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    SetField(note, mapping.MappableField, value);
+                }
+            }
+
+            _releaseNoteRepository.AddAsync(note);
+            await _unitOfWork.CompleteAsync();
+            return new ReleaseNoteResponse(true, mapFrom.ToString(), note);
+        }
+
+        private void SetField(ReleaseNote item, string dst, string value)
+        {
+            var prop = item.GetType().GetProperty(dst);
+            if (prop != null)
+            {
+                prop.SetValue(item, value);
+            }
+        }
+
+        private string GetValueFromField(JObject mapFrom, string field)
+        {
+            var value = "";
+            if (!string.IsNullOrWhiteSpace(field))
+            {
+                var fieldToMapTo = field;
+                var p1 = mapFrom["fields"];
+                if (p1 == null)
+                {
+                    // "Fields" does not exist.
+                    throw new Exception("F");
+                }
+
+                var p2 = p1[fieldToMapTo];
+                if (p2 != null)
+                {
+                    value = p2.Value<string>();
+                }
+                else
+                {
+                    // target AzureDevopsField does not exist
+                }
+            }
+
+            return value;
         }
     }
 }
