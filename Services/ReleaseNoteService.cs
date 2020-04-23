@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -129,10 +130,10 @@ namespace ReleaseNotes_WebAPI.Services
         {
             var mappings = _mappableService.ListMappedAsync(mappableType);
             var note = new ReleaseNote();
-
+            var allTokens = AllTokens(mapFrom);
             foreach (var mapping in mappings.Result.Entity)
             {
-                var value = GetValueFromField(mapFrom, mapping.AzureDevOpsField);
+                var value = GetValueFromField(allTokens, mapping.AzureDevOpsField);
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     SetField(note, mapping.MappableField, value);
@@ -153,31 +154,31 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        private string GetValueFromField(JObject mapFrom, string field)
+        private string GetValueFromField(IEnumerable<JToken> allTokens, string fieldToMapTo)
         {
             var value = "";
-            if (!string.IsNullOrWhiteSpace(field))
+            if (!string.IsNullOrWhiteSpace(fieldToMapTo))
             {
-                var fieldToMapTo = field;
-                var p1 = mapFrom["fields"];
-                if (p1 == null)
-                {
-                    // "Fields" does not exist.
-                    throw new Exception("F");
-                }
-
-                var p2 = p1[fieldToMapTo];
-                if (p2 != null)
-                {
-                    value = p2.Value<string>();
-                }
-                else
-                {
-                    // target AzureDevopsField does not exist
-                }
+                var field = allTokens.FirstOr(
+                    t => t.Type == JTokenType.Property && ((JProperty) t).Name == fieldToMapTo, "");
+                value = field.Value<string>();
             }
 
             return value;
+        }
+
+        private IEnumerable<JToken> AllTokens(JObject obj)
+        {
+            var toSearch = new Stack<JToken>(obj.Children());
+            while (toSearch.Count > 0)
+            {
+                var inspected = toSearch.Pop();
+                yield return inspected;
+                foreach (var child in inspected)
+                {
+                    toSearch.Push(child);
+                }
+            }
         }
     }
 }
