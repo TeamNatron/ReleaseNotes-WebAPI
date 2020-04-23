@@ -25,38 +25,25 @@ namespace ReleaseNotes_WebApi.Services
             _mapper = mapper;
         }
 
-        public async Task<MappingResponse> ListAsync(bool mapped, string type)
+        public async Task<MappableResponse> ListMappableAsync()
         {
-            dynamic result;
-            if (mapped)
-            {
-                result = await _mappableRepository.GetMappedFields(type);
-            }
-            else
-            {
-                result = await _mappableRepository.GetMappableFields();
-            }
+            var result = await _mappableRepository.GetMappableFields();
 
-            // The response will start out as a failed attempt to retrieve data, this is because
-            // C#'s compiler doesn't recognize the use of default when using the TypeSwitch class..
-            var response = new MappingResponse(
-                false, "Noe gikk galt, vennligst kontakt din lokale utvikler..");
+            var mappableFields = _mapper.Map<IEnumerable<MappableFieldsResource>>(result);
+            var response = new MappableResponse(
+                true, "Innhenting av Mapped Fields er vellykket", mappableFields);
 
-            TypeSwitch.Do(
-                result,
-                TypeSwitch.Case<IEnumerable<MappableField>>(() =>
-                {
-                    var mappableFields = _mapper.Map<IEnumerable<MappableFieldsResource>>(result);
-                    response = new MappingResponse(
-                        true, "Innhenting av Mapped Fields er vellykket", mappableFields);
-                }),
-                TypeSwitch.Case<IEnumerable<ReleaseNoteMapping>>(() =>
-                {
-                    var releaseNoteMappings = _mapper.Map<IEnumerable<ReleaseNoteMappingResource>>(result);
-                    response = new MappingResponse(
-                        true, "Innhenting av Release Note Mappings er vellykket", releaseNoteMappings);
-                })
-            );
+            return response;
+        }
+
+
+        public async Task<MappedResponse> ListMappedAsync(string type)
+        {
+            var result = await _mappableRepository.GetMappedFields(type);
+
+            var releaseNoteMappings = _mapper.Map<IEnumerable<ReleaseNoteMappingResource>>(result);
+            var response = new MappedResponse(
+                true, "Innhenting av Release Note Mappings er vellykket", releaseNoteMappings);
 
             return response;
         }
@@ -64,7 +51,6 @@ namespace ReleaseNotes_WebApi.Services
         public async Task<MappingResponse> UpdateReleaseNoteMappingAsync(UpdateReleaseNoteMappingResource resource,
             string type, string mappableField)
         {
-            
             var existingMapping = await _mappableRepository.FindAsync(type, mappableField);
 
             if (existingMapping == null)
