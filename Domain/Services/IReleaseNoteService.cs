@@ -22,7 +22,7 @@ namespace ReleaseNotes_WebAPI.Domain.Services
         Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note);
 
         Task<ReleaseNoteResponse> CreateReleaseNote(CreateReleaseNoteResource note);
-        Task<ReleaseNoteResponse> CreateReleaseNoteFromMap(JObject mapFrom, string mappableType);
+        Task<ReleaseNotesResponse> CreateReleaseNotesFromMap(JObject mapFrom, string mappableType);
 
     }
 }

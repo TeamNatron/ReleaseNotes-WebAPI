@@ -126,25 +126,54 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        public async Task<ReleaseNoteResponse> CreateReleaseNoteFromMap(JObject mapFrom, string mappableType)
+        public async Task<ReleaseNotesResponse> CreateReleaseNotesFromMap(JObject mapFrom, string mappableType)
         {
             var mappings = _mappableService.ListMappedAsync(mappableType);
-            var note = new ReleaseNote();
-            var allTokens = AllTokens(mapFrom);
-            foreach (var mapping in mappings.Result.Entity)
+            var workItems = mapFrom["value"];
+            var notesToSave = new List<ReleaseNote>();
+            if (workItems.GetType() == typeof(JArray))
             {
-                var value = GetValueFromField(allTokens, mapping.AzureDevOpsField);
-                if (!string.IsNullOrWhiteSpace(value))
+                foreach (var workItem in workItems.Children())
                 {
-                    SetField(note, mapping.MappableField, value);
+                    var note = new ReleaseNote();
+                    var allTokens = AllTokens(workItem);
+                    foreach (var mapping in mappings.Result.Entity)
+                    {
+                        if (mapping.AzureDevOpsField != null)
+                        {
+                            var value = GetValueFromField(allTokens, mapping.AzureDevOpsField);
+                            
+                            /*var mapPath = mapping.AzureDevOpsField.Split("/");
+                            var value = "";
+                            JToken tmp = null;
+                            foreach (var field in mapPath)
+                            {
+                                Console.WriteLine(field);
+                                tmp = workItem[field];
+                            }
+                            if (tmp != null)
+                            {
+                                value = tmp.Value<string>();
+                            }*/
+                            
+                            if (!string.IsNullOrWhiteSpace(value))
+                            {
+                                SetField(note, mapping.MappableField, value);
+                            }
+                        }
+                    }
+                    notesToSave.Add(note);
                 }
             }
+            _releaseNoteRepository.AddRangeAsync(notesToSave);
 
-            _releaseNoteRepository.AddAsync(note);
             await _unitOfWork.CompleteAsync();
-            return new ReleaseNoteResponse(true, mapFrom.ToString(), note);
+            return new ReleaseNotesResponse(true, mapFrom.ToString(), notesToSave);
         }
 
+        /**
+         * Set value of a field in a ReleaseNote using the string name of the field
+         */
         private void SetField(ReleaseNote item, string dst, string value)
         {
             var prop = item.GetType().GetProperty(dst);
@@ -154,6 +183,9 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
+        /*
+         * Get value from a field using its string name
+         */
         private string GetValueFromField(IEnumerable<JToken> allTokens, string fieldToMapTo)
         {
             var value = "";
@@ -162,12 +194,14 @@ namespace ReleaseNotes_WebAPI.Services
                 var field = allTokens.FirstOr(
                     t => t.Type == JTokenType.Property && ((JProperty) t).Name == fieldToMapTo, "");
                 value = field.Value<string>();
+                return value;
             }
-
-            return value;
         }
 
-        private IEnumerable<JToken> AllTokens(JObject obj)
+        /**
+         * Extract all nested  fields of an object to an Enumarable list 
+         */
+        private IEnumerable<JToken> AllTokens(JToken obj)
         {
             var toSearch = new Stack<JToken>(obj.Children());
             while (toSearch.Count > 0)

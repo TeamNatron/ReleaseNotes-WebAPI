@@ -36,6 +36,11 @@ namespace ReleaseNotes_WebAPI.Persistence.Repositories
             await _context.ReleaseNotes.AddAsync(releaseNote);
         }
 
+        public async void AddRangeAsync(List<ReleaseNote> releaseNotes)
+        {
+            await _context.ReleaseNotes.AddRangeAsync(releaseNotes);
+        }
+
         public async Task<ReleaseNote> FindAsync(int id)
         {
             return await _context.ReleaseNotes.FindAsync(id);

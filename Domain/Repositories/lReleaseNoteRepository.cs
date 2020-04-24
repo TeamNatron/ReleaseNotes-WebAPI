@@ -12,6 +12,8 @@ namespace ReleaseNotes_WebAPI.Domain.Repositories
         Task<IEnumerable<ReleaseNote>> FilterDates(ReleaseNoteParameters queryParameters);
         
         void AddAsync(ReleaseNote releaseNote);
+        void AddRangeAsync(List<ReleaseNote> releaseNotes);
+        
 
         Task<ReleaseNote> FindAsync(int id, bool includeReleases);
         Task<ReleaseNote> FindAsync(int id);

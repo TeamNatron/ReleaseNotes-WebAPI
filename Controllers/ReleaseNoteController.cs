@@ -118,14 +118,14 @@ namespace ReleaseNotes_WebAPI.Controllers
                 return BadRequest(ModelState.GetErrorMessages());
             }
 
-            var result = await _releaseNoteService.CreateReleaseNoteFromMap(resource, mappableType);
+            var result = await _releaseNoteService.CreateReleaseNotesFromMap(resource, mappableType);
 
             if (!result.Success)
             {
                 return BadRequest(result.Message);
             }
 
-            var releaseNoteResource = _mapper.Map<ReleaseNote, ReleaseNoteResource>(result.ReleaseNote);
+            var releaseNoteResource = _mapper.Map<List<ReleaseNote>, List<ReleaseNoteResource>>(result.List);
             return Ok(releaseNoteResource);
         }
 
