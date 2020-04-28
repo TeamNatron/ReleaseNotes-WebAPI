@@ -214,7 +214,6 @@ namespace ReleaseNotes_WebAPI.Services
                     break;
             }
 
-            Console.WriteLine(value);
             return value;
         }
 
