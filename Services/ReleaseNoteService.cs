@@ -216,22 +216,5 @@ namespace ReleaseNotes_WebAPI.Services
 
             return value;
         }
-
-        /**
-         * Extract all nested  fields of an object to an Enumarable list 
-         */
-        private IEnumerable<JToken> AllTokens(JToken obj)
-        {
-            var toSearch = new Stack<JToken>(obj.Children());
-            while (toSearch.Count > 0)
-            {
-                var inspected = toSearch.Pop();
-                yield return inspected;
-                foreach (var child in inspected)
-                {
-                    toSearch.Push(child);
-                }
-            }
-        }
     }
 }
