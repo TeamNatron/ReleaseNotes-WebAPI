@@ -14,11 +14,14 @@ namespace ReleaseNotesWebAPI.Services
     public class ReleaseService : IReleaseService
     {
         private readonly IReleaseRepository _releaseRepository;
+        private readonly IReleaseNoteService _releaseNoteService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ReleaseService(IReleaseRepository releaseRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public ReleaseService(IReleaseRepository releaseRepository, IReleaseNoteService releaseNoteService,
+            IUnitOfWork unitOfWork, IMapper mapper)
         {
             _releaseRepository = releaseRepository;
+            _releaseNoteService = releaseNoteService;
             _unitOfWork = unitOfWork;
         }
 
@@ -40,6 +43,51 @@ namespace ReleaseNotesWebAPI.Services
             }
         }
 
+        public async Task<ReleaseResponse> CreateFromWorkItems(CreateReleaseFromWorkItemsResource resource)
+        {
+            var existingRelease = await _releaseRepository.FindByNameAsync(resource.Title);
+
+            if (existingRelease != null)
+            {
+                return new ReleaseResponse(
+                    "Release med navnet: " + resource.Title + " finnes allerede i databasen.");
+            }
+
+            Release release;
+            try
+            {
+                // Create new Release entity
+                release = new Release
+                {
+                    Title = resource.Title,
+                    IsPublic = resource.IsPublic,
+                    ProductVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId),
+                };
+
+                // Create new ReleaseReleaseNotes entity
+                var releaseReleaseNotes = new List<ReleaseReleaseNote>();
+                var releaseNotes = await _releaseNoteService.CreateReleaseNotesFromMap(resource.ReleaseNotes);
+                // Map each ReleaseNote to this Release
+                foreach (var releaseNote in releaseNotes.List)
+                {
+                    releaseReleaseNotes.Add(new ReleaseReleaseNote {Release = release, ReleaseNote = releaseNote});
+                }
+
+                // Add ReleaseReleaseNote to the Release
+                release.ReleaseReleaseNotes = releaseReleaseNotes;
+            }
+            catch (Exception e)
+            {
+                return new ReleaseResponse(e.Message);
+            }
+
+
+            await _releaseRepository.AddAsync(release);
+            await _unitOfWork.CompleteAsync();
+
+            return new ReleaseResponse(release);
+        }
+
         public async Task<ReleaseResponse> UpdateAsync(int id, SaveReleaseResource resource)
         {
             var existingRelease = await _releaseRepository.FindByIdAsync(id);
@@ -58,13 +106,15 @@ namespace ReleaseNotesWebAPI.Services
 
                 // Remove all items from existing list
                 existingRelease.ReleaseReleaseNotes.Clear();
-                
+
                 // Map each ReleaseNote to this Release
                 foreach (var releaseNote in releaseNotes)
                 {
-                    existingRelease.ReleaseReleaseNotes.Add(new ReleaseReleaseNote { Release = existingRelease, ReleaseNote = releaseNote});
+                    existingRelease.ReleaseReleaseNotes.Add(new ReleaseReleaseNote
+                        {Release = existingRelease, ReleaseNote = releaseNote});
                 }
             }
+
             if (resource.ProductVersionId > 0 && resource.ProductVersionId != existingRelease.ProductVersionId)
             {
                 var productVersion = await _releaseRepository.FindProductVersion(resource.ProductVersionId);
@@ -73,6 +123,7 @@ namespace ReleaseNotesWebAPI.Services
                     existingRelease.ProductVersion = productVersion;
                 }
             }
+
             try
             {
                 _releaseRepository.Update(existingRelease);
@@ -136,7 +187,7 @@ namespace ReleaseNotesWebAPI.Services
 
                     // Create new ReleaseReleaseNotes entity
                     var releaseReleaseNotes = new List<ReleaseReleaseNote>();
-                    
+
                     // Retrieve all ReleaseNotes from database
                     IEnumerable<ReleaseNote> releaseNotes;
 
@@ -149,16 +200,15 @@ namespace ReleaseNotesWebAPI.Services
                         // Create new Release Notes
                         releaseNotes = resource.ReleaseNotes;
                     }
-                    
+
                     // Map each ReleaseNote to this Release
                     foreach (var releaseNote in releaseNotes)
                     {
-                        releaseReleaseNotes.Add(new ReleaseReleaseNote { Release = release, ReleaseNote = releaseNote});
+                        releaseReleaseNotes.Add(new ReleaseReleaseNote {Release = release, ReleaseNote = releaseNote});
                     }
-                    
+
                     // Add ReleaseReleaseNote to the Release
                     release.ReleaseReleaseNotes = releaseReleaseNotes;
-
                 }
                 catch (Exception e)
                 {
