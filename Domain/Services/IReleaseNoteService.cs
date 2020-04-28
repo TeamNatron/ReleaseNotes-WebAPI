@@ -20,9 +20,8 @@ namespace ReleaseNotes_WebAPI.Domain.Services
         Task<ReleaseNoteResponse> RemoveReleaseNote(int id);
 
         Task<ReleaseNoteResponse> UpdateReleaseNote(int id, EditReleaseNoteResource note);
-
+        
         Task<ReleaseNoteResponse> CreateReleaseNote(CreateReleaseNoteResource note);
-        Task<ReleaseNotesResponse> CreateReleaseNotesFromMap(JObject mapFrom, string mappableType);
-
+        Task<ReleaseNotesResponse> CreateReleaseNotesFromMap(JArray mapFrom);
     }
 }

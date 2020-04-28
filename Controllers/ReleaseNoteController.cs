@@ -108,17 +108,16 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(releaseNoteResource);
         }
 
-        [HttpPost("{mappableType}")]
-        public async Task<ActionResult<ReleaseNoteResource>> CreateReleaseNoteFromMapAsync(
-            [FromRoute] string mappableType,
-            [FromBody] JObject resource)
+        [HttpPost("map")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<ReleaseNoteResource>> CreateReleaseNoteFromMapAsync([FromBody] JArray resource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorMessages());
             }
 
-            var result = await _releaseNoteService.CreateReleaseNotesFromMap(resource, mappableType);
+            var result = await _releaseNoteService.CreateReleaseNotesFromMap(resource);
 
             if (!result.Success)
             {

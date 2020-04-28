@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Repositories;
@@ -126,55 +127,59 @@ namespace ReleaseNotes_WebAPI.Services
             }
         }
 
-        public async Task<ReleaseNotesResponse> CreateReleaseNotesFromMap(JObject mapFrom, string mappableType)
+        public async Task<ReleaseNotesResponse> CreateReleaseNotesFromMap(JArray workItems)
         {
-            var mappings = _mappableService.ListMappedAsync(mappableType);
-            var workItems = mapFrom["value"];
-            var notesToSave = new List<ReleaseNote>();
-            if (workItems.GetType() == typeof(JArray))
-            {
-                foreach (var workItem in workItems.Children())
-                {
-                    var note = new ReleaseNote();
-                    var allTokens = AllTokens(workItem);
-                    foreach (var mapping in mappings.Result.Entity)
-                    {
-                        if (mapping.AzureDevOpsField != null)
-                        {
-                            var value = GetValueFromField(allTokens, mapping.AzureDevOpsField);
-                            
-                            /*var mapPath = mapping.AzureDevOpsField.Split("/");
-                            var value = "";
-                            JToken tmp = null;
-                            foreach (var field in mapPath)
-                            {
-                                Console.WriteLine(field);
-                                tmp = workItem[field];
-                            }
-                            if (tmp != null)
-                            {
-                                value = tmp.Value<string>();
-                            }*/
-                            
-                            if (!string.IsNullOrWhiteSpace(value))
-                            {
-                                SetField(note, mapping.MappableField, value);
-                            }
-                        }
-                    }
-                    notesToSave.Add(note);
-                }
-            }
-            _releaseNoteRepository.AddRangeAsync(notesToSave);
-
+            var notes = await DoCreateReleaseNotesFromMap(workItems);
+            _releaseNoteRepository.AddRangeAsync(notes);
             await _unitOfWork.CompleteAsync();
-            return new ReleaseNotesResponse(true, mapFrom.ToString(), notesToSave);
+            return new ReleaseNotesResponse(true, "0px", notes);
+        }
+
+        protected async Task<List<ReleaseNote>> DoCreateReleaseNotesFromMap(JArray workItems)
+        {
+            var mappableResponse = await _mappableService.ListMappableAsync();
+            var mappableFieldsResources = mappableResponse.Entity.ToList();
+
+            var notesToSave = new List<ReleaseNote>();
+
+            foreach (var workItem in workItems.Children())
+            {
+                var fields = workItem["fields"];
+                var type = fields["System.WorkItemType"].Value<string>();
+                var note = new ReleaseNote();
+
+                // perform mapping
+                foreach (var mappable in mappableFieldsResources)
+                {
+                    var mapping = await _mappableService.GetMappedByCompKey(type, mappable.Name);
+                    var devOpsField = mapping.AzureDevOpsField;
+
+                    if (string.IsNullOrWhiteSpace(devOpsField)) continue;
+
+                    var value = GetValueFromField(fields, devOpsField, mappable.DataType);
+                    
+                    if (value != null)
+                    {
+                        SetField(note, mapping.MappableField.Name, value);
+                    }
+                }
+
+                // assign non-mappable fields
+                note.AuthorEmail = fields["System.AssignedTo"]["uniqueName"].Value<string>();
+                note.AuthorName = fields["System.AssignedTo"]["displayName"].Value<string>();
+                note.WorkItemId = workItem["id"].Value<int>();
+
+                // save
+                notesToSave.Add(note);
+            }
+
+            return notesToSave;
         }
 
         /**
          * Set value of a field in a ReleaseNote using the string name of the field
          */
-        private void SetField(ReleaseNote item, string dst, string value)
+        private void SetField(ReleaseNote item, string dst, object value)
         {
             var prop = item.GetType().GetProperty(dst);
             if (prop != null)
@@ -184,18 +189,33 @@ namespace ReleaseNotes_WebAPI.Services
         }
 
         /*
-         * Get value from a field using its string name
+         * Get value from a field using its string name and specified MappableDataType
          */
-        private string GetValueFromField(IEnumerable<JToken> allTokens, string fieldToMapTo)
+        private object GetValueFromField(JToken fields, string fieldName, string dataType)
         {
-            var value = "";
-            if (!string.IsNullOrWhiteSpace(fieldToMapTo))
+            dynamic value = null;
+            if (string.IsNullOrWhiteSpace(fieldName)) return value;
+
+            var field = fields[fieldName];
+            
+            if (field == null) return value;
+
+            switch (dataType)
             {
-                var field = allTokens.FirstOr(
-                    t => t.Type == JTokenType.Property && ((JProperty) t).Name == fieldToMapTo, "");
-                value = field.Value<string>();
-                return value;
+                case MappableDataTypes.String:
+                case MappableDataTypes.Html:
+                    value = field.Value<string>();;
+                    break;
+                case MappableDataTypes.DateTime:
+                    value = field.Value<DateTime>();
+                    break;
+                default:
+                    Console.WriteLine("ERROR: no match for dataType " + dataType);
+                    break;
             }
+
+            Console.WriteLine(value);
+            return value;
         }
 
         /**
