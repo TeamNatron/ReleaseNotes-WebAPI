@@ -25,6 +25,11 @@ namespace ReleaseNotes_WebApi.Services
             _mapper = mapper;
         }
 
+        public Task<ReleaseNoteMapping> GetMappedByCompKey(string type, string mappableField)
+        {
+            return _mappableRepository.FindAsync(type, mappableField);
+        }
+
         public async Task<MappableResponse> ListMappableAsync()
         {
             var result = await _mappableRepository.GetMappableFields();
