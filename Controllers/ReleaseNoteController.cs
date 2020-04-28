@@ -108,7 +108,7 @@ namespace ReleaseNotes_WebAPI.Controllers
             return Ok(releaseNoteResource);
         }
 
-        [HttpPost("map")]
+        [HttpPost("azure")]
         [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<ReleaseNoteResource>> CreateReleaseNoteFromMapAsync([FromBody] JArray resource)
         {
