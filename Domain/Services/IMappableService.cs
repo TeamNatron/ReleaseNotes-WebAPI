@@ -9,8 +9,11 @@ namespace ReleaseNotes_WebAPI.Domain.Services
 {
     public interface IMappableService
     {
-        Task<MappingResponse> ListAsync(bool mapped, string type);
-        
-        Task<MappingResponse> UpdateReleaseNoteMappingAsync(UpdateReleaseNoteMappingResource resource, string type, string mappableField);
+        Task<MappedResponse> ListMappedAsync(string type);
+
+        Task<ReleaseNoteMapping> GetMappedByCompKey(string type, string mappableField);
+        Task<MappableResponse> ListMappableAsync();
+        Task<MappingResponse> UpdateReleaseNoteMappingAsync(UpdateReleaseNoteMappingResource resource, string type,
+            string mappableField);
     }
 }

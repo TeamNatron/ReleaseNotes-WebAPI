@@ -320,17 +320,24 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
             {
                 var fields = new List<MappableField>
                 {
-                    new MappableField {Name = "Title"},
-                    new MappableField {Name = "Ingress"},
-                    new MappableField {Name = "Description"},
-                    new MappableField {Name = "WorkItemId"},
-                    new MappableField {Name = "AuthorName"},
-                    new MappableField {Name = "AuthorEmail"},
-                    new MappableField {Name = "WorkItemDescriptionHtml"},
-                    new MappableField {Name = "WorkItemTitle"},
-                    new MappableField {Name = "ClosedDate"}
+                    new MappableField {Name = "Title", DataType = MappableDataTypes.String},
+                    new MappableField {Name = "Ingress", DataType = MappableDataTypes.String},
+                    new MappableField {Name = "Description", DataType = MappableDataTypes.Html},
+                    new MappableField {Name = "WorkItemDescriptionHtml", DataType = MappableDataTypes.Html},
+                    new MappableField {Name = "WorkItemTitle", DataType = MappableDataTypes.String},
+                    new MappableField {Name = "ClosedDate", DataType = MappableDataTypes.DateTime}
                 };
 
+                var defaultMappings = new Dictionary<string, string>
+                {
+                    {fields[0].Name, "System.Title"},
+                    {fields[1].Name, null},
+                    {fields[2].Name, "System.Description"},
+                    {fields[3].Name, "System.Description"},
+                    {fields[4].Name, "System.Title"},
+                    {fields[5].Name, "Microsoft.VSTS.Common.StateChangeDate"},
+                };
+                
                 context.MappableFields.AddRange(fields);
                 if (!context.ReleaseNoteMappings.Any())
                 {
@@ -339,8 +346,9 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     {
                         foreach (var mappableField in fields)
                         {
+                            defaultMappings.TryGetValue(mappableField.Name, out var defaultMap);
                             mappings.Add(new ReleaseNoteMapping
-                                {MappableField = mappableField, MappableType = mappableType});
+                                {MappableField = mappableField, MappableType = mappableType, AzureDevOpsField = defaultMap});
                         }
                     }
 
