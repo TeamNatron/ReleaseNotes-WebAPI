@@ -129,35 +129,45 @@ namespace ReleaseNotes_WebAPI.Services
 
         public async Task<ReleaseNotesResponse> CreateReleaseNotesFromMap(JArray workItems)
         {
-            var notes = await DoCreateReleaseNotesFromMap(workItems);
+            List<ReleaseNote> notes;
+            try
+            {
+                notes = await DoCreateReleaseNotesFromMap(workItems);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                return new ReleaseNotesResponse("An internal server error occured: " + e.Message);
+            }
+
             _releaseNoteRepository.AddRangeAsync(notes);
             await _unitOfWork.CompleteAsync();
-            return new ReleaseNotesResponse(true, "0px", notes);
+            return new ReleaseNotesResponse(notes);
         }
 
-        protected async Task<List<ReleaseNote>> DoCreateReleaseNotesFromMap(JArray workItems)
+        private async Task<List<ReleaseNote>> DoCreateReleaseNotesFromMap(JArray workItems)
         {
             var mappableResponse = await _mappableService.ListMappableAsync();
             var mappableFieldsResources = mappableResponse.Entity.ToList();
 
             var notesToSave = new List<ReleaseNote>();
 
+            // iterate trough each workItem and each mappable field. 
             foreach (var workItem in workItems.Children())
             {
                 var fields = workItem["fields"];
                 var type = fields["System.WorkItemType"].Value<string>();
                 var note = new ReleaseNote();
 
-                // perform mapping
                 foreach (var mappable in mappableFieldsResources)
                 {
+                    // get mapping of current mappable
                     var mapping = await _mappableService.GetMappedByCompKey(type, mappable.Name);
                     var devOpsField = mapping.AzureDevOpsField;
-
                     if (string.IsNullOrWhiteSpace(devOpsField)) continue;
 
+                    // assign mapped value to releaseNote
                     var value = GetValueFromField(fields, devOpsField, mappable.DataType);
-                    
                     if (value != null)
                     {
                         SetField(note, mapping.MappableField.Name, value);
@@ -179,7 +189,7 @@ namespace ReleaseNotes_WebAPI.Services
         /**
          * Set value of a field in a ReleaseNote using the string name of the field
          */
-        private void SetField(ReleaseNote item, string dst, object value)
+        private static void SetField(ReleaseNote item, string dst, object value)
         {
             var prop = item.GetType().GetProperty(dst);
             if (prop != null)
@@ -191,28 +201,20 @@ namespace ReleaseNotes_WebAPI.Services
         /*
          * Get value from a field using its string name and specified MappableDataType
          */
-        private object GetValueFromField(JToken fields, string fieldName, string dataType)
+        private static object GetValueFromField(JToken fields, string fieldName, string dataType)
         {
             dynamic value = null;
             if (string.IsNullOrWhiteSpace(fieldName)) return value;
-
             var field = fields[fieldName];
-            
             if (field == null) return value;
 
-            switch (dataType)
+            value = dataType switch
             {
-                case MappableDataTypes.String:
-                case MappableDataTypes.Html:
-                    value = field.Value<string>();;
-                    break;
-                case MappableDataTypes.DateTime:
-                    value = field.Value<DateTime>();
-                    break;
-                default:
-                    Console.WriteLine("ERROR: no match for dataType " + dataType);
-                    break;
-            }
+                MappableDataTypes.String => (dynamic) field.Value<string>(),
+                MappableDataTypes.Html => field.Value<string>(),
+                MappableDataTypes.DateTime => field.Value<DateTime>(),
+                _ => throw new Exception("No match for dataType " + dataType)
+            };
 
             return value;
         }
