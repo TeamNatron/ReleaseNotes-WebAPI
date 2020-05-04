@@ -150,18 +150,12 @@ describe("Releases POST", () => {
           TEST_RELEASE_RAW_WORKITEMS.ProductVersionId
         );
         expect(res.body.isPublic).to.equal(TEST_RELEASE_RAW_WORKITEMS.isPublic);
-        console.log(res.body);
 
         // Test for release notes
         const releaseNote = res.body.releaseNotes[0];
-        // expect(releaseNote.title).to.equal(
-        //   TEST_RELEASE_RAW_WORKITEMS.releaseNotes[0].fields["System.Title"]
-        // );
         expect(releaseNote.workItemTitle).to.equal(
           TEST_RELEASE_RAW_WORKITEMS.releaseNotes[0].fields["System.Title"]
         );
-        // expect(releaseNote.ingress);
-        // expect(releaseNote.description);
         expect(releaseNote.workItemId).to.equal(
           TEST_RELEASE_RAW_WORKITEMS.releaseNotes[0].id
         );
