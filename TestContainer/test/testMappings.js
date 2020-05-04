@@ -13,6 +13,8 @@ const WORK_ITEM_TYPE_TASK = "task";
 const ADDRESS_MAPPED_FIELDS = "/api/mappablefields/";
 const NAME_PUT_MAPPED_FIELD = "Title";
 
+var mappedFields = [];
+
 const MAPPED_FIELD_OBJECT = {
   azureDevOpsField: "SuperPower",
 };
@@ -71,6 +73,9 @@ describe("Mappings GET", () => {
         if (err) {
           done(err);
         }
+        // Get original mapping for later use
+        mappedFields = res.body.entity;
+
         expect(res.should.have.status(200));
         expect(res.body.entity).to.be.a("array");
         expect(res.body.entity[0].mappableField).to.be.a("string");
@@ -111,6 +116,36 @@ describe("Mappings PUT", () => {
         expect(res.should.have.status(200));
         expect(res.body.entity.azureDevOpsField).to.equal(
           MAPPED_FIELD_OBJECT.azureDevOpsField
+        );
+        expect(res.body.entity.mappableField).to.equal(NAME_PUT_MAPPED_FIELD);
+        expect(res.body.entity.mappableType).to.equal(WORK_ITEM_TYPE_TASK);
+        done();
+      });
+  });
+
+  it("should dispose of title mapping", (done) => {
+    // Retrieves
+    const obj = mappedFields.find(
+      (obj) =>
+        obj.mappableField.toUpperCase() === "TITLE" &&
+        obj.mappableType.toUpperCase() === WORK_ITEM_TYPE_TASK.toUpperCase()
+    );
+    const MAPPED_FIELD_OBJECT_ORIGINAL = {
+      azureDevOpsField: obj.azureDevOpsField,
+    };
+    chai
+      .request(process.env.APP_URL)
+      .put(url)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .send(MAPPED_FIELD_OBJECT_ORIGINAL)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        expect(res.should.have.status(200));
+        expect(res.body.entity.azureDevOpsField).to.equal(
+          MAPPED_FIELD_OBJECT_ORIGINAL.azureDevOpsField
         );
         expect(res.body.entity.mappableField).to.equal(NAME_PUT_MAPPED_FIELD);
         expect(res.body.entity.mappableType).to.equal(WORK_ITEM_TYPE_TASK);
