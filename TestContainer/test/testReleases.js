@@ -42,6 +42,7 @@ const TEST_RELEASE_3 = {
 };
 
 var accessToken;
+const AZURE = "azure";
 const addressReleases = "/api/releases";
 const addressPut = "/api/releases/101";
 const addressCheckAfterCreate = "/api/releases/103";
@@ -128,6 +129,46 @@ describe("Releases POST", () => {
       .send(TEST_RELEASE_1)
       .end((err) => {
         err.should.have.status(400);
+        done();
+      });
+  });
+
+  it("POST | Should create release with raw workItems", (done) => {
+    chai
+      .request(process.env.APP_URL)
+      .post(addressReleases + "/" + AZURE)
+      .set("Content-Type", "application/json")
+      .set("Authorization", "Bearer " + accessToken)
+      .send(TEST_RELEASE_RAW_WORKITEMS)
+      .end((err, res) => {
+        if (err) {
+          done(err.response.text);
+        }
+        res.should.have.status(200);
+        expect(res.body.title).to.equal(TEST_RELEASE_RAW_WORKITEMS.title);
+        expect(res.body.productVersion.id).to.equal(
+          TEST_RELEASE_RAW_WORKITEMS.ProductVersionId
+        );
+        expect(res.body.isPublic).to.equal(TEST_RELEASE_RAW_WORKITEMS.isPublic);
+        console.log(res.body);
+
+        // Test for release notes
+        const releaseNote = res.body.releaseNotes[0];
+        // expect(releaseNote.title).to.equal(
+        //   TEST_RELEASE_RAW_WORKITEMS.releaseNotes[0].fields["System.Title"]
+        // );
+        expect(releaseNote.workItemTitle).to.equal(
+          TEST_RELEASE_RAW_WORKITEMS.releaseNotes[0].fields["System.Title"]
+        );
+        // expect(releaseNote.ingress);
+        // expect(releaseNote.description);
+        expect(releaseNote.workItemId).to.equal(
+          TEST_RELEASE_RAW_WORKITEMS.releaseNotes[0].id
+        );
+        expect(releaseNote.workItemDescriptionHtml).to.be.a("string");
+        expect(correctDateFormat(releaseNote.closedDate)).to.be.false;
+        expect(releaseNote.isPublic).to.equal(false);
+
         done();
       });
   });
@@ -340,3 +381,98 @@ describe("Releases DELETE", () => {
       });
   });
 });
+
+const TEST_RELEASE_RAW_WORKITEMS = {
+  isPublic: false,
+  title: "Release-6",
+  ProductVersionId: 100,
+  releaseNotes: [
+    {
+      id: 327,
+      rev: 5,
+      fields: {
+        "System.AreaPath": "Release Note System",
+        "System.TeamProject": "Release Note System",
+        "System.IterationPath": "Release Note System\\Sprint 7",
+        "System.WorkItemType": "Task",
+        "System.State": "In Progress",
+        "System.Reason": "Work started",
+        "System.AssignedTo": {
+          displayName: "Lars Øyvind Ous",
+          url:
+            "https://spsprodweu1.vssps.visualstudio.com/A025f0995-ba99-4e30-998a-739dc40106c6/_apis/Identities/c09ed437-6953-687c-91e6-fa55bef8daf7",
+          _links: {
+            avatar: {
+              href:
+                "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+            },
+          },
+          id: "c09ed437-6953-687c-91e6-fa55bef8daf7",
+          uniqueName: "larsous@ntnu.no",
+          imageUrl:
+            "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+          descriptor: "aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+        },
+        "System.CreatedDate": "2020-04-21T11:26:52.2Z",
+        "System.CreatedBy": {
+          displayName: "Markus Randa",
+          url:
+            "https://spsprodweu1.vssps.visualstudio.com/A025f0995-ba99-4e30-998a-739dc40106c6/_apis/Identities/daab4d46-973a-64b4-9795-742508e96bfc",
+          _links: {
+            avatar: {
+              href:
+                "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.ZGFhYjRkNDYtOTczYS03NGI0LTk3OTUtNzQyNTA4ZTk2YmZj",
+            },
+          },
+          id: "daab4d46-973a-64b4-9795-742508e96bfc",
+          uniqueName: "markuran@ntnu.no",
+          imageUrl:
+            "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.ZGFhYjRkNDYtOTczYS03NGI0LTk3OTUtNzQyNTA4ZTk2YmZj",
+          descriptor: "aad.ZGFhYjRkNDYtOTczYS03NGI0LTk3OTUtNzQyNTA4ZTk2YmZj",
+        },
+        "System.ChangedDate": "2020-04-23T12:57:21.443Z",
+        "System.ChangedBy": {
+          displayName: "Lars Øyvind Ous",
+          url:
+            "https://spsprodweu1.vssps.visualstudio.com/A025f0995-ba99-4e30-998a-739dc40106c6/_apis/Identities/c09ed437-6953-687c-91e6-fa55bef8daf7",
+          _links: {
+            avatar: {
+              href:
+                "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+            },
+          },
+          id: "c09ed437-6953-687c-91e6-fa55bef8daf7",
+          uniqueName: "larsous@ntnu.no",
+          imageUrl:
+            "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+          descriptor: "aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+        },
+        "System.CommentCount": 0,
+        "System.Title":
+          "Back-end: Når en ReleaseNote opprettes blir mappingTable brukt til mapping",
+        "Microsoft.VSTS.Common.StateChangeDate": "2020-04-22T08:55:20.503Z",
+        "Microsoft.VSTS.Common.ActivatedDate": "2020-04-22T08:55:20.503Z",
+        "Microsoft.VSTS.Common.ActivatedBy": {
+          displayName: "Lars Øyvind Ous",
+          url:
+            "https://spsprodweu1.vssps.visualstudio.com/A025f0995-ba99-4e30-998a-739dc40106c6/_apis/Identities/c09ed437-6953-687c-91e6-fa55bef8daf7",
+          _links: {
+            avatar: {
+              href:
+                "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+            },
+          },
+          id: "c09ed437-6953-687c-91e6-fa55bef8daf7",
+          uniqueName: "larsous@ntnu.no",
+          imageUrl:
+            "https://dev.azure.com/ReleaseNoteSystem/_apis/GraphProfile/MemberAvatars/aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+          descriptor: "aad.YzA5ZWQ0MzctNjk1My03ODdjLTkxZTYtZmE1NWJlZjhkYWY3",
+        },
+        "Microsoft.VSTS.Common.Priority": 2,
+        "System.Description": "<div>Testnes<br></div>",
+      },
+      url:
+        "https://dev.azure.com/ReleaseNoteSystem/399f705f-cd58-45f2-becb-f890cb50f774/_apis/wit/workItems/327",
+    },
+  ],
+};
