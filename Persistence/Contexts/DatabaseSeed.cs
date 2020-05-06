@@ -283,7 +283,10 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                     {
                         Email = "admin@ungspiller.no", Password = passwordHasher.HashPassword("12345678"),
                         AzureInformation = new AzureInformation
-                            {Id = 123,UserId = "test.testovitch@testnes.no", Pat = "123123asdasd", Organization = "ReleaseNotesSystem"}
+                        {
+                            Id = 123, UserId = "test.testovitch@testnes.no", Pat = "123123asdasd",
+                            Organization = "ReleaseNoteSystem"
+                        }
                     },
                     new User
                     {
@@ -300,33 +303,58 @@ namespace ReleaseNotes_WebAPI.Persistence.Contexts
                 context.Users.AddRange(users);
                 context.SaveChanges();
             }
-            
+
+            if (!context.MappableTypes.Any())
+            {
+                var types = new List<MappableType>
+                {
+                    new MappableType {Name = "task"},
+                    new MappableType {Name = "bug"},
+                };
+                context.MappableTypes.AddRange(types);
+                context.SaveChanges();
+            }
+
             // If there are no mappings
             if (!context.MappableFields.Any())
             {
                 var fields = new List<MappableField>
                 {
-                    new MappableField {Name = "Title"},
-                    new MappableField {Name = "Ingress"},
-                    new MappableField {Name = "Description"},
-                    new MappableField {Name = "WorkItemId"},
-                    new MappableField {Name = "AuthorName"},
-                    new MappableField {Name = "AuthorEmail"},
-                    new MappableField {Name = "WorkItemDescriptionHtml"},
-                    new MappableField {Name = "WorkItemTitle"},
-                    new MappableField {Name = "ClosedDate"}
+                    new MappableField {Name = "Title", DataType = MappableDataTypes.String},
+                    new MappableField {Name = "Ingress", DataType = MappableDataTypes.String},
+                    new MappableField {Name = "Description", DataType = MappableDataTypes.Html},
+                    new MappableField {Name = "WorkItemDescriptionHtml", DataType = MappableDataTypes.Html},
+                    new MappableField {Name = "WorkItemTitle", DataType = MappableDataTypes.String},
+                    new MappableField {Name = "ClosedDate", DataType = MappableDataTypes.DateTime}
+                };
+
+                var defaultMappings = new Dictionary<string, string>
+                {
+                    {fields[0].Name, "System.Title"},
+                    {fields[1].Name, null},
+                    {fields[2].Name, "System.Description"},
+                    {fields[3].Name, "System.Description"},
+                    {fields[4].Name, "System.Title"},
+                    {fields[5].Name, "Microsoft.VSTS.Common.StateChangeDate"},
                 };
                 
                 context.MappableFields.AddRange(fields);
                 if (!context.ReleaseNoteMappings.Any())
                 {
                     var mappings = new List<ReleaseNoteMapping>();
-                    foreach (var mappableField in fields)
+                    foreach (var mappableType in context.MappableTypes.ToList())
                     {
-                        mappings.Add(new ReleaseNoteMapping {MappableField = mappableField});
+                        foreach (var mappableField in fields)
+                        {
+                            defaultMappings.TryGetValue(mappableField.Name, out var defaultMap);
+                            mappings.Add(new ReleaseNoteMapping
+                                {MappableField = mappableField, MappableType = mappableType, AzureDevOpsField = defaultMap});
+                        }
                     }
+
                     context.AddRange(mappings);
                 }
+
                 context.SaveChanges();
             }
         }

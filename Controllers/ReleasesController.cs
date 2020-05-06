@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using ReleaseNotes_WebAPI.Domain.Models;
 using ReleaseNotes_WebAPI.Domain.Services;
+using ReleaseNotes_WebAPI.Domain.Services.Communication;
 using ReleaseNotes_WebAPI.Extensions;
 using ReleaseNotes_WebAPI.Resources;
 using ReleaseNotes_WebAPI.Utilities;
@@ -32,9 +34,24 @@ namespace ReleaseNotes_WebAPI.Controllers
             {
                 return BadRequest(ModelState.GetErrorMessages());
             }
-
             var result = await _releaseService.SaveAsync(resource);
+            if (!result.Success) return BadRequest(result.Message);
 
+            var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
+            return Ok(releaseResource);
+        }
+        
+        [HttpPost("azure")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> CreateFromWorkItems([FromBody] CreateReleaseFromWorkItemsResource resource)
+        {
+            // Check if the user data works with this model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+            var result = await _releaseService.CreateFromWorkItems(resource);
+            
             if (!result.Success) return BadRequest(result.Message);
 
             var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
@@ -97,8 +114,6 @@ namespace ReleaseNotes_WebAPI.Controllers
 
             var releaseResource = _mapper.Map<Release, ReleaseResource>(result.Release);
             return Ok(releaseResource);
-
         }
-
     }
 }
